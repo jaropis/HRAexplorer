@@ -1,6 +1,6 @@
 shinyServer(function(input, output){
   dataAddress <- reactive({
-    dataPaths <- data.frame(name = c("RR.csv"), size = 0, type = c("text/plain"), datapath = c("./RR.csv"), stringsAsFactors = FALSE)
+    dataPaths <- data.frame(name = c("RR.csv"), size = 0, type = c("text/plain"), datapath = c("../initial_data/RR.csv"), stringsAsFactors = FALSE)
     if (!is.null(input$files)){
       dataPaths <- input$files
     }
@@ -8,14 +8,14 @@ shinyServer(function(input, output){
   })
 
   output$plot <- renderPlot({
+    #browser()
     errorOnRead <- FALSE
-    rr_and_flags <- read_and_filter_one_file(dataAddress(), 1, separator=getSep(input$separator), input$data_columns, input$minmax, input$usingExcel)
-    tryCatch(
-      tempPP <- preparePP(rr_and_flags[[1]], rr_and_flags[[2]]),
-      error = function(e) errorOnRead <<-  TRUE
-    )
-    tryCatch(
-      drawPP(tempPP, variableName = ifelse(input$variableName=="", "RR", input$variableName), color = input$color),
+    rr_and_flags <- read_and_filter_one_file(dataAddress(), 1, separator=getSep(input$separator),
+                                             input$data_columns, input$minmax, input$usingExcel)
+    pp <- tryCatch(
+      hrvhra::drawpp(rr_and_flags$RR, rr_and_flags$annotations,
+                     vname = ifelse(input$variableName=="", "RR", input$variableName),
+                     col = "black", bg = input$color, pch = 21),
       error = function(e)   errorOnRead <<- TRUE
     )
     if (errorOnRead){
@@ -24,7 +24,7 @@ shinyServer(function(input, output){
       text(6,5, "try another file type,", cex = 1.5)
       text(6,3, "column selection, or separator", cex = 1.5)
     } else {
-      drawPP(tempPP, variableName = ifelse(input$variableName=="", "RR", input$variableName), color = input$color)
+      pp
     }
   })
 
@@ -35,6 +35,7 @@ shinyServer(function(input, output){
       returnTable <- getPpResults(dataAddress(), sep = getSep(input$separator), input$data_columns, input$minmax, input$usingExcel),
       error = function(e) returnTable <<- NA
     )
+    #browser()
     if (is.na(returnTable[1])) return(data.frame(Info = "FAIL - incorrect format - try choosing another file type, column selection or separator"))
     else return(returnTable)})
 

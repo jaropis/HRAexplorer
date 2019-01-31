@@ -19,7 +19,7 @@ read_and_filter_one_file <- function(fileAddresses, lineNumber, separator, colum
   dataFile <- fileAddresses$datapath[lineNumber]
   javaerror <- FALSE; csverror <- FALSE # these show whether the function should return "some_problem" and exit
   if (usingExcel){
-    if (dataFile=="./RR.csv") dataFile="./RR.xlsx" # just making sure that the XLConnect does not crash on text
+    if (dataFile=="../initial_data/RR.csv") dataFile="../initial_data/RR.xlsx" # just making sure that the XLConnect does not crash on text
     tryCatch(
       wb <- loadWorkbook(dataFile),
       error = function(e) javaerror <<- TRUE # if java fails, "some_problem" will be returned and it should be handled in reactive plot
@@ -27,6 +27,7 @@ read_and_filter_one_file <- function(fileAddresses, lineNumber, separator, colum
     if (javaerror) return(data.frame("some_problem"))
     data <- readWorksheet(wb, sheet = 1) # this will never happen if java fails
   } else {
+    #browser()
     data <- read.csv(dataFile, sep = separator, header = T, row.names=NULL)
   }
   column_idx <- readNumbersFromField(column_data)
@@ -52,7 +53,7 @@ read_and_filter_one_file <- function(fileAddresses, lineNumber, separator, colum
   which_max <- RR >= minmax[2]
   flags[which_min] <- 2
   flags[which_max] <- 3
-  return(list(RR=RR, flags=flags))
+  return(list(RR=RR, annotations=flags))
 }
 
 getSep <- function(separator){
