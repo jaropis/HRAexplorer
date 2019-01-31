@@ -27,7 +27,6 @@ read_and_filter_one_file <- function(fileAddresses, lineNumber, separator, colum
     if (javaerror) return(data.frame("some_problem"))
     data <- readWorksheet(wb, sheet = 1) # this will never happen if java fails
   } else {
-    #browser()
     data <- read.csv(dataFile, sep = separator, header = T, row.names=NULL)
   }
   column_idx <- readNumbersFromField(column_data)
