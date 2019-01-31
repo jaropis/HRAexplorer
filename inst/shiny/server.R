@@ -8,6 +8,7 @@ shinyServer(function(input, output){
   })
 
   output$plot <- renderPlot({
+    #browser()
     errorOnRead <- FALSE
     rr_and_flags <- read_and_filter_one_file(dataAddress(), 1, separator=getSep(input$separator),
                                              input$data_columns, input$minmax, input$usingExcel)
@@ -34,7 +35,7 @@ shinyServer(function(input, output){
       returnTable <- getPpResults(dataAddress(), sep = getSep(input$separator), input$data_columns, input$minmax, input$usingExcel),
       error = function(e) returnTable <<- NA
     )
-
+    #browser()
     if (is.na(returnTable[1])) return(data.frame(Info = "FAIL - incorrect format - try choosing another file type, column selection or separator"))
     else return(returnTable)})
 
@@ -63,7 +64,5 @@ shinyServer(function(input, output){
     content = function(file) {
       writeWorksheetToFile( file = file, data=currentPPvalues(), sheet="Poincare plot")
     })
-
   ### end of server below
 })
-<
