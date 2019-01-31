@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1540579507083.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "881629E4",
+    "lastKnownWriteTime" : 1540581421,
+    "last_content_update" : 1540581421089,
+    "path" : "~/Dropbox/Praca/software/hexplorer/R/data-crunching-module.R",
+    "project_path" : "R/data-crunching-module.R",
+    "properties" : {
+        "cursorPosition" : "8,48",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

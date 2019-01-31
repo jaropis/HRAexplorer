@@ -1,0 +1,15 @@
+Package: HRAexplorer
+Type: Package
+Title: HRA and HRV explorer
+Version: 0.1.0
+Author: Jaroslaw Piskorski
+Maintainer: Jaroslaw Piskorski <jaropis@zg.home.pl>
+Description: This software provides a gui for exploring the asymmetry and varia-
+    bility of the RR intervals time series
+Imports:
+    hrvhra,
+    XLConnect
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.0

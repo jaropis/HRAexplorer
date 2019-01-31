@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1540579674013.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "5363D4B0",
+    "lastKnownWriteTime" : 1540579709,
+    "last_content_update" : 1540579709225,
+    "path" : "~/Dropbox/Praca/software/hexplorer/inst/shiny/server.R",
+    "project_path" : "inst/shiny/server.R",
+    "properties" : {
+        "cursorPosition" : "67,1",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1540580011465.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "54265229",
+    "lastKnownWriteTime" : 1540580516,
+    "last_content_update" : 1540580516752,
+    "path" : "~/Dropbox/Praca/software/hexplorer/R/global.R",
+    "project_path" : "R/global.R",
+    "properties" : {
+        "cursorPosition" : "1,10",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

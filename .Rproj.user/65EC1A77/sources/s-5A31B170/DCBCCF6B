@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1540579946599.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "DCBCCF6B",
+    "lastKnownWriteTime" : 1540580356,
+    "last_content_update" : 1540580356620,
+    "path" : "~/Dropbox/Praca/software/hexplorer/inst/shiny/ui.R",
+    "project_path" : "inst/shiny/ui.R",
+    "properties" : {
+        "cursorPosition" : "14,42",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

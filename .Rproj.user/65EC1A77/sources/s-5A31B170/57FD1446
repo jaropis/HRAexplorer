@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1540579192372.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "57FD1446",
+    "lastKnownWriteTime" : 1540580262,
+    "last_content_update" : 1540580262910,
+    "path" : "~/Dropbox/Praca/software/hexplorer/R/data-loading-module.R",
+    "project_path" : "R/data-loading-module.R",
+    "properties" : {
+        "cursorPosition" : "49,5",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
