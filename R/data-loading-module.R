@@ -1,17 +1,23 @@
 # data load module
-options( java.parameters = c("-Xss2560k", "-Xmx2g"))
-
-readNumbersFromField <- function(listArgument){
-  listOfNamesAndNumbers <- paste(strsplit(listArgument, ",")[[1]], collapse=".")
-  listOfNamesAndNumbers <- strsplit(listOfNamesAndNumbers," ")[[1]]
-  nazwa <- ""
-  myLengthosc <- length(listOfNamesAndNumbers)
-  for (element in 1:myLengthosc){
-    if (is.na(as.numeric(listOfNamesAndNumbers[element]))) nazwa <- paste(nazwa, listOfNamesAndNumbers[element])
+#' function to read numbers from input windows
+#'
+#' @param list_argument string holding the numbers keyed into the input field
+#'
+#' @return numeric vector holding the values
+#'
+#' @export
+read_numbers_from_field <- function(list_argument){
+  list_of_names_and_numbers <- paste(strsplit(list_argument, ",")[[1]], collapse=".")
+  list_of_names_and_numbers <- strsplit(list_of_names_and_numbers," ")[[1]]
+  name <- ""
+  my_length <- length(list_of_names_and_numbers)
+  for (element in 1:my_length){
+    if (is.na(as.numeric(list_of_names_and_numbers[element])))
+      name <- paste(name, list_of_names_and_numbers[element])
     else break
   }
-  listOfNumbers <- listOfNamesAndNumbers[element:myLengthosc]
-  myData <- as.vector(sapply(listOfNumbers, as.numeric))
+  list_of_numbers <- list_of_names_and_numbers[element:my_length]
+  myData <- vapply(list_of_numbers, as.numeric, FUN.VALUE = numeric(1))
   return(myData)
 }
 
@@ -30,7 +36,7 @@ read_and_filter_one_file <- function(fileAddresses, lineNumber, separator, colum
   } else {
     data <- read.csv(dataFile, sep = separator, header = T, row.names=NULL)
   }
-  column_idx <- readNumbersFromField(column_data)
+  column_idx <- read_numbers_from_field(column_data)
   RR_idx <- column_idx[1]
   flag_idx <- ifelse(length(column_idx)>1, column_idx[2], 0)
   tryCatch( # this will go wrong if the wrong type of file is selected
@@ -48,7 +54,7 @@ read_and_filter_one_file <- function(fileAddresses, lineNumber, separator, colum
   else
     flags <- RR*0
   # time based filtering here
-  minmax <- readNumbersFromField(minmax)
+  minmax <- read_numbers_from_field(minmax)
   which_min <- RR <= minmax[1]
   which_max <- RR >= minmax[2]
   flags[which_min] <- 2

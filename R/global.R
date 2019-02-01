@@ -1,3 +1,8 @@
+#' CONSTANTS
+#'
+options( java.parameters = c("-Xss2560k", "-Xmx2g"))
+
+
 # list holding the colors for selection
 #' @export
 glob_color_list <- list("orange" = "orange",
