@@ -8,7 +8,6 @@ shinyServer(function(input, output){
   })
 
   output$plot <- renderPlot({
-    #browser()
     errorOnRead <- FALSE
     rr_and_flags <- read_and_filter_one_file(dataAddress(), 1, separator=getSep(input$separator),
                                              input$data_columns, input$minmax, input$usingExcel)

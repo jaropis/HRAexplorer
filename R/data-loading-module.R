@@ -15,17 +15,18 @@ readNumbersFromField <- function(listArgument){
   return(myData)
 }
 
+#' @export
 read_and_filter_one_file <- function(fileAddresses, lineNumber, separator, column_data, minmax, usingExcel){
   dataFile <- fileAddresses$datapath[lineNumber]
   javaerror <- FALSE; csverror <- FALSE # these show whether the function should return "some_problem" and exit
   if (usingExcel){
     if (dataFile=="../initial_data/RR.csv") dataFile="../initial_data/RR.xlsx" # just making sure that the XLConnect does not crash on text
     tryCatch(
-      wb <- loadWorkbook(dataFile),
+      wb <- XLConnect::loadWorkbook(dataFile),
       error = function(e) javaerror <<- TRUE # if java fails, "some_problem" will be returned and it should be handled in reactive plot
     )
     if (javaerror) return(data.frame("some_problem"))
-    data <- readWorksheet(wb, sheet = 1) # this will never happen if java fails
+    data <- XLConnect::readWorksheet(wb, sheet = 1) # this will never happen if java fails
   } else {
     data <- read.csv(dataFile, sep = separator, header = T, row.names=NULL)
   }
