@@ -29,10 +29,9 @@ read_numbers_from_field <- function(list_argument){
 #' @param minmax tex, two numbers, the minimum RR to be counted as RR of sinus origin, likewise for maximum
 #' @param using_Excel boolean, whether the files are Excel files
 #'
-#' @return list with two elements, RR intervals column and annotation column
+#' @return list with two elements, RR intervals column and annotations column
 #' @export
 read_and_filter_one_file <- function(file_addresses, line_number, separator, column_data, minmax, using_Excel){
-  browser()
   data_file <- file_addresses$datapath[line_number]
   javaerror <- FALSE; csverror <- FALSE # these show whether the function should return "some_problem" and exit
   if (using_Excel){
@@ -72,17 +71,13 @@ read_and_filter_one_file <- function(file_addresses, line_number, separator, col
   return(list(RR=RR, annotations=flags))
 }
 
-getSep <- function(separator){
-  sep = separator
-  if (separator == "tabulator"){
-    sep = "\t"
-  }
-  if (separator == "space"){
-    sep = " "
-  }
-  return(sep)
-}
-
+#' function to read the separator from input - it is either what has ben selected
+#' or a selection has to be translated into a real separator
+#'
+#' @param separator separator
+#'
+#' @return separator
+#' @export
 getSep <- function(separator){
   sep = separator
   if (separator == "tabulator"){
