@@ -21,20 +21,30 @@ read_numbers_from_field <- function(list_argument){
   return(myData)
 }
 
+#' function to read and filter a single file containing rr intervals and annotations
+#' @param file_addresses list with name, size, type and path of files with rr intervals
+#' @param line_number the position of the file being loaded on the list
+#' @param separator separator for the loaded file (tab, comma etc.)
+#' @param column_data text, two numbers, the numbers of the RR column and the annotation column (typically "1 2")
+#' @param minmax tex, two numbers, the minimum RR to be counted as RR of sinus origin, likewise for maximum
+#' @param using_Excel boolean, whether the files are Excel files
+#'
+#' @return list with two elements, RR intervals column and annotation column
 #' @export
-read_and_filter_one_file <- function(fileAddresses, lineNumber, separator, column_data, minmax, usingExcel){
-  dataFile <- fileAddresses$datapath[lineNumber]
+read_and_filter_one_file <- function(file_addresses, line_number, separator, column_data, minmax, using_Excel){
+  browser()
+  data_file <- file_addresses$datapath[line_number]
   javaerror <- FALSE; csverror <- FALSE # these show whether the function should return "some_problem" and exit
-  if (usingExcel){
-    if (dataFile=="../initial_data/RR.csv") dataFile="../initial_data/RR.xlsx" # just making sure that the XLConnect does not crash on text
+  if (using_Excel){
+    if (data_file=="../initial_data/RR.csv") data_file="../initial_data/RR.xlsx" # just making sure that the XLConnect does not crash on text
     tryCatch(
-      wb <- XLConnect::loadWorkbook(dataFile),
+      wb <- XLConnect::loadWorkbook(data_file),
       error = function(e) javaerror <<- TRUE # if java fails, "some_problem" will be returned and it should be handled in reactive plot
     )
     if (javaerror) return(data.frame("some_problem"))
     data <- XLConnect::readWorksheet(wb, sheet = 1) # this will never happen if java fails
   } else {
-    data <- read.csv(dataFile, sep = separator, header = T, row.names=NULL)
+    data <- read.csv(data_file, sep = separator, header = T, row.names=NULL)
   }
   column_idx <- read_numbers_from_field(column_data)
   RR_idx <- column_idx[1]
