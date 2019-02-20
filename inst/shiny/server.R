@@ -1,6 +1,20 @@
 shinyServer(function(input, output){
 
-  rr_and_flags <- callModule("data-loading")
+  dataAddress <- reactive({
+    dataPaths <- data.frame(name = c("RR.csv"), size = 0, type = c("text/plain"), datapath = c("../initial_data/RR.csv"), stringsAsFactors = FALSE)
+    if (!is.null(input$files)){
+      dataPaths <- input$files
+    }
+    return(dataPaths)
+  })
+
+  rr_and_flags <- callModule(loadData,
+                             "data-loading",
+                             dataAddress = dataAddress,
+                             separator = input$separator,
+                             data_columns = input$data_columns,
+                             minmax = input$minmax,
+                             usingExcel = input$usingExcel)
 
   output$plot <- renderPlot({
     errorOnRead <- FALSE

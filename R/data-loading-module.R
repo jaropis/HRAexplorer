@@ -13,18 +13,21 @@ loadDataUI <- function(input, output, session){
   )
 }
 
-loadData <- function(input, output, session) {
-  dataAddress <- reactive({
-    dataPaths <- data.frame(name = c("RR.csv"), size = 0, type = c("text/plain"), datapath = c("../initial_data/RR.csv"), stringsAsFactors = FALSE)
-    if (!is.null(input$files)){
-      dataPaths <- input$files
-    }
-    return(dataPaths)
-  })
-
-  rr_and_flags <- read_and_filter_one_file(dataAddress(), 1, separator=getSep(input$separator),
-                                           input$data_columns, input$minmax, input$usingExcel)
-  return(reactive(rr_and_flags))
+#' data loading module
+#' @param input input shiny variable
+#' @param output output shiny variable
+#' @param session input shiny variable
+#' @dataAddress reactive containing the addresses of data files
+loadData <- function(input, output, session,
+                     dataAddress,
+                     separator,
+                     data_columns,
+                     minmax,
+                     usingExcel) {
+  browser()
+  rr_and_flags <- reactive(read_and_filter_one_file(dataAddress(), 1, separator=getSep(separator),
+                                           data_columns, minmax, usingExcel))
+  return(rr_and_flags)
 }
 
 # --- FUNCTIONS ----
