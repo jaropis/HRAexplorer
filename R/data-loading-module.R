@@ -1,4 +1,33 @@
 # data load module
+loadDataUI <- function(input, output, session){
+  tagList(
+  textInput("variableName","variable name", "RR"),
+  checkboxInput("usingExcel", "using Excel", value = FALSE),
+  fileInput('files', label="load files in the correct format - see the information on the right", multiple=TRUE),
+  selectInput("separator", "select separator",
+              list("tabulator", ",", ";", "space")),
+  textInput("data_columns", "enter the column for RR intervals and flags - see explanations", "1 2"),
+  textInput("minmax","enter minimum and maximum acceptable RR length", "0 3000"),
+  selectInput("color", "select color from the list below",
+              glob_color_list)
+  )
+}
+
+loadData <- function(input, output, session) {
+  dataAddress <- reactive({
+    dataPaths <- data.frame(name = c("RR.csv"), size = 0, type = c("text/plain"), datapath = c("../initial_data/RR.csv"), stringsAsFactors = FALSE)
+    if (!is.null(input$files)){
+      dataPaths <- input$files
+    }
+    return(dataPaths)
+  })
+
+  rr_and_flags <- read_and_filter_one_file(dataAddress(), 1, separator=getSep(input$separator),
+                                           input$data_columns, input$minmax, input$usingExcel)
+  return(reactive(rr_and_flags))
+}
+
+# --- FUNCTIONS ----
 #' function to read numbers from input windows
 #'
 #' @param list_argument string holding the numbers keyed into the input field

@@ -1,16 +1,9 @@
 shinyServer(function(input, output){
-  dataAddress <- reactive({
-    dataPaths <- data.frame(name = c("RR.csv"), size = 0, type = c("text/plain"), datapath = c("../initial_data/RR.csv"), stringsAsFactors = FALSE)
-    if (!is.null(input$files)){
-      dataPaths <- input$files
-    }
-    return(dataPaths)
-  })
+
+  rr_and_flags <- callModule("data-loading")
 
   output$plot <- renderPlot({
     errorOnRead <- FALSE
-    rr_and_flags <- read_and_filter_one_file(dataAddress(), 1, separator=getSep(input$separator),
-                                             input$data_columns, input$minmax, input$usingExcel)
     pp <- tryCatch(
       hrvhra::drawpp(rr_and_flags$RR, rr_and_flags$annotations,
                      vname = ifelse(input$variableName=="", "RR", input$variableName),
