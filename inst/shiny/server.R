@@ -14,7 +14,8 @@ shinyServer(function(input, output){
                              separator = input$separator,
                              data_columns = input$data_columns,
                              minmax = input$minmax,
-                             usingExcel = input$usingExcel)
+                             usingExcel = input$usingExcel
+  )
 
   output$plot <- renderPlot({
     errorOnRead <- FALSE

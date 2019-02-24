@@ -24,6 +24,7 @@ loadData <- function(input, output, session,
                      data_columns,
                      minmax,
                      usingExcel) {
+
   rr_and_flags <- reactive(read_and_filter_one_file(dataAddress(), 1, separator=getSep(separator),
                                            data_columns, minmax, usingExcel))
   return(rr_and_flags)
