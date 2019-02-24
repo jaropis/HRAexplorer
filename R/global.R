@@ -1,3 +1,5 @@
+#' CONSTANTS
+
 # list holding the colors for selection
 #' @export
 glob_color_list <- list("orange" = "orange",
@@ -8,7 +10,10 @@ glob_color_list <- list("orange" = "orange",
                  "green"="#66CC99",
                  "black" = "black")
 
-
+#' function returning Poincare plot description
+#'
+#' @return HTML
+#' @export
 PP_description <- function(){
   return("Application for calculating Poincare plots descriptors for one or more files.
          <ul>

@@ -1,4 +1,5 @@
 shinyServer(function(input, output){
+
   dataAddress <- reactive({
     dataPaths <- data.frame(name = c("RR.csv"), size = 0, type = c("text/plain"), datapath = c("../initial_data/RR.csv"), stringsAsFactors = FALSE)
     if (!is.null(input$files)){
@@ -7,12 +8,19 @@ shinyServer(function(input, output){
     return(dataPaths)
   })
 
+  rr_and_flags <- callModule(loadData,
+                             "data-loading",
+                             dataAddress = dataAddress,
+                             separator = input$separator,
+                             data_columns = input$data_columns,
+                             minmax = input$minmax,
+                             usingExcel = input$usingExcel
+  )
+
   output$plot <- renderPlot({
     errorOnRead <- FALSE
-    rr_and_flags <- read_and_filter_one_file(dataAddress(), 1, separator=getSep(input$separator),
-                                             input$data_columns, input$minmax, input$usingExcel)
     pp <- tryCatch(
-      hrvhra::drawpp(rr_and_flags$RR, rr_and_flags$annotations,
+      hrvhra::drawpp(rr_and_flags()$RR, rr_and_flags()$annotations,
                      vname = ifelse(input$variableName=="", "RR", input$variableName),
                      col = "black", bg = input$color, pch = 21),
       error = function(e)   errorOnRead <<- TRUE
@@ -34,7 +42,7 @@ shinyServer(function(input, output){
       returnTable <- getPpResults(dataAddress(), sep = getSep(input$separator), input$data_columns, input$minmax, input$usingExcel),
       error = function(e) returnTable <<- NA
     )
-
+    #browser()
     if (is.na(returnTable[1])) return(data.frame(Info = "FAIL - incorrect format - try choosing another file type, column selection or separator"))
     else return(returnTable)})
 
@@ -63,7 +71,5 @@ shinyServer(function(input, output){
     content = function(file) {
       writeWorksheetToFile( file = file, data=currentPPvalues(), sheet="Poincare plot")
     })
-
   ### end of server below
 })
-<
