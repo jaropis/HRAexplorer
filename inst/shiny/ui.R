@@ -7,7 +7,7 @@ ui <-
                data_infoUI("data-info")
              )
       ),
-      column(6,
+      column(9,
              tabsetPanel(
                tabPanel("Poincare plot",
                         plotOutput("plot"),
@@ -18,9 +18,6 @@ ui <-
                         downloadButton('downloadResults', 'Download results as Excel file'))
 
              )
-      ),
-
-      column(3, HTML(paste("<h4>Explanation</h4>",PP_description()))
       )
-    )
+      )
   )
