@@ -4,7 +4,7 @@ ui <-
     fluidRow(
       column(3,
              wellPanel(
-               loadDataUI()
+               data_infoUI("data-info")
              )
       ),
       column(6,
