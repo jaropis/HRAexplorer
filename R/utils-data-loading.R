@@ -1,4 +1,3 @@
-# data load module
 #' function to read numbers from input windows
 #'
 #' @param list_argument string holding the numbers keyed into the input field
@@ -27,14 +26,14 @@ read_numbers_from_field <- function(list_argument){
 #' @param separator separator for the loaded file (tab, comma etc.)
 #' @param column_data text, two numbers, the numbers of the RR column and the annotation column (typically "1 2")
 #' @param minmax tex, two numbers, the minimum RR to be counted as RR of sinus origin, likewise for maximum
-#' @param using_Excel boolean, whether the files are Excel files
+#' @param using_excel boolean, whether the files are Excel files
 #'
 #' @return list with two elements, RR intervals column and annotations column
 #' @export
-read_and_filter_one_file <- function(file_addresses, line_number, separator, column_data, minmax, using_Excel){
+read_and_filter_one_file <- function(file_addresses, line_number, separator, column_data, minmax, using_excel){
   data_file <- file_addresses$datapath[line_number]
   javaerror <- FALSE; csverror <- FALSE # these show whether the function should return "some_problem" and exit
-  if (using_Excel){
+  if (using_excel){
     if (data_file=="../initial_data/RR.csv") data_file="../initial_data/RR.xlsx" # just making sure that the XLConnect does not crash on text
     tryCatch(
       wb <- XLConnect::loadWorkbook(data_file),

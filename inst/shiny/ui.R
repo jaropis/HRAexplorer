@@ -4,16 +4,7 @@ ui <-
     fluidRow(
       column(3,
              wellPanel(
-               textInput("variableName","variable name", "RR"),
-               checkboxInput("usingExcel", "using Excel", value = FALSE),
-               fileInput('files', label="load files in the correct format - see the information on the right", multiple=TRUE),
-               selectInput("separator", "select separator",
-                           list("tabulator", ",", ";", "space")),
-               textInput("data_columns", "enter the column for RR intervals and flags - see explanations", "1 2"),
-               textInput("minmax","enter minimum and maximum acceptable RR length", "0 3000"),
-               selectInput("color", "select color from the list below",
-                           glob_color_list)
-
+               data_infoUI("data-info")
              )
       ),
       column(6,
