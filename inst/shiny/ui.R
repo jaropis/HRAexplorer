@@ -14,7 +14,7 @@ ui <-
                         downloadButton('downloadPlot', 'Download Plot')
                ),
                tabPanel("Numerical results", tags$style(type="text/css", "#filesView { overflow-x: auto; max-width: 100%; }"),
-                        tableOutput("filesView"),
+                        DT::dataTableOutput("filesView"),
                         downloadButton('downloadResults', 'Download results as Excel file'))
 
              )

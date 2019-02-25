@@ -38,11 +38,11 @@ shinyServer(function(input, output){
                                   data_info$using_excel())
       })
 
-  output$filesView <- renderTable({
+  output$filesView <- DT::renderDataTable({
     return(currentPPvalues())
-  }, include.rownames = FALSE)
+  })
 
-  output$myDataView <- renderTable({
+  output$myDataView <- DT::renderDataTable({
     X <- data_info$variableName
     myTable <- data.frame(myData()[[1]], transformData()$data)
     colnames(myTable) <- c(data_info$variableName, "transformation")
