@@ -7,8 +7,9 @@ Maintainer: Jaroslaw Piskorski <jaropis@zg.home.pl>
 Description: This software provides a gui for exploring the asymmetry and varia-
     bility of the RR intervals time series
 Imports:
-    shiny,
+    DT,
     hrvhra,
+    shiny,
     XLConnect
 License: MIT
 Encoding: UTF-8
