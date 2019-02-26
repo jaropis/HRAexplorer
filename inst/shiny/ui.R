@@ -10,7 +10,7 @@ ui <-
       column(9,
              tabsetPanel(
                tabPanel("Poincare plot",
-                        plotOutput("plot"),
+                        plotsUI("plots"),
                         downloadButton('downloadPlot', 'Download Plot')
                ),
                tabPanel("Numerical results", tags$style(type="text/css", "#filesView { overflow-x: auto; max-width: 100%; }"),
