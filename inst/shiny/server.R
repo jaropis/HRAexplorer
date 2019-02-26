@@ -13,19 +13,19 @@ shinyServer(function(input, output){
     return(dataPaths)
   })
 
-  output$plot <- renderPlot({
-    errorOnRead <- FALSE
-    rr_and_flags <- read_and_filter_one_file(dataAddress(), 1,
-                                             separator=getSep(data_info$separator()),
-                                             data_info$data_columns(),
-                                             data_info$minmax(),
-                                             data_info$using_excel())
-    # todo - what about errors??
-          hrvhra::drawpp(rr_and_flags$RR, rr_and_flags$annotations,
-                     vname = ifelse(data_info$variable_name() == "", "RR", data_info$variable_name()),
-                     col = "black", bg = data_info$color(), pch = 21)
-
-  })
+  # call plotting module
+  callModule(plots,
+             "plots",
+             type_of_plot = "poincare",
+             dataAddress = dataAddress(),
+             line_number = 1,
+             separator = data_info$separator(),
+             data_columns = data_info$data_columns(),
+             minmax = data_info$minmax(),
+             using_excel = data_info$using_excel(),
+             variable_name = data_info$variable_name(),
+             color = data_info$color()
+  )
 
   # now reactive conductor holding the results of Poincare plot calculations
 
