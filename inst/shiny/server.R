@@ -2,7 +2,7 @@ shinyServer(function(input, output){
 
   data_info <- callModule(data_info, id = "data-info")
 
-  dataAddress <- reactive({
+  rct_data_address <- reactive({
     dataPaths <- data.frame(name = c("RR.csv"), size = 0,
                             type = c("text/plain"),
                             datapath = c("../initial_data/RR.csv"),
@@ -17,54 +17,30 @@ shinyServer(function(input, output){
   callModule(plots,
              "plots",
              type_of_plot = "poincare",
-             dataAddress = dataAddress(),
+             rct_data_address = rct_data_address,
              line_number = 1,
-             separator = data_info$separator(),
-             data_columns = data_info$data_columns(),
-             minmax = data_info$minmax(),
-             using_excel = data_info$using_excel(),
-             variable_name = data_info$variable_name(),
-             color = data_info$color()
+             inp_separator = data_info$separator,
+             inp_data_columns = data_info$data_columns,
+             inp_minmax = data_info$minmax,
+             inp_using_excel = data_info$using_excel,
+             inp_variable_name = data_info$variable_name,
+             inp_color = data_info$color
   )
 
   # now reactive conductor holding the results of Poincare plot calculations
 
-  currentPPvalues <- reactive({
-      #todo - what about errors!
-      returnTable <- getPpResults(dataAddress(),
-                                  sep = getSep(data_info$separator()),
-                                  data_info$data_columns(),
-                                  data_info$minmax(),
-                                  data_info$using_excel())
-      })
-
-  output$filesView <- DT::renderDataTable({
-    return(currentPPvalues())
+  rct_current_pp_values <- reactive({
+    #todo - what about errors!
+    returnTable <- getPpResults(rct_data_address(),
+                                sep = getSep(data_info$separator()),
+                                data_info$data_columns(),
+                                data_info$minmax(),
+                                data_info$using_excel())
   })
 
-  output$myDataView <- DT::renderDataTable({
-    X <- data_info$variableName
-    myTable <- data.frame(myData()[[1]], transformData()$data)
-    colnames(myTable) <- c(data_info$variableName, "transformation")
-    myTable
-  })
-
-  output$downloadPlot <- downloadHandler(
-    filename = "PoincarePlot.png",
-    content = function(file) {
-      rr_and_flags <- read_and_filter_one_file(dataAddress(), 1,
-                                               separator=getSep(data_info$separator),
-                                               data_info$data_columns,
-                                               data_info$minmax, data_info$usingExcel)
-      png(file, width=1800, height = 1900, res=300)
-      plotInput(rr_and_flags[[1]], rr_and_flags[[2]], data_info$color, data_info$variableName)
-      dev.off()
-    })
-
-  output$downloadResults <- downloadHandler(
-    filename = "PPResults.xlsx",
-    content = function(file) {
-      writeWorksheetToFile( file = file, data=currentPPvalues(), sheet="Poincare plot")
-    })
+  callModule(main_table,
+             "main-table",
+             rct_current_pp_values = rct_current_pp_values
+  )
   ### end of server below
 })
