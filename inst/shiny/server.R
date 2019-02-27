@@ -32,10 +32,10 @@ shinyServer(function(input, output){
   rct_current_pp_values <- reactive({
     #todo - what about errors!
     returnTable <- getPpResults(rct_data_address(),
-                                sep = getSep(data_info$separator()),
-                                data_info$data_columns(),
-                                data_info$minmax(),
-                                data_info$using_excel())
+                                separator = getSep(data_info$separator() %||% 'tabulator'),
+                                column_data = data_info$data_columns() %||% "1 2",
+                                minmax = data_info$minmax() %||% "0 3000",
+                                using_excel = data_info$using_excel() %||% FALSE)
   })
 
   callModule(main_table,

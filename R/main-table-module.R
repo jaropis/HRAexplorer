@@ -16,9 +16,12 @@ main_tableUI <- function(id) {
 #' @export
 main_table <- function(input, output, session,
                        rct_current_pp_values) {
-
-    output$main_table <- DT::renderDataTable({
-    rct_current_pp_values()
+  main_DTable <- reactive({DT::datatable(
+    rct_current_pp_values(),
+    options = list(scrollX = '150px'))
+  })
+  output$main_table <- DT::renderDataTable({
+    main_DTable()
   })
 
   output$downloadResults <- downloadHandler(

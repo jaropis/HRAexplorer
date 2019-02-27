@@ -8,7 +8,7 @@
 #'
 #' @return the results of Poincare plot analysis
 #' @export
-getPpResults <- function(fileAddresses, separator = "\t", column_data, minmax, using_excel){
+getPpResults <- function(fileAddresses, separator = "\t", column_data = c(1,2), minmax = c(0, 3000), using_excel = FALSE){
   results <- c()
     for (lineNumber in  1:length(fileAddresses[[1]])){
       rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
