@@ -1,6 +1,6 @@
 library(shinydashboard)
 ui <- dashboardPage(
-  dashboardHeader(title = "Basic dashboard"),
+  dashboardHeader(title = "HRAExplorer"),
   dashboardSidebar(),
   dashboardBody(
     # Boxes need to be put in a row (or column)
