@@ -25,8 +25,11 @@ main_table <- function(input, output, session,
       results_matrix <- data.frame(file = results_matrix[, 1, drop = FALSE],
                               "view" = buttons_row,
                               results_matrix[, 2:ncol(results_matrix)])
-    main_table <- DT::datatable(results_matrix, options = list(scrollX = '150px'),
-                                escape = FALSE, rownames = FALSE)
+    main_table <- DT::datatable(results_matrix,
+                                options = list(scrollX = '150px'),
+                                escape = FALSE,
+                                rownames = FALSE,
+                                selection = 'none')
     main_table
   })
 
