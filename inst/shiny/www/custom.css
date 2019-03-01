@@ -1,3 +1,4 @@
+/* style the view buttons inside the table */
 [id^="view"]{
     padding-top: 4px;
     padding-bottom: 4px;
@@ -23,4 +24,9 @@
 
 .rotate-container {
   margin-right: 10px;
+}
+
+/* remove the More button from flipBox */
+#btn-1 {
+  display: none;
 }
