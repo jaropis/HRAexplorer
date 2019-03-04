@@ -35,16 +35,16 @@ plots <- function(input, output, session,
   if (type_of_plot == "poincare") {
     output$current_plot <- renderPlot({
       rr_and_flags <- read_and_filter_one_file(rct_data_address(),
-                                               line_number,
-                                               getSep(inp_separator()),
-                                               inp_data_columns(),
-                                               inp_minmax(),
-                                               inp_using_excel()
-      )
+                                               line_number = 1,
+                                               separator = getSep(inp_separator() %||% 'tabulator'),
+                                               column_data = inp_data_columns() %||% "1 2",
+                                               minmax = inp_minmax() %||% "0 3000",
+                                               using_excel = inp_using_excel() %||% FALSE
+                                               )
       # todo - what about errors??
       hrvhra::drawpp(rr_and_flags$RR, rr_and_flags$annotations,
-                     vname = ifelse(inp_variable_name()  == "", "RR", inp_variable_name()),
-                     col = "black", bg = inp_color(), pch = 21)
+                     vname = inp_variable_name() %||% "RR",
+                     col = "black", bg = inp_color() %||% "orange", pch = 21)
 
     })
 
@@ -52,13 +52,14 @@ plots <- function(input, output, session,
       filename = "PoincarePlot.png",
       content = function(file) {
         rr_and_flags <- read_and_filter_one_file(rct_data_address(), 1,
-                                                 separator=getSep(inp_separator()),
-                                                 inp_data_columns(),
-                                                 inp_minmax(), inp_using_excel())
+                                                 separator=getSep(inp_separator() %||% 'tabulator'),
+                                                 inp_data_columns() %||% '1 2',
+                                                 inp_minmax() %||% "0 3000",
+                                                 inp_using_excel() %||% FALSE)
         png(file, width=1800, height = 1900, res=300)
         hrvhra::drawpp(rr_and_flags$RR, rr_and_flags$annotations,
-                       vname = ifelse(inp_variable_name()  == "", "RR", inp_variable_name()),
-                       col = "black", bg = inp_color(), pch = 21)
+                       vname = inp_variable_name() %||% "RR",
+                       col = "black", bg = inp_color() %||% "orange", pch = 21)
         dev.off()
       })
   }

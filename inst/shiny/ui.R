@@ -15,7 +15,9 @@ ui <- dashboardPage(
                main_tableUI("main-table"),
                header_img = NULL,
                main_img = NULL,
-               back_content = {})
+               back_content = {
+                 plotsUI("plots")
+               })
     )
   )
 )
