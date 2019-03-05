@@ -12,7 +12,7 @@ shinyServer(function(input, output){
     }
     return(dataPaths)
   })
-
+  observe({print(input$foo)})
   # call plotting module
   callModule(plots,
              "plots",
