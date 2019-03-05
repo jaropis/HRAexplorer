@@ -20,7 +20,7 @@ main_table <- function(input, output, session,
     results_matrix <- as.data.frame(rct_current_pp_values())
 
       buttons_row <- paste0('
-               <button type="button" class="btn btn-primary" id="view_',1:nrow(results_matrix),'">View</button>
+               <button type="button" class="btn btn-primary" id="btn_view_',1:nrow(results_matrix),' onclick = ">View</button>
              ')
       results_matrix <- data.frame(file = results_matrix[, 1, drop = FALSE],
                               "view" = buttons_row,
