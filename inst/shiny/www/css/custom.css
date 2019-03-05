@@ -1,5 +1,5 @@
 /* style the view buttons inside the table */
-[id^="view"]{
+[id^="btn_view"]{
     padding-top: 4px;
     padding-bottom: 4px;
     margin-bottom: -4px !important;
@@ -30,3 +30,4 @@
 #btn-1 {
   display: none;
 }
+
