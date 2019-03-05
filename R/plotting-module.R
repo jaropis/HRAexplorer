@@ -35,7 +35,7 @@ plots <- function(input, output, session,
   if (type_of_plot == "poincare") {
     output$current_plot <- renderPlot({
       rr_and_flags <- read_and_filter_one_file(rct_data_address(),
-                                               line_number = 1,
+                                               line_number = line_number() %||% 1,
                                                separator = getSep(inp_separator() %||% 'tabulator'),
                                                column_data = inp_data_columns() %||% "1 2",
                                                minmax = inp_minmax() %||% "0 3000",

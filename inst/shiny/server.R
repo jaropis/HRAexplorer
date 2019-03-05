@@ -12,13 +12,21 @@ shinyServer(function(input, output){
     }
     return(dataPaths)
   })
-  observe({print(input$foo)})
+
+  # listen for clicks on the main table (View buttons)
+  line_chosen <- reactive({
+    if (!is.null(input$foo))
+      as.numeric(input$foo)
+    else
+      NULL
+  })
+
   # call plotting module
   callModule(plots,
              "plots",
              type_of_plot = "poincare",
              rct_data_address = rct_data_address,
-             line_number = 1,
+             line_number = line_chosen,
              inp_separator = data_info$separator,
              inp_data_columns = data_info$data_columns,
              inp_minmax = data_info$minmax,

@@ -31,6 +31,7 @@ read_numbers_from_field <- function(list_argument){
 #' @return list with two elements, RR intervals column and annotations column
 #' @export
 read_and_filter_one_file <- function(file_addresses, line_number, separator, column_data, minmax, using_excel){
+
   data_file <- file_addresses$datapath[line_number]
   javaerror <- FALSE; csverror <- FALSE # these show whether the function should return "some_problem" and exit
   if (using_excel){
