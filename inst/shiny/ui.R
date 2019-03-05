@@ -5,7 +5,8 @@ ui <- dashboardPage(
   dashboardSidebar(),
   dashboardBody(
     tags$head(
-      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+      tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
+      tags$script(src = "javascript/all.js")
     ),
     fluidRow(
       flipBox( id = 1,
