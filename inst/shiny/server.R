@@ -3,13 +3,19 @@ shinyServer(function(input, output){
   data_info <- callModule(data_info, id = "data-info")
 
   rct_data_address <- reactive({
-    dataPaths <- data.frame(name = c("RR.csv"), size = 0,
-                            type = c("text/plain"),
-                            datapath = c("../initial_data/RR.csv"),
-                            stringsAsFactors = FALSE)
     if (!is.null(data_info$files())){
-      dataPaths <- data_info$files()
+      return(data_info$files())
     }
+    initial_files <- Sys.glob("../initial_data/*csv")
+    names <- unname(
+      vapply(initial_files, function(x) strsplit(x, "/")[[1]][3], FUN.VALUE = c("a"))
+      )
+    types <- rep("text/plain", length(names))
+    browser()
+    dataPaths <- data.frame(name = names, size = 0,
+                            type = types,
+                            datapath = initial_files,
+                            stringsAsFactors = FALSE)
     return(dataPaths)
   })
 
