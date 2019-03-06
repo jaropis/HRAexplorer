@@ -35,31 +35,32 @@ plots <- function(input, output, session,
   if (type_of_plot == "poincare") {
     output$current_plot <- renderPlot({
       rr_and_flags <- read_and_filter_one_file(rct_data_address(),
-                                               line_number = line_number() %||% 1,
-                                               separator = getSep(inp_separator() %||% 'tabulator'),
-                                               column_data = inp_data_columns() %||% "1 2",
-                                               minmax = inp_minmax() %||% "0 3000",
-                                               using_excel = inp_using_excel() %||% FALSE
+                                               line_number = line_number() %||% glob_init_line_number,
+                                               separator = getSep(inp_separator() %||% glob_init_separator),
+                                               column_data = inp_data_columns() %||% glob_init_columns,
+                                               minmax = inp_minmax() %||% glob_init_min_max_sinus,
+                                               using_excel = inp_using_excel() %||% glob_init_excel
                                                )
       # todo - what about errors??
       hrvhra::drawpp(rr_and_flags$RR, rr_and_flags$annotations,
-                     vname = inp_variable_name() %||% "RR",
-                     col = "black", bg = inp_color() %||% "orange", pch = 21)
+                     vname = inp_variable_name() %||% glob_init_var_name,
+                     col = glob_marker_color, bg = inp_color() %||% glob_init_color, pch = 21)
 
     })
 
     output$downloadPlot <- downloadHandler(
       filename = "PoincarePlot.png",
       content = function(file) {
-        rr_and_flags <- read_and_filter_one_file(rct_data_address(), 1,
-                                                 separator=getSep(inp_separator() %||% 'tabulator'),
-                                                 inp_data_columns() %||% '1 2',
-                                                 inp_minmax() %||% "0 3000",
-                                                 inp_using_excel() %||% FALSE)
+        rr_and_flags <- read_and_filter_one_file(rct_data_address(),
+                                                 line_number = line_number() %||% glob_init_line_number,
+                                                 separator = getSep(inp_separator() %||% glob_init_separator),
+                                                 column_data = inp_data_columns() %||% glob_init_columns,
+                                                 minmax = inp_minmax() %||% glob_init_min_max_sinus,
+                                                 using_excel = inp_using_excel() %||% glob_init_excel)
         png(file, width=1800, height = 1900, res=300)
         hrvhra::drawpp(rr_and_flags$RR, rr_and_flags$annotations,
-                       vname = inp_variable_name() %||% "RR",
-                       col = "black", bg = inp_color() %||% "orange", pch = 21)
+                       vname = inp_variable_name() %||% glob_init_var_name,
+                       col = glob_marker_color, bg = inp_color() %||% glob_init_color, pch = 21)
         dev.off()
       })
   }

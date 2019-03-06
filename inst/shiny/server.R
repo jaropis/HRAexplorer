@@ -11,7 +11,6 @@ shinyServer(function(input, output){
       vapply(initial_files, function(x) strsplit(x, "/")[[1]][3], FUN.VALUE = c("a"))
       )
     types <- rep("text/plain", length(names))
-    browser()
     dataPaths <- data.frame(name = names, size = 0,
                             type = types,
                             datapath = initial_files,
@@ -46,10 +45,10 @@ shinyServer(function(input, output){
   rct_current_pp_values <- reactive({
     #todo - what about errors!
     returnTable <- getPpResults(rct_data_address(),
-                                separator = getSep(data_info$separator() %||% 'tabulator'),
-                                column_data = data_info$data_columns() %||% "1 2",
-                                minmax = data_info$minmax() %||% "0 3000",
-                                using_excel = data_info$using_excel() %||% FALSE)
+                                separator = getSep(data_info$separator() %||% glob_init_separator),
+                                column_data = data_info$data_columns() %||% glob_init_columns,
+                                minmax = data_info$minmax() %||% glob_init_min_max_sinus,
+                                using_excel = data_info$using_excel() %||% glob_init_excel)
   })
 
   callModule(main_table,
