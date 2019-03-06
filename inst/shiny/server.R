@@ -6,7 +6,8 @@ shinyServer(function(input, output){
     if (!is.null(data_info$files())){
       return(data_info$files())
     }
-    initial_files <- Sys.glob("../initial_data/*csv")
+    pattern <- paste0("../initial_data/*", glob_init_file_extension)
+    initial_files <- Sys.glob(pattern)
     names <- unname(
       vapply(initial_files, function(x) strsplit(x, "/")[[1]][3], FUN.VALUE = c("a"))
       )

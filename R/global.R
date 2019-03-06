@@ -19,7 +19,10 @@ glob_init_min_max_sinus <- "0 3000"
 glob_init_color <- "orange"
 glob_init_var_name <- "RR"
 glob_init_excel <- FALSE
+glob_init_file_extension <- "csv"
 
 #' other globals
 #' @export
 glob_marker_color = "black"
+
+
