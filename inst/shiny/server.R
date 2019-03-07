@@ -56,5 +56,8 @@ shinyServer(function(input, output){
              "main-table",
              rct_current_pp_values = rct_current_pp_values
   )
+
+    callModule(data_upload_and_filter,
+               "get-filter-data")
   ### end of server below
 })
