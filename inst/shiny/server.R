@@ -21,7 +21,7 @@ shinyServer(function(input, output){
     initial_files <- Sys.glob(pattern)
     names <- unname(
       vapply(initial_files, function(x) strsplit(x, "/")[[1]][3], FUN.VALUE = c("a"))
-      )
+    )
     types <- rep("text/plain", length(names))
     dataPaths <- data.frame(name = names, size = 0,
                             type = types,
@@ -63,8 +63,9 @@ shinyServer(function(input, output){
              rct_current_pp_values = rct_current_pp_values
   )
   observeEvent(input$get_filter_data,{
-    browser()
-  data_info <- data_upload_and_filter()
+    data_info <<- callModule(data_upload_and_filter,
+                            "get-filter-data")
+    print(names(data_info))
   }, ignoreNULL = TRUE)
   ### end of server below
 })

@@ -23,11 +23,11 @@ data_upload_and_filter <- function(input, output, session) {
         actionButton(ns("ok"), "OK")
       )
     )
+
+
   )
   }
-  observeEvent(input$data_button, {
-    filtering_modal()
-  })
+  filtering_modal()
 
   observeEvent(input$ok, {
     return(
