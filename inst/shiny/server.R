@@ -4,8 +4,8 @@ shinyServer(function(input, output){
                           "get-filter-data")
 
   rct_data_address <- reactive({
-    if (!is.null(data_info$files())){
-      return(data_info$files())
+    if (!is.null(data_info$data_addresses())){
+      return(data_info$data_addresses())
     }
     pattern <- paste0("../initial_data/*", glob_init_file_extension)
     initial_files <- Sys.glob(pattern)
