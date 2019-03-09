@@ -1,6 +1,7 @@
 shinyServer(function(input, output){
 
-  data_info <- callModule(data_info, id = "data-info")
+  data_info <- callModule(data_upload_and_filter,
+                          "get-filter-data")
 
   rct_data_address <- reactive({
     if (!is.null(data_info$files())){
@@ -31,14 +32,14 @@ shinyServer(function(input, output){
   callModule(plots,
              "plots",
              type_of_plot = "poincare",
-             rct_data_address = rct_data_address,
-             line_number = line_chosen,
-             inp_separator = data_info$separator,
-             inp_data_columns = data_info$data_columns,
-             inp_minmax = data_info$minmax,
-             inp_using_excel = data_info$using_excel,
-             inp_variable_name = data_info$variable_name,
-             inp_color = data_info$color
+             data_address = rct_data_address(),
+             line_number = line_chosen() %||% glob_init_line_number,
+             separator = getSep(data_info$separator() %||% glob_init_separator),
+             data_columns = data_info$data_columns() %||% glob_init_columns,
+             minmax = data_info$minmax() %||% glob_init_min_max_sinus,
+             using_excel = data_info$using_excel() %||% glob_init_excel,
+             variable_name = data_info$variable_name() %||% glob_init_var_name,
+             color = data_info$color() %||% glob_init_color
   )
 
   # now reactive conductor holding the results of Poincare plot calculations
@@ -57,7 +58,5 @@ shinyServer(function(input, output){
              rct_current_pp_values = rct_current_pp_values
   )
 
-    callModule(data_upload_and_filter,
-               "get-filter-data")
   ### end of server below
 })

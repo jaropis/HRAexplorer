@@ -24,12 +24,30 @@ data_upload_and_filter <- function(input, output, session) {
               textInput("data_columns", "enter the column for RR intervals and flags - see explanations", "1 2"),
               textInput("minmax","enter minimum and maximum acceptable RR length", "0 3000"),
               selectInput("color", "select color from the list below",
-                          glob_color_list))
+                          glob_color_list)),
+      footer = tagList(
+        modalButton("Cancel"),
+        actionButton("ok", "OK")
+      )
     )
   )
   }
   observeEvent(input$data_button, {
     filtering_modal()
+  })
+
+  observeEvent(input$ok, {
+    return(
+      list(
+        variable_name = reactive(input$variable_name),
+        using_excel = reactive(input$using_excel),
+        data_addresses = reactive(input$data_addresses),
+        separator = reactive(input$separator),
+        data_columns = reactive(input$data_columns),
+        minmax = reactive(input$minmax),
+        color = reactive(input$color)
+      )
+    )
   })
   return(
     list(
