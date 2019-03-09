@@ -31,7 +31,6 @@ plots <- function(input, output, session,
                   using_excel,
                   variable_name,
                   color) {
-
   if (type_of_plot == "poincare") {
     output$current_plot <- renderPlot({
       rr_and_flags <- read_and_filter_one_file(data_address,

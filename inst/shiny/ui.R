@@ -3,7 +3,7 @@ library(shinydashboardPlus)
 ui <- dashboardPage(
   dashboardHeader(title = "HRAExplorer"),
   dashboardSidebar(
-    data_upload_and_filterUI("get-filter-data")
+    actionButton(inputId = "get_filter_data", label = "Get/filter data")
   ),
   dashboardBody(
     tags$head(
