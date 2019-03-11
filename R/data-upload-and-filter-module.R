@@ -17,11 +17,11 @@ data_upload_and_filter <- function(input, output, session) {
                 textInput(ns("data_columns"), "enter the column for RR intervals and flags - see explanations", glob_init_columns),
                 textInput(ns("minmax"),"enter minimum and maximum acceptable RR length", glob_init_min_max_sinus),
                 selectInput(ns("color"), "select color from the list below",
-                            glob_color_list),
-                submitButton("Submit")),
+                            glob_color_list)
+                ),
         footer = tagList(
           modalButton("Cancel"),
-          actionButton(ns("ok"), "OK")
+          submitButton("Update View", icon("refresh"))
         )
       )
 

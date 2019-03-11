@@ -11,9 +11,10 @@ shinyServer(function(input, output){
     minmax = reactive(NULL),
     color = reactive(NULL)
   )
+  observeEvent(input$"get_filter_data", {
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
-
+}, ignoreInit = TRUE)
   rct_data_address <- reactive({
 
     if (!is.null(data_info$data_addresses())){
