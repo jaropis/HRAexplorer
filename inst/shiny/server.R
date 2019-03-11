@@ -11,6 +11,8 @@ shinyServer(function(input, output){
     minmax = reactive(NULL),
     color = reactive(NULL)
   )
+  data_info <- callModule(data_upload_and_filter,
+                          "get-filter-data")
 
   rct_data_address <- reactive({
 
@@ -62,10 +64,5 @@ shinyServer(function(input, output){
              "main-table",
              rct_current_pp_values = rct_current_pp_values
   )
-  observeEvent(input$get_filter_data,{
-    data_info <<- callModule(data_upload_and_filter,
-                            "get-filter-data")
-    print(names(data_info))
-  }, ignoreNULL = TRUE)
   ### end of server below
 })
