@@ -30,4 +30,7 @@
 #btn-1 {
   display: none;
 }
-
+/* hide the Cancel button - invisible, but used in javascript
+[data-dismiss="modal"] {
+  display: none;
+}*/

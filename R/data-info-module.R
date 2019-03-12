@@ -24,13 +24,15 @@ data_info <- function(input, output, session) {
 
   return(
     list(
-      variable_name = reactive(input$variable_name),
-      using_excel = reactive(input$using_excel),
-      files = reactive(input$files),
-      separator = reactive(input$separator),
-      data_columns = reactive(input$data_columns),
-      minmax = reactive(input$minmax),
-      color = reactive(input$color)
+      data_addresses = reactive({NULL}),
+      line_number = reactive({1}),
+      variable_name = reactive(NULL),
+      using_excel = reactive(NULL),
+      files = reactive(NULL),
+      separator = reactive(NULL),
+      data_columns = reactive(NULL),
+      minmax = reactive(NULL),
+      color = reactive(NULL)
     )
   )
 }
