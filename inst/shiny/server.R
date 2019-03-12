@@ -11,10 +11,10 @@ shinyServer(function(input, output){
     minmax = reactive(NULL),
     color = reactive(NULL)
   )
-  observeEvent(input$"get_filter_data", {
+
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
-}, ignoreInit = TRUE)
+
   rct_data_address <- reactive({
 
     if (!is.null(data_info$data_addresses())){
@@ -54,11 +54,12 @@ shinyServer(function(input, output){
 
   rct_current_pp_values <- reactive({
     #todo - what about errors!
-    returnTable <- getPpResults(rct_data_address(),
-                                separator = getSep(data_info$separator() %||% glob_init_separator),
-                                column_data = data_info$data_columns() %||% glob_init_columns,
-                                minmax = data_info$minmax() %||% glob_init_min_max_sinus,
-                                using_excel = data_info$using_excel() %||% glob_init_excel)
+    force(data_info$go()) # react to the go button in the modal
+    returnTable <- getPpResults(isolate(rct_data_address()),
+                                separator = getSep(isolate(data_info$separator()) %||% glob_init_separator),
+                                column_data = isolate(data_info$data_columns()) %||% glob_init_columns,
+                                minmax = isolate(data_info$minmax()) %||% glob_init_min_max_sinus,
+                                using_excel = isolate(data_info$using_excel()) %||% glob_init_excel)
   })
 
   callModule(main_table,
