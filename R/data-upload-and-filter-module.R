@@ -3,7 +3,7 @@ data_upload_and_filterUI <- function(id) {
   actionButton(ns("get_filters"),
                "Get/filter data",
                class = "btn-success",
-               style="margin-top:90px")
+               style="margin:0 auto;margin-top:90px;display:block;")
 }
 
 #' module with data upload and filtering
@@ -21,15 +21,23 @@ data_upload_and_filter <- function(input, output, session) {
           size = 'l',
           fade = TRUE,
           #upload_filterUI(ns("upload_filterUI"))
-          tagList(textInput(ns("variable_name"),"variable name", glob_init_var_name),
-                  checkboxInput(ns("using_excel"), "using Excel", glob_init_excel),
-                  fileInput(ns('data_addresses'), label="load files in the correct format - see the information on the right", multiple=TRUE),
-                  selectInput(ns("separator"), "select separator",
-                              list(glob_init_separator, ",", ";", "space")),
-                  textInput(ns("data_columns"), "enter the column for RR intervals and flags - see explanations", glob_init_columns),
-                  textInput(ns("minmax"),"enter minimum and maximum acceptable RR length", glob_init_min_max_sinus),
-                  selectInput(ns("color"), "select color from the list below",
-                              glob_color_list)
+          tagList(
+            fluidRow(
+              column(4,
+                     textInput(ns("variable_name"),"variable name", glob_init_var_name),
+                     checkboxInput(ns("using_excel"), "using Excel", value = glob_init_excel),
+                     fileInput(ns("files"), label="load files in the correct format - see the information on the right", multiple=TRUE)
+              ),
+              column(4,
+                     selectInput(ns("separator"), "select separator",
+                                 list(glob_init_separator, ",", ";", "space")),
+                     textInput(ns("data_columns"), "enter the column for RR intervals and flags - see explanations", glob_init_columns),
+                     textInput(ns("minmax"),"enter minimum and maximum acceptable RR length", glob_init_min_max_sinus)
+              ),
+              column(4,
+                     selectInput(ns("color"), "select color from the list below", glob_color_list)
+              )
+            )
           ),
           footer = tagList(
             modalButton("Cancel"),
