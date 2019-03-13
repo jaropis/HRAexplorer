@@ -41,12 +41,12 @@ shinyServer(function(input, output){
                type_of_plot = "poincare",
                data_address = rct_data_address(),
                line_number = as.numeric(input$foo %||% glob_init_line_number),
-               separator = getSep(data_info$separator() %||% glob_init_separator),
-               data_columns = data_info$data_columns() %||% glob_init_columns,
-               minmax = data_info$minmax() %||% glob_init_min_max_sinus,
-               using_excel = data_info$using_excel() %||% glob_init_excel,
-               variable_name = data_info$variable_name() %||% glob_init_var_name,
-               color = data_info$color() %||% glob_init_color
+               separator = getSep(state_RR_settings$separator %||% glob_init_separator),
+               data_columns = state_RR_settings$data_columns %||% glob_init_columns,
+               minmax = state_RR_settings$min_max_sinus %||% glob_init_min_max_sinus,
+               using_excel = state_RR_settings$excel %||% glob_init_excel,
+               variable_name = state_RR_settings$var_name %||% glob_init_var_name,
+               color = state_figures$color %||% glob_init_color
     )
   })
 

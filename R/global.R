@@ -25,4 +25,18 @@ glob_init_file_extension <- "rea"
 #' @export
 glob_marker_color = "black"
 
+# state variables definitions ----
+#' RR time series parameters
+#' @export
+state_RR_settings <- new.env(parent = emptyenv())
+state_RR_settings$var_name <- glob_init_var_name
+state_RR_settings$line_number <- glob_init_line_number
+state_RR_settings$separator <- glob_init_separator
+state_RR_settings$data_columns <- glob_init_columns
+state_RR_settings$min_max_sinus <- glob_init_min_max_sinus
+state_RR_settings$excel <- glob_init_excel
+state_RR_settings$file_extension <- glob_init_file_extension
 
+#' figures state
+state_figures <- new.env(parent = emptyenv())
+state_figures$color <- glob_init_color
