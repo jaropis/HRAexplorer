@@ -19,7 +19,12 @@ ui <- dashboardPage(
                header_img = NULL,
                main_img = NULL,
                back_content = {
-                 plotsUI("plots")
+                 fluidRow(
+                   box(
+                      plotsUI("plots")
+                   ),
+                   box("div")
+                 )
                })
     )
   )
