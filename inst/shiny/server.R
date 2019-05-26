@@ -3,8 +3,9 @@ shinyServer(function(input, output){
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
   # listen for clicks on the main table (View buttons)
-  observeEvent(input$foo,{
+  observeEvent(c(input$foo, data_info()),{
     # call plotting module
+    req(is.null(data_info()) || data_info()) # draw at the beginning, then require specific value (GO clicked)
     callModule(plots,
                "plots",
                type_of_plot = "poincare",
