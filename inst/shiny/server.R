@@ -1,70 +1,41 @@
 shinyServer(function(input, output){
 
-  data_info <- callModule(data_info, id = "data-info")
-
-  dataAddress <- reactive({
-    dataPaths <- data.frame(name = c("RR.csv"), size = 0,
-                            type = c("text/plain"),
-                            datapath = c("../initial_data/RR.csv"),
-                            stringsAsFactors = FALSE)
-    if (!is.null(data_info$files())){
-      dataPaths <- data_info$files()
-    }
-    return(dataPaths)
-  })
-
-  output$plot <- renderPlot({
-    errorOnRead <- FALSE
-    rr_and_flags <- read_and_filter_one_file(dataAddress(), 1,
-                                             separator=getSep(data_info$separator()),
-                                             data_info$data_columns(),
-                                             data_info$minmax(),
-                                             data_info$using_excel())
-    # todo - what about errors??
-          hrvhra::drawpp(rr_and_flags$RR, rr_and_flags$annotations,
-                     vname = ifelse(data_info$variable_name() == "", "RR", data_info$variable_name()),
-                     col = "black", bg = data_info$color(), pch = 21)
-
-  })
+  data_info <- callModule(data_upload_and_filter,
+                          "get-filter-data")
+  # listen for clicks on the main table (View buttons)
+  observeEvent(input$foo,{
+    # call plotting module
+    callModule(plots,
+               "plots",
+               type_of_plot = "poincare",
+               data_address = state_RR_settings$data_addresses,
+               line_number = as.numeric(input$foo %||% glob_init_line_number), # triggering here
+               separator = getSep(state_RR_settings$separator %||% glob_init_separator),
+               data_columns = state_RR_settings$data_columns %||% glob_init_columns,
+               minmax = state_RR_settings$min_max_sinus %||% glob_init_min_max_sinus,
+               using_excel = state_RR_settings$excel %||% glob_init_excel,
+               variable_name = state_RR_settings$var_name %||% glob_init_var_name,
+               color = state_figures$color %||% glob_init_color
+    )
+  }, ignoreInit = TRUE)
 
   # now reactive conductor holding the results of Poincare plot calculations
 
-  currentPPvalues <- reactive({
-      #todo - what about errors!
-      returnTable <- getPpResults(dataAddress(),
-                                  sep = getSep(data_info$separator()),
-                                  data_info$data_columns(),
-                                  data_info$minmax(),
-                                  data_info$using_excel())
-      })
-
-  output$filesView <- DT::renderDataTable({
-    return(currentPPvalues())
+  rct_current_pp_values <- reactive({
+    #todo - what about errors!
+    req(is.null(data_info()) || data_info() != 0) # so that it does not recalculate when something else than pressing Go is done in the modal
+    force(data_info()) # react to the go button in the modal
+    returnTable <- getPpResults(state_RR_settings$data_addresses %||% {state_RR_settings$data_addresses <- calculate_data_addresses()},
+                                separator = getSep(state_RR_settings$separator %||% {state_RR_settings$separator <- glob_init_separator}),
+                                column_data = state_RR_settings$data_columns %||% {state_RR_settings$data_columns <- glob_init_columns},
+                                minmax = state_RR_settings$min_max_sinus %||% {state_RR_settings$min_max_sinus <- glob_init_min_max_sinus},
+                                using_excel = state_RR_settings$excel %||% {state_RR_settings$excel <- glob_init_excel}
+    )
   })
 
-  output$myDataView <- DT::renderDataTable({
-    X <- data_info$variableName
-    myTable <- data.frame(myData()[[1]], transformData()$data)
-    colnames(myTable) <- c(data_info$variableName, "transformation")
-    myTable
-  })
-
-  output$downloadPlot <- downloadHandler(
-    filename = "PoincarePlot.png",
-    content = function(file) {
-      rr_and_flags <- read_and_filter_one_file(dataAddress(), 1,
-                                               separator=getSep(data_info$separator),
-                                               data_info$data_columns,
-                                               data_info$minmax, data_info$usingExcel)
-      png(file, width=1800, height = 1900, res=300)
-      plotInput(rr_and_flags[[1]], rr_and_flags[[2]], data_info$color, data_info$variableName)
-      dev.off()
-    })
-
-  output$downloadResults <- downloadHandler(
-    filename = "PPResults.xlsx",
-    content = function(file) {
-      writeWorksheetToFile( file = file, data=currentPPvalues(), sheet="Poincare plot")
-    })
+  callModule(main_table,
+             "main-table",
+             rct_current_pp_values = rct_current_pp_values
+  )
   ### end of server below
 })

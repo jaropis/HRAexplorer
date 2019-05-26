@@ -1,0 +1,68 @@
+data_upload_and_filterUI <- function(id) {
+  ns <- NS(id)
+  actionButton(ns("get_filters"),
+               "Get/filter data",
+               class = "btn-success",
+               style="margin:0 auto;margin-top:90px;display:block;")
+}
+
+#' module with data upload and filtering
+#'
+#' no input
+#' @return inputs corresponding to upload and filtering
+
+data_upload_and_filter <- function(input, output, session) {
+  ns <- session$ns
+
+  observeEvent(input$get_filters, {
+    filtering_modal <- function() {
+      showModal(
+        modalDialog(
+          size = 'l',
+          fade = TRUE,
+          #upload_filterUI(ns("upload_filterUI"))
+          tagList(
+            fluidRow(
+              column(4,
+                     textInput(ns("variable_name"),"variable name", state_RR_settings$var_name),
+                     checkboxInput(ns("using_excel"), "using Excel", value = state_RR_settings$excel),
+                     fileInput(ns("files"), label="load files in the correct format - see the information on the right", multiple=TRUE)
+              ),
+              column(4,
+                     selectInput(ns("separator"), "select separator",
+                                 list(state_RR_settings$separator, ",", ";", "space")),
+                     textInput(ns("data_columns"), "enter the column for RR intervals and flags - see explanations",
+                               state_RR_settings$data_columns),
+                     textInput(ns("minmax"),"enter minimum and maximum acceptable RR length", state_RR_settings$min_max_sinus)
+              ),
+              column(4,
+                     selectInput(ns("color"), "select color from the list below", state_figures$color)
+              )
+            )
+          ),
+          footer = tagList(
+            modalButton("Cancel"),
+            actionButton(ns("go"),
+                         "Go",
+                         icon("refresh"),
+                         onclick = "document.querySelectorAll('[data-dismiss]')[0].click();",
+                         class = 'btn-primary')
+          )
+        )
+
+      )
+    }
+    filtering_modal()
+  })
+  reactive({ # save current filter values here
+    state_RR_settings$var_name <-  input$variable_name
+    state_RR_settings$excel <-  input$using_excel
+    state_RR_settings$data_addresses <-  input$files %||% state_RR_settings$data_addresses
+    state_RR_settings$separator <-  input$separator
+    state_RR_settings[["data_columns"]] <-  isolate(input$data_columns)
+    state_RR_settings$min_max_sinus <-  input$minmax
+    state_figures$color <-  input$color
+    #filter_trigger <- reactive({sample(1:10^6, 1)})
+    input$go
+  })
+}

@@ -1,23 +1,26 @@
-ui <-
-  fluidPage(
-    titlePanel("Measures of the Poincare Plot"),
+library(shinydashboard)
+library(shinydashboardPlus)
+ui <- dashboardPage(
+  dashboardHeader(title = "HRAExplorer"),
+  dashboardSidebar(
+      data_upload_and_filterUI("get-filter-data")
+    ),
+  dashboardBody(
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
+      tags$script(src = "javascript/all.js")
+    ),
     fluidRow(
-      column(3,
-             wellPanel(
-               data_infoUI("data-info")
-             )
-      ),
-      column(9,
-             tabsetPanel(
-               tabPanel("Poincare plot",
-                        plotOutput("plot"),
-                        downloadButton('downloadPlot', 'Download Plot')
-               ),
-               tabPanel("Numerical results", tags$style(type="text/css", "#filesView { overflow-x: auto; max-width: 100%; }"),
-                        DT::dataTableOutput("filesView"),
-                        downloadButton('downloadResults', 'Download results as Excel file'))
-
-             )
-      )
-      )
+      flipBox( id = 1,
+               front_title = "Numerical results",
+               solidHeader = FALSE,
+               width = 12,
+               main_tableUI("main-table"),
+               header_img = NULL,
+               main_img = NULL,
+               back_content = {
+                 plotsUI("plots")
+               })
+    )
   )
+)

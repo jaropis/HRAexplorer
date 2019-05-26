@@ -1,0 +1,36 @@
+/* style the view buttons inside the table */
+[id^="btn_view"]{
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin-bottom: -4px !important;
+    margin-top: -4px;
+}
+
+/* the following style elements correct some strange aspects of flipbox */
+.avatar {
+  display: none;
+}
+
+.card-background-1 {
+  height: 1em !important;
+}
+
+.card-front-1 {
+  padding-left: 10px;
+  margin-left: 5px;
+  padding-right: 10px;
+  margin-right: 5px;
+}
+
+.rotate-container {
+  margin-right: 10px;
+}
+
+/* remove the More button from flipBox */
+#btn-1 {
+  display: none;
+}
+/* hide the Cancel button - invisible, but used in javascript
+[data-dismiss="modal"] {
+  display: none;
+}*/
