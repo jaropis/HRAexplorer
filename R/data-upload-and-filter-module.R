@@ -24,19 +24,25 @@ data_upload_and_filter <- function(input, output, session) {
           tagList(
             fluidRow(
               column(4,
-                     textInput(ns("variable_name"),"variable name", state_RR_settings$var_name %||% "RR"),
-                     checkboxInput(ns("using_excel"), "using Excel", value = state_RR_settings$excel %||% FALSE),
-                     fileInput(ns("files"), label="load files in the correct format - see the information on the right", multiple=TRUE)
+                     textInput(ns("variable_name"),"variable name",
+                               state_RR_settings$var_name %||% glob_init_var_name),
+                     checkboxInput(ns("using_excel"), "using Excel",
+                                   value = state_RR_settings$excel %||% glob_init_excel),
+                     fileInput(ns("files"),
+                               label="load files in the correct format - see the information on the right",
+                               multiple=TRUE)
               ),
               column(4,
                      selectInput(ns("separator"), "select separator",
-                                 list(state_RR_settings$separator %||% " ", ",", ";", "space", "\t")),
+                                 list(state_RR_settings$separator %||% glob_init_separator, ",", ";", "space", "\t")),
                      textInput(ns("data_columns"), "enter the column for RR intervals and flags - see explanations",
-                               state_RR_settings$data_columns %||% c(2, 3)),
-                     textInput(ns("minmax"),"enter minimum and maximum acceptable RR length", state_RR_settings$min_max_sinus)
+                               state_RR_settings$data_columns %||% glob_init_columns),
+                     textInput(ns("minmax"),"enter minimum and maximum acceptable RR length",
+                               state_RR_settings$min_max_sinus %||% glob_init_min_max_sinus)
               ),
               column(4,
-                     selectInput(ns("color"), "select color from the list below", state_figures$color %||% "orange")
+                     selectInput(ns("color"), "select color from the list below", glob_color_list,
+                                 selected = state_figures$color %||% glob_init_color)
               )
             )
           ),
@@ -62,7 +68,6 @@ data_upload_and_filter <- function(input, output, session) {
     state_RR_settings[["data_columns"]] <-  isolate(input$data_columns)
     state_RR_settings$min_max_sinus <-  input$minmax
     state_figures$color <-  input$color
-    #filter_trigger <- reactive({sample(1:10^6, 1)})
     input$go
   })
 }
