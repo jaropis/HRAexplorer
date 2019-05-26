@@ -54,7 +54,7 @@ data_upload_and_filter <- function(input, output, session) {
     }
     filtering_modal()
   })
-  observeEvent(input$go, { # save current filter values here
+  reactive({ # save current filter values here
     state_RR_settings$var_name <-  input$variable_name
     state_RR_settings$excel <-  input$using_excel
     state_RR_settings$data_addresses <-  input$files %||% state_RR_settings$data_addresses
@@ -62,11 +62,7 @@ data_upload_and_filter <- function(input, output, session) {
     state_RR_settings[["data_columns"]] <-  isolate(input$data_columns)
     state_RR_settings$min_max_sinus <-  input$minmax
     state_figures$color <-  input$color
-
-    return(
-      list(
-        go = reactive(input$go) # trigger recalculation
-      )
-    )
+    #filter_trigger <- reactive({sample(1:10^6, 1)})
+    input$go
   })
 }

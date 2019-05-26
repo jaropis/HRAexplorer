@@ -2,7 +2,6 @@ shinyServer(function(input, output){
 
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
-
   # listen for clicks on the main table (View buttons)
   observeEvent(input$foo,{
     # call plotting module
@@ -24,7 +23,8 @@ shinyServer(function(input, output){
 
   rct_current_pp_values <- reactive({
     #todo - what about errors!
-    force(data_info$go()) # react to the go button in the modal
+    req(is.null(data_info()) || data_info() != 0) # so that it does not recalculate when something else than pressing Go is done in the modal
+    force(data_info()) # react to the go button in the modal
     returnTable <- getPpResults(state_RR_settings$data_addresses %||% {state_RR_settings$data_addresses <- calculate_data_addresses()},
                                 separator = getSep(state_RR_settings$separator %||% {state_RR_settings$separator <- glob_init_separator}),
                                 column_data = state_RR_settings$data_columns %||% {state_RR_settings$data_columns <- glob_init_columns},

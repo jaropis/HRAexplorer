@@ -2,7 +2,9 @@ library(shinydashboard)
 library(shinydashboardPlus)
 ui <- dashboardPage(
   dashboardHeader(title = "HRAExplorer"),
-  dashboardSidebar(),
+  dashboardSidebar(
+      data_upload_and_filterUI("get-filter-data")
+    ),
   dashboardBody(
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
