@@ -20,6 +20,16 @@ shinyServer(function(input, output){
     )
   }, ignoreInit = TRUE)
 
+  observeEvent(c(input$foo, data_info()),{
+    # call results for a single file on the plot page
+    req(is.null(data_info()) || data_info()) #
+    callModule(single_results,
+               "single-results",
+               type_of_plot = "poincare",
+               line_number = as.numeric(input$foo %||% glob_init_line_number), # triggering here
+               rct_current_pp_values = rct_current_pp_values
+    )
+  }, ignoreInit = TRUE)
   # now reactive conductor holding the results of Poincare plot calculations
 
   rct_current_pp_values <- reactive({
