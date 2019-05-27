@@ -20,10 +20,14 @@ ui <- dashboardPage(
                main_img = NULL,
                back_content = {
                  fluidRow(
-                   box(
-                      plotsUI("plots")
+                   box(title = "Poincare plot",
+                    #height = "500px",
+                    plotsUI("plots")
                    ),
-                   box("div")
+                   box(title = "Poincare plot descriptors",
+                    #height = "500px",
+                    single_resultsUI("single-results")
+                   )
                  )
                })
     )
