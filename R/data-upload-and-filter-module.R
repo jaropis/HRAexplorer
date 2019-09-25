@@ -1,3 +1,4 @@
+#' @export
 data_upload_and_filterUI <- function(id) {
   ns <- NS(id)
   actionButton(ns("get_filters"),
@@ -10,7 +11,7 @@ data_upload_and_filterUI <- function(id) {
 #'
 #' no input
 #' @return inputs corresponding to upload and filtering
-
+#' @export
 data_upload_and_filter <- function(input, output, session) {
   ns <- session$ns
 

@@ -1,4 +1,5 @@
 # data info module
+#' @export
 data_infoUI <- function(id){
   ns <- NS(id)
   tagList(
@@ -20,6 +21,7 @@ data_infoUI <- function(id){
 #' @param session input shiny variable
 #'
 #' @return input reactive values
+#' @export
 data_info <- function(input, output, session) {
 
   return(
