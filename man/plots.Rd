@@ -4,14 +4,14 @@
 \alias{plots}
 \title{module to plot various plots related to HRA/HRV}
 \usage{
-plots(input, output, session, type_of_plot = "poincare",
-  rct_data_address, line_number, inp_data_columns, inp_separator,
-  inp_minmax, inp_using_excel, inp_variable_name, inp_color)
+plots(input, output, session, type_of_plot = "poincare", data_address,
+  line_number, data_columns, separator, minmax, using_excel, variable_name,
+  color)
 }
 \arguments{
 \item{type_of_plot}{plot type (poincare, runs, spectrum etc.)}
 
-\item{rct_data_address}{address of the file to be read}
+\item{data_address}{address of the file to be read}
 
 \item{line_number}{the line holding the name of the file we want to analyze}
 

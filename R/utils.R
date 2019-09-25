@@ -15,6 +15,7 @@
 #' function to get initial data addresses
 #'
 #' @return data frame with info on the initial files
+#' @export
 calculate_data_addresses <- function() {
   pattern <- paste0("../initial_data/*", glob_init_file_extension)
   initial_files <- Sys.glob(pattern)

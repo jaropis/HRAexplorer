@@ -1,5 +1,5 @@
 #' main results table depending on the analysis type
-#'
+#' @export
 main_tableUI <- function(id) {
   ns <- NS(id)
   tagList(

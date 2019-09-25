@@ -1,5 +1,5 @@
 #' module to plot various plots
-
+#' @export
 plotsUI <- function(id) {
   ns <- NS(id)
   tagList(
@@ -10,17 +10,18 @@ plotsUI <- function(id) {
 
 #' module to plot various plots related to HRA/HRV
 #'
-#'@param type_of_plot plot type (poincare, runs, spectrum etc.)
-#'@param data_address address of the file to be read
-#'@param line_number the line holding the name of the file we want to analyze
-#'@param inp_data_columns numbers of columns holding RR intervals and annotations
-#'@param inp_separator separator used in file
-#'@param inp_minmax minimum and maximum values of RR intervals of sinus origin
-#'@param inp_using_excel whether or not use Excel format
-#'@param inp_variable_name name of the variable for display
-#'@param inp_color color for plotting
+#' @param type_of_plot plot type (poincare, runs, spectrum etc.)
+#' @param data_address address of the file to be read
+#' @param line_number the line holding the name of the file we want to analyze
+#' @param inp_data_columns numbers of columns holding RR intervals and annotations
+#' @param inp_separator separator used in file
+#' @param inp_minmax minimum and maximum values of RR intervals of sinus origin
+#' @param inp_using_excel whether or not use Excel format
+#' @param inp_variable_name name of the variable for display
+#' @param inp_color color for plotting
 #'
-#'@return plot (also causes side effect of saving the plot to disc)
+#' @return plot (also causes side effect of saving the plot to disc)
+#' @export
 plots <- function(input, output, session,
                   type_of_plot = "poincare",
                   data_address,

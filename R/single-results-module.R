@@ -1,5 +1,5 @@
 #' module to show results for a single recording on the flip side
-
+#' @export
 single_resultsUI <- function(id) {
   ns <- NS(id)
   uiOutput(ns("single_table"))
@@ -7,7 +7,7 @@ single_resultsUI <- function(id) {
 
 
 #' function to build the table with results for
-#'
+#' @export
 single_results <- function(input, output, session,
                            type_of_plot,
                            line_number,
@@ -32,7 +32,7 @@ single_results <- function(input, output, session,
 #' @param data_line named vector with Poincare descriptors
 #'
 #' @return HTML string
-#'
+#' @export
 poincare_description_string <- function(data_line) {
   paste("<div id='poincare_plot'>",
         "<hr>",
