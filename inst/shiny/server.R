@@ -1,3 +1,5 @@
+library(HRAexplorer)
+
 shinyServer(function(input, output){
 
   data_info <- callModule(data_upload_and_filter,
