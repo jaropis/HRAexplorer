@@ -1,0 +1,3 @@
+1568056624202:shiny::runApp('inst/shiny')
+1568056649334:devtools::load_all()
+1568056654155:runApp('inst/shiny')
