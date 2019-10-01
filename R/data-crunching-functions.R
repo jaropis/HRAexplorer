@@ -1,3 +1,25 @@
+#' export function to get analysis results
+#'
+#' @param analysis_type analysis type (poincare, runs, spectral)
+#' @param file_addresses the addresses of the uploaded file(s)
+#' @param separator the separator chosen by the user
+#' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
+#' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
+#' @param using_Excel boolean, whether Excel files are used
+#'
+#' @return the results of Poincare plot analysis
+#' @export
+get_numerical_results <- function(analysis_type, fileAddresses, separator = "\t", column_data = c(1,2), minmax = c(0, 3000), using_excel = FALSE) {
+  if (analysis_type == "poincare")
+    return(getPpResults(fileAddresses, separator, column_data, minmax, using_excel))
+  if (analysis_type == "runs")
+    return(get_runs_results())
+  if (analysis_type == "spectral")
+    return(get_spectral_results())
+  if (analysis_type == "quality")
+    return(get_quality_results())
+}
+
 #' function for getting the results of Poincare Plot analysis
 #'
 #' @param file_addresses the addresses of the uploaded file(s)
@@ -7,7 +29,6 @@
 #' @param using_Excel boolean, whether Excel files are used
 #'
 #' @return the results of Poincare plot analysis
-#' @export
 getPpResults <- function(fileAddresses, separator = "\t", column_data = c(1,2), minmax = c(0, 3000), using_excel = FALSE){
   results <- c()
     for (lineNumber in  1:length(fileAddresses[[1]])){

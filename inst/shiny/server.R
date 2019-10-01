@@ -33,20 +33,22 @@ shinyServer(function(input, output){
   # now reactive conductor holding the results of Poincare plot calculations
 
   rct_current_pp_values <- reactive({
+    # TODO add runs and spectral here!
     #todo - what about errors!
     req(is.null(data_info()) || data_info() != 0) # so that it does not recalculate when something else than pressing Go is done in the modal
     force(data_info()) # react to the go button in the modal
-    returnTable <- getPpResults(state_RR_settings$data_addresses %||% {state_RR_settings$data_addresses <- calculate_data_addresses()},
-                                separator = getSep(state_RR_settings$separator %||% {state_RR_settings$separator <- glob_init_separator}),
-                                column_data = state_RR_settings$data_columns %||% {state_RR_settings$data_columns <- glob_init_columns},
-                                minmax = state_RR_settings$min_max_sinus %||% {state_RR_settings$min_max_sinus <- glob_init_min_max_sinus},
-                                using_excel = state_RR_settings$excel %||% {state_RR_settings$excel <- glob_init_excel}
+    returnTable <- get_numerical_results(analysis_type = "poincare",
+                                          state_RR_settings$data_addresses %||% {state_RR_settings$data_addresses <- calculate_data_addresses()},
+                                          separator = getSep(state_RR_settings$separator %||% {state_RR_settings$separator <- glob_init_separator}),
+                                          column_data = state_RR_settings$data_columns %||% {state_RR_settings$data_columns <- glob_init_columns},
+                                          minmax = state_RR_settings$min_max_sinus %||% {state_RR_settings$min_max_sinus <- glob_init_min_max_sinus},
+                                          using_excel = state_RR_settings$excel %||% {state_RR_settings$excel <- glob_init_excel}
     )
   })
 
   callModule(main_table,
              "main-table",
-             rct_current_pp_values = rct_current_pp_values
+             rct_current_values = rct_current_pp_values
   )
   ### end of server below
 })
