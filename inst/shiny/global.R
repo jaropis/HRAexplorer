@@ -6,7 +6,14 @@ library(HRAexplorer)
 library(shinydashboard)
 library(shinydashboardPlus)
 
-# CONSTANTS ----
+# modules ----
+source(file.path("modules", "data-info-module"))
+source(file.path("modules", "data-upload-and-filter-module.R"))
+source(file.path("modules", "data-main-table-module.R"))
+source(file.path("modules", "plotting-module.R"))
+source(file.path("modules", "single-results-module.R"))
+
+# constants ----
 
 # list holding the colors for selection
 glob_color_list <- list("orange" = "orange",
