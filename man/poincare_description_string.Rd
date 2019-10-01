@@ -5,21 +5,13 @@
 \title{function returning Poincare descriptors to be shown on the flipside}
 \usage{
 poincare_description_string(data_line)
-
-poincare_description_string(data_line)
 }
 \arguments{
 \item{data_line}{named vector with Poincare descriptors}
-
-\item{data_line}{named vector with runs}
 }
 \value{
-HTML string
-
 HTML string
 }
 \description{
 function returning Poincare descriptors to be shown on the flipside
-
-function returning Poincare descriptors
 }
