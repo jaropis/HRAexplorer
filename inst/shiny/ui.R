@@ -1,5 +1,3 @@
-library(shinydashboard)
-library(shinydashboardPlus)
 ui <- dashboardPage(
   dashboardHeader(title = "HRAExplorer"),
   dashboardSidebar(

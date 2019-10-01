@@ -1,4 +1,4 @@
 local({
    old <- getOption("defaultPackages")
-   options(defaultPackages = c(old, "shinyproxy"), shiny.port = 3838, shiny.host = "68.183.66.211")
+   options(defaultPackages = c(old, "shinyproxy"), shiny.port = 3838, shiny.host = "0.0.0.0")
 })
