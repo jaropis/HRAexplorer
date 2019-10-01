@@ -17,6 +17,7 @@ main_tableUI <- function(id) {
 main_table <- function(input, output, session,
                        rct_current_pp_values) {
   main_DTable <- reactive({
+    # TODO this is data processing - extract out to main-table-functions
     results_matrix <- as.data.frame(rct_current_pp_values())
       buttons_row <- paste0('
                <button type="button" class="btn btn-primary" id="btn_view_',1:nrow(results_matrix),'" onclick = "click_more(btn_view_',1:nrow(results_matrix),')">View</button>
