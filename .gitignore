@@ -4,3 +4,4 @@
 .RData
 .rstudio/
 Deployment/
+.DS_Store
