@@ -8,7 +8,7 @@
 #'
 description_string <- function(data_line, type_of_plot) {
   if (type_of_plot == "poincare") {
-    poincare_description_string(data_line)
+    html_description <- poincare_description_string(data_line)
   }
 
   if (type_of_plot == "runs") {
@@ -45,6 +45,6 @@ poincare_description_string <- function(data_line) {
 #'
 #' @return HTML string
 #' @export
-poincare_description_string <- function(data_line) {
+runs_description_string <- function(data_line) {
   # TODO
 }
