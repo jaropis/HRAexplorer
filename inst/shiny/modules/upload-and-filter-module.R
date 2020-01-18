@@ -1,4 +1,3 @@
-#' @export
 data_upload_and_filterUI <- function(id) {
   ns <- NS(id)
   actionButton(ns("get_filters"),

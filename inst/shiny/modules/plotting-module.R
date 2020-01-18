@@ -34,6 +34,7 @@ plots <- function(input, output, session,
                   color) {
   if (type_of_plot == "poincare") {
     output$current_plot <- renderPlot({
+      ## TODO abstract this
       rr_and_flags <- read_and_filter_one_file(data_address,
                                                line_number = line_number,
                                                separator = separator,
