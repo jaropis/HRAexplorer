@@ -13,6 +13,9 @@ source(file.path("modules", "main-table-module.R"))
 source(file.path("modules", "plotting-module.R"))
 source(file.path("modules", "single-results-module.R"))
 
+# frontend utils ----
+source(file.path("modules", "local-storage.R"))
+
 # constants ----
 
 # list holding the colors for selection

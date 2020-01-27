@@ -4,8 +4,13 @@
 \alias{getPpResults}
 \title{function for getting the results of Poincare Plot analysis}
 \usage{
-getPpResults(fileAddresses, separator = "\\t", column_data = c(1, 2),
-  minmax = c(0, 3000), using_excel = FALSE)
+getPpResults(
+  fileAddresses,
+  separator = "\\t",
+  column_data = c(1, 2),
+  minmax = c(0, 3000),
+  using_excel = FALSE
+)
 }
 \arguments{
 \item{separator}{the separator chosen by the user}

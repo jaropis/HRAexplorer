@@ -4,8 +4,14 @@
 \alias{read_and_filter_one_file}
 \title{function to read and filter a single file containing rr intervals and annotations}
 \usage{
-read_and_filter_one_file(file_addresses, line_number, separator,
-  column_data, minmax, using_excel)
+read_and_filter_one_file(
+  file_addresses,
+  line_number,
+  separator,
+  column_data,
+  minmax,
+  using_excel
+)
 }
 \arguments{
 \item{file_addresses}{list with name, size, type and path of files with rr intervals}
