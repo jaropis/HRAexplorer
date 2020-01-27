@@ -4,8 +4,14 @@
 \alias{get_numerical_results}
 \title{export function to get analysis results}
 \usage{
-get_numerical_results(analysis_type, fileAddresses, separator = "\\t",
-  column_data = c(1, 2), minmax = c(0, 3000), using_excel = FALSE)
+get_numerical_results(
+  analysis_type,
+  fileAddresses,
+  separator = "\\t",
+  column_data = c(1, 2),
+  minmax = c(0, 3000),
+  using_excel = FALSE
+)
 }
 \arguments{
 \item{analysis_type}{analysis type (poincare, runs, spectral)}

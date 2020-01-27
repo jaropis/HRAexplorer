@@ -2,8 +2,6 @@
 
 export("%||%")
 export(calculate_data_addresses)
-export(data_info)
-export(data_infoUI)
 export(description_string)
 export(getSep)
 export(get_numerical_results)
