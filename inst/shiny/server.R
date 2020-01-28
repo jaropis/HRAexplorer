@@ -1,9 +1,9 @@
-shinyServer(function(input, output){
+shinyServer(function(input, output, session){
 
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
   # listen for clicks on the main table (View buttons)
-  observeEvent(c(input$foo, data_info()),{
+  observeEvent(c(input$foo, data_info()), {
     # call plotting module
     req(is.null(data_info()) || data_info()) # draw at the beginning, then require specific value (GO clicked)
     callModule(plots,
@@ -16,7 +16,7 @@ shinyServer(function(input, output){
                minmax = get_from_storage(session, "min_max_sinus") %||% glob_init_min_max_sinus,
                using_excel = get_from_storage(session, "excel") %||% glob_init_excel,
                variable_name = get_from_storage(session, "var_name") %||% glob_init_var_name,
-               color = state_figures$color %||% glob_init_color
+               color = get_from_storage(session, "figure_color") %||% glob_init_color
     )
   }, ignoreInit = TRUE)
 
@@ -37,12 +37,13 @@ shinyServer(function(input, output){
     #todo - what about errors!
     req(is.null(data_info()) || data_info() != 0) # so that it does not recalculate when something else than pressing Go is done in the modal
     force(data_info()) # react to the go button in the modal
+
     returnTable <- get_numerical_results(analysis_type = "poincare",
-                                          get_from_storage(session, "data_addresses") %||% {store_in_storage(session, "data_addresses", calculate_data_addresses())},
-                                          TUTU i wyżej - skończ separator = getSep(state_RR_settings$separator %||% {state_RR_settings$separator <- glob_init_separator}),
-                                          column_data = state_RR_settings$data_columns %||% {state_RR_settings$data_columns <- glob_init_columns},
-                                          minmax = state_RR_settings$min_max_sinus %||% {state_RR_settings$min_max_sinus <- glob_init_min_max_sinus},
-                                          using_excel = state_RR_settings$excel %||% {state_RR_settings$excel <- glob_init_excel}
+                                          get_from_storage(session, "data_addresses") %||% store_in_storage(session, "data_addresses", calculate_data_addresses()),
+                                          separator = getSep(get_from_storage(session, "separator") %||% store_in_storage(session, "separator", glob_init_separator)),
+                                          column_data = get_from_storage(session, "data_columns") %||% store_in_storage(session, "data_columns", glob_init_columns),
+                                          minmax = get_from_storage(session, "min_max_sinus") %||% store_in_storage(session, "min_max_sinus", glob_init_min_max_sinus),
+                                          using_excel = get_from_storage(session, "excel") %||% store_in_storage(session, "excel", glob_init_excel)
     )
   })
 
@@ -50,5 +51,4 @@ shinyServer(function(input, output){
              "main-table",
              rct_current_values = rct_current_pp_values
   )
-  ### end of server below
 })
