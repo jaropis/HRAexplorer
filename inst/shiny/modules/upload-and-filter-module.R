@@ -67,7 +67,7 @@ data_upload_and_filter <- function(input, output, session) {
     store_in_storage(session, "separator", input$separator)
     store_in_storage(session, "data_columns", isolate(input$data_columns))
     store_in_storage(session, "min_max_sinus", input$minmax)
-    store_in_storage(session, "color", input$color)
+    store_in_storage(session, "figure_color", input$color)
     input$go
   })
 }
