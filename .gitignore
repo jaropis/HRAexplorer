@@ -5,3 +5,5 @@
 .rstudio/
 Deployment/
 .DS_Store
+.cache/
+
