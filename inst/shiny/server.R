@@ -9,13 +9,13 @@ shinyServer(function(input, output){
     callModule(plots,
                "plots",
                type_of_plot = "poincare",
-               data_address = state_RR_settings$data_addresses,
+               data_address = get_from_storage(session, "data_addresses"),
                line_number = as.numeric(input$foo %||% glob_init_line_number), # triggering here
-               separator = getSep(state_RR_settings$separator %||% glob_init_separator),
-               data_columns = state_RR_settings$data_columns %||% glob_init_columns,
-               minmax = state_RR_settings$min_max_sinus %||% glob_init_min_max_sinus,
-               using_excel = state_RR_settings$excel %||% glob_init_excel,
-               variable_name = state_RR_settings$var_name %||% glob_init_var_name,
+               separator = getSep(get_from_storage(session, "separator") %||% glob_init_separator),
+               data_columns = get_from_storage(session, "data_columns") %||% glob_init_columns,
+               minmax = get_from_storage(session, "min_max_sinus") %||% glob_init_min_max_sinus,
+               using_excel = get_from_storage(session, "excel") %||% glob_init_excel,
+               variable_name = get_from_storage(session, "var_name") %||% glob_init_var_name,
                color = state_figures$color %||% glob_init_color
     )
   }, ignoreInit = TRUE)
@@ -38,8 +38,8 @@ shinyServer(function(input, output){
     req(is.null(data_info()) || data_info() != 0) # so that it does not recalculate when something else than pressing Go is done in the modal
     force(data_info()) # react to the go button in the modal
     returnTable <- get_numerical_results(analysis_type = "poincare",
-                                          state_RR_settings$data_addresses %||% {state_RR_settings$data_addresses <- calculate_data_addresses()},
-                                          separator = getSep(state_RR_settings$separator %||% {state_RR_settings$separator <- glob_init_separator}),
+                                          get_from_storage(session, "data_addresses") %||% {store_in_storage(session, "data_addresses", calculate_data_addresses())},
+                                          TUTU i wyżej - skończ separator = getSep(state_RR_settings$separator %||% {state_RR_settings$separator <- glob_init_separator}),
                                           column_data = state_RR_settings$data_columns %||% {state_RR_settings$data_columns <- glob_init_columns},
                                           minmax = state_RR_settings$min_max_sinus %||% {state_RR_settings$min_max_sinus <- glob_init_min_max_sinus},
                                           using_excel = state_RR_settings$excel %||% {state_RR_settings$excel <- glob_init_excel}
