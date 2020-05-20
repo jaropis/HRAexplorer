@@ -1,5 +1,22 @@
+# options ----
+options(java.parameters = c("-Xss2560k", "-Xmx2g"))
+
+# libraries ----
 library(HRAexplorer)
-# CONSTANTS ----
+library(shinydashboard)
+library(shinydashboardPlus)
+
+# modules ----
+source(file.path("modules", "data-info-module.R"))
+source(file.path("modules", "upload-and-filter-module.R"))
+source(file.path("modules", "main-table-module.R"))
+source(file.path("modules", "plotting-module.R"))
+source(file.path("modules", "single-results-module.R"))
+
+# frontend utils ----
+source(file.path("modules", "local-storage.R"))
+
+# constants ----
 
 # list holding the colors for selection
 glob_color_list <- list("orange" = "orange",
@@ -22,19 +39,3 @@ glob_init_file_extension <- "rea"
 
 #' other globals
 glob_marker_color = "black"
-
-# STATE VARIABLES DEFINITIONS ----
-
-#' RR time series parameters
-state_RR_settings <- new.env(parent = emptyenv())
-state_RR_settings$var_name <- glob_init_var_name
-state_RR_settings$separator <- glob_init_separator
-state_RR_settings$data_columns <- glob_init_columns
-state_RR_settings$min_max_sinus <- glob_init_min_max_sinus
-state_RR_settings$excel <- glob_init_excel
-state_RR_settings$file_extension <- glob_init_file_extension
-state_RR_settings$data_addresses <- NULL # this is an environment (so OK)
-
-#' figures state
-state_figures <- new.env(parent = emptyenv())
-state_figures$color <- glob_init_color
