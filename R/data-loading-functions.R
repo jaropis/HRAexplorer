@@ -77,7 +77,7 @@ read_and_filter_one_file <- function(file_addresses, line_number, separator, col
 #'
 #' @return separator
 #' @export
-getSep <- function(separator){
+get_sep <- function(separator){
   sep = separator
   if (separator == "tabulator"){
     sep = "\t"

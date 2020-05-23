@@ -3,30 +3,27 @@ shinyServer(function(input, output, session){
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
   # listen for clicks on the main table (View buttons)
-  observeEvent(c(input$foo, data_info()), {
-    # call plotting module
-    #req(is.null(data_info()) || data_info()) # draw at the beginning, then require specific value (GO clicked)
+  observeEvent(c(input$foo, data_info$go), {
     callModule(plots,
                "plots",
                type_of_plot = "poincare",
-               data_address = get_from_storage(session, "data_addresses"),
-               line_number = as.numeric(input$foo %||% glob_init_line_number), # triggering here
-               separator = getSep(get_from_storage(session, "separator") %||% glob_init_separator),
-               data_columns = get_from_storage(session, "data_columns") %||% glob_init_columns,
-               minmax = get_from_storage(session, "min_max_sinus") %||% glob_init_min_max_sinus,
-               using_excel = get_from_storage(session, "excel") %||% glob_init_excel,
-               variable_name = get_from_storage(session, "var_name") %||% glob_init_var_name,
-               color = get_from_storage(session, "figure_color") %||% glob_init_color
+               data_address = data_info$files(),
+               line_number = as.integer(input$foo),
+               separator = data_info$separator(),
+               data_columns = data_info$data_columns(),
+               minmax = data_info$minmax(),
+               using_excel = data_info$using_excel(),
+               variable_name = data_info$variable_name(),
+               color = data_info$color()
     )
   }, ignoreInit = TRUE)
 
-  observeEvent(c(input$foo, data_info()),{
+  observeEvent(c(input$foo, data_info$go), {
     # call results for a single file on the plot page
-    req(is.null(data_info()) || data_info()) #
     callModule(single_results,
                "single-results",
                type_of_plot = "poincare",
-               line_number = as.numeric(input$foo %||% glob_init_line_number), # triggering here
+               line_number = as.integer(input$foo), # triggering here
                rct_current_pp_values = rct_current_pp_values
     )
   }, ignoreInit = TRUE)
@@ -34,15 +31,12 @@ shinyServer(function(input, output, session){
 
   rct_current_pp_values <- reactive({
     # TODO add runs and spectral here!
-    #todo - what about errors!
-    req(data_info() ==0 || data_info() != 0) # so that it does not recalculate when something else than pressing Go is done in the modal
-
     returnTable <- get_numerical_results(analysis_type = "poincare",
-                                          get_from_storage(session, "data_addresses") %||% store_in_storage(session, "data_addresses", calculate_data_addresses()),
-                                          separator = getSep(get_from_storage(session, "separator") %||% store_in_storage(session, "separator", glob_init_separator)),
-                                          column_data = get_from_storage(session, "data_columns") %||% store_in_storage(session, "data_columns", glob_init_columns),
-                                          minmax = get_from_storage(session, "min_max_sinus") %||% store_in_storage(session, "min_max_sinus", glob_init_min_max_sinus),
-                                          using_excel = get_from_storage(session, "excel") %||% store_in_storage(session, "excel", glob_init_excel)
+                                          data_info$files(),
+                                          separator = data_info$separator(),
+                                          column_data = data_info$data_columns(),
+                                          minmax = data_info$minmax(),
+                                          using_excel = data_info$using_excel()
     )
   })
 
