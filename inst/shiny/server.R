@@ -5,7 +5,7 @@ shinyServer(function(input, output, session){
   # listen for clicks on the main table (View buttons)
   observeEvent(c(input$foo, data_info()), {
     # call plotting module
-    req(is.null(data_info()) || data_info()) # draw at the beginning, then require specific value (GO clicked)
+    #req(is.null(data_info()) || data_info()) # draw at the beginning, then require specific value (GO clicked)
     callModule(plots,
                "plots",
                type_of_plot = "poincare",
@@ -35,8 +35,7 @@ shinyServer(function(input, output, session){
   rct_current_pp_values <- reactive({
     # TODO add runs and spectral here!
     #todo - what about errors!
-    req(is.null(data_info()) || data_info() != 0) # so that it does not recalculate when something else than pressing Go is done in the modal
-    force(data_info()) # react to the go button in the modal
+    req(data_info() ==0 || data_info() != 0) # so that it does not recalculate when something else than pressing Go is done in the modal
 
     returnTable <- get_numerical_results(analysis_type = "poincare",
                                           get_from_storage(session, "data_addresses") %||% store_in_storage(session, "data_addresses", calculate_data_addresses()),

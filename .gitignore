@@ -6,4 +6,5 @@
 Deployment/
 .DS_Store
 .cache/
-
+.Renviron
+*~
