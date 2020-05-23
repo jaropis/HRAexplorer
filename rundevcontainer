@@ -1,0 +1,35 @@
+#/bin/bash
+case $1 in
+    start)
+	[ ! -z $(docker images -q hradev:latest) ] || docker image build -t hrgdev .
+	docker run --rm -e PASSWORD=hra -e ROOT=true -p 8787:8787 -d -v $(pwd):/mnt/vol  --name hradev hradev
+	exitVal=$?
+	if [ $exitVal -eq 0 ]
+	then
+	    echo "R_CONFIG_ACTIVE=deveopment" > .Renviron
+	    echo "hradev image is now running at localhost:8787, login: rstudio, password: hra"
+	    exit 0
+	else
+	    echo "it seems that the container is already running, or another process is using port 8787"
+	    exit 1
+	fi
+	;;
+    stop)
+	docker container rm -f hradev
+	exitVal=$?
+	if [ $exitVal -eq 0 ]
+	then
+	    echo "hradev stopped"
+	    exit 0
+	else
+	    echo "geqtldev was probably not running"
+	    exit 1
+	fi
+	;;
+    rebuild)
+	docker image rm -f hradev
+	docker image build -t hradev .
+	;;
+    *)
+	echo "usage: /runcontainer start/stop/rebuild"
+esac
