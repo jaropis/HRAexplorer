@@ -7,7 +7,6 @@ library(shinydashboard)
 library(shinydashboardPlus)
 
 # modules ----
-source(file.path("modules", "data-info-module.R"))
 source(file.path("modules", "upload-and-filter-module.R"))
 source(file.path("modules", "main-table-module.R"))
 source(file.path("modules", "plotting-module.R"))

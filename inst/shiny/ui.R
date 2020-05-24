@@ -5,7 +5,7 @@ ui <- dashboardPage(
         id = "sidebar-tabs",
         menuItem("Import and filter data",
                  tabName = "data_import",
-                 icon = icon("table")),
+                 icon = icon("database")),
         menuItem("HRV time domain",
                  tabName = "hrv_time_domain",
                  icon = icon("heart"))

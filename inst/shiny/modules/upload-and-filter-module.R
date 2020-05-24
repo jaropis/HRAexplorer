@@ -2,32 +2,35 @@ data_upload_and_filterUI <- function(id) {
   ns <- NS(id)
   fluidRow(
     column(4,
-           textInput(ns("variable_name"),"variable name",
-                     value = glob_init_var_name),
-           checkboxInput(ns("using_excel"), "using Excel",
-                         value = glob_init_excel),
+           h3("Files to upload"),
            fileInput(ns("files"),
-                     label="load files in the correct format - see the information on the right",
-                     multiple=TRUE)
-    ),
-    column(4,
+                     label="Select files to upload",
+                     multiple=TRUE),
            selectInput(ns("separator"), "select separator",
                        list(glob_init_separator, ",", ";", "space", "\t")),
            textInput(ns("data_columns"), "enter the column for RR intervals and flags - see explanations",
                      glob_init_columns),
-           textInput(ns("minmax"),"enter minimum and maximum acceptable RR length",
+    ),
+    column(4,
+           h3("Filters"),
+           textInput(ns("minmax"),"minimum and maximum RR length",
                      glob_init_min_max_sinus)
     ),
     column(4,
+           h3("Output format"),
+           textInput(ns("variable_name"),"variable name",
+                     value = glob_init_var_name),
+           checkboxInput(ns("using_excel"), "using Excel",
+                         value = glob_init_excel),
            selectInput(ns("color"), "select color from the list below", glob_color_list,
                        selected = glob_init_color)
-    ),
+    )#,
 
-    actionButton(ns("go"),
-                 "Go",
-                 icon("refresh"),
-                 onclick = "document.querySelectorAll('[data-dismiss]')[0].click();",
-                 class = 'btn-primary')
+#    actionButton(ns("go"),
+#                 "Go",
+#                 icon("refresh"),
+#                 onclick = "document.querySelectorAll('[data-dismiss]')[0].click();",
+#                 class = 'btn-primary')
   )
 }
 
