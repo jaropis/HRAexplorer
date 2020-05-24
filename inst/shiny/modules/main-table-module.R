@@ -1,5 +1,4 @@
 #' main results table depending on the analysis type
-#' @export
 main_tableUI <- function(id) {
   ns <- NS(id)
   tagList(
@@ -9,16 +8,14 @@ main_tableUI <- function(id) {
 }
 
 #' module for displaying main table
-#'
 #' @param rct_current_values the current values related to poincare plot (to be changed for other types of output)
 #'
 #' @return DT
-#' @export
 main_table <- function(input, output, session,
                        rct_current_values) {
   main_DTable <- reactive({
     # TODO this is data processing - extract out to main-table-functions
-    results_matrix <- get_results_matrix(rct_current_values())
+    results_matrix <- HRAexplorer::get_results_matrix(rct_current_values())
     main_table <- DT::datatable(results_matrix,
                                 options = list(scrollX = '150px'),
                                 escape = FALSE,
@@ -36,5 +33,4 @@ main_table <- function(input, output, session,
     content = function(file) {
       XLConnect::writeWorksheetToFile( file = file, data=rct_current_values(), sheet="Poincare plot")
     })
-
 }

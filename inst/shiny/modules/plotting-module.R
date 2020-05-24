@@ -1,5 +1,4 @@
 #' module to plot various plots
-#' @export
 plotsUI <- function(id) {
   ns <- NS(id)
   tagList(
@@ -21,7 +20,6 @@ plotsUI <- function(id) {
 #' @param inp_color color for plotting
 #'
 #' @return plot (also causes side effect of saving the plot to disc)
-#' @export
 plots <- function(input, output, session,
                   type_of_plot = "poincare",
                   data_address,
@@ -34,7 +32,6 @@ plots <- function(input, output, session,
                   color) {
   if (type_of_plot == "poincare") {
     output$current_plot <- renderPlot({
-      ## TODO abstract this
       rr_and_flags <- read_and_filter_one_file(data_address,
                                                line_number = line_number,
                                                separator = separator,
@@ -42,7 +39,7 @@ plots <- function(input, output, session,
                                                minmax = minmax,
                                                using_excel = using_excel
                                                )
-      # todo - what about errors??
+      # TODO - what about errors??
       hrvhra::drawpp(rr_and_flags$RR, rr_and_flags$annotations,
                      vname = variable_name,
                      col = glob_marker_color, bg = color, pch = 21)
