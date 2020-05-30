@@ -19,4 +19,4 @@ RUN install2.r shiny \
                remotes \
                roxygen2
 
-RUN installGithub.r jaropis/hrvhra
+RUN installGithub.r   jaropis/hrvhra
