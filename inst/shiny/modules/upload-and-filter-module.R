@@ -6,6 +6,8 @@ data_upload_and_filterUI <- function(id) {
            fileInput(ns("files"),
                      label="Select files to upload",
                      multiple=TRUE),
+           checkboxInput(ns("using_excel"), "using Excel",
+                         value = glob_init_excel),
            selectInput(ns("separator"), "select separator",
                        list(glob_init_separator, ",", ";", "space", "\t")),
            textInput(ns("data_columns"), "enter the column for RR intervals and flags - see explanations",
@@ -20,8 +22,6 @@ data_upload_and_filterUI <- function(id) {
            h3("Output format"),
            textInput(ns("variable_name"),"variable name",
                      value = glob_init_var_name),
-           checkboxInput(ns("using_excel"), "using Excel",
-                         value = glob_init_excel),
            selectInput(ns("color"), "select color from the list below", glob_color_list,
                        selected = glob_init_color)
     )#,
