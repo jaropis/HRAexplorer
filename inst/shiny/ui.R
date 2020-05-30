@@ -8,7 +8,10 @@ ui <- dashboardPage(
                  icon = icon("database")),
         menuItem("HRV time domain",
                  tabName = "hrv_time_domain",
-                 icon = icon("heart"))
+                 icon = icon("heart")),
+        menuItem("Runs",
+                 tabName = "runs",
+                 icon = icon("chart-line"))
       )
     ),
   dashboardBody(
@@ -20,7 +23,7 @@ ui <- dashboardPage(
       tabItem(tabName = "data_import",
               data_upload_and_filterUI("get-filter-data")
               ),
-      tabItem (tabName = "hrv_time_domain",
+      tabItem(tabName = "hrv_time_domain",
                fluidRow(
                  flipBox( id = 1,
                           front_title = "Numerical results",
@@ -40,6 +43,24 @@ ui <- dashboardPage(
                             )
                           })
                )
+      ),
+      tabItem(tabName = "runs",
+              fluidRow(
+                flipBox( id = 2,
+                         front_title = "Numerical results",
+                         solidHeader = FALSE,
+                         width = 12,
+                         main_tableUI("main-table-runs"),
+                         header_img = NULL,
+                         main_img = NULL,
+                         back_content = {
+                           fluidRow(
+                             box(title = "Monotonic runs",
+                                 plotsUI("runs-plots")
+                             )
+                           )
+                         })
+              )
       )
     )
   )
