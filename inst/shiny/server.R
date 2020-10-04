@@ -22,6 +22,16 @@ shinyServer(function(input, output, session){
     )
   })
 
+  rct_current_spectral_values <- reactive({
+    get_numerical_results(analysis_type = "spectral",
+                          data_info$files(),
+                          separator = data_info$separator(),
+                          column_data = data_info$data_columns(),
+                          minmax = data_info$minmax(),
+                          using_excel = data_info$using_excel(),
+                          use_ULF = data_info$use_ULF()
+    )
+  })
   rct_current_quality_values <- reactive({
     get_numerical_results(analysis_type = "quality",
                           data_info$files(),
@@ -67,5 +77,9 @@ shinyServer(function(input, output, session){
   callModule(main_table,
              "main-table-quality",
              rct_current_values = rct_current_quality_values
+  )
+  callModule(main_table,
+             "main-table-spectral",
+             rct_current_values = rct_current_spectral_values
   )
 })

@@ -13,7 +13,7 @@ ui <- dashboardPage(
                  tabName = "runs",
                  icon = icon("chart-line")),
         menuItem("Fourer spectrum",
-                 tabName = "fourier_spectrum",
+                 tabName = "spectral",
                  icon = icon("area-chart")),
         menuItem("Quality",
                  tabName = "quality",
@@ -63,6 +63,24 @@ ui <- dashboardPage(
                            fluidRow(
                              box(title = "Monotonic runs",
                                  plotsUI("runs-plots")
+                             )
+                           )
+                         })
+              )
+        ),
+      tabItem(tabName = "spectral",
+              fluidRow(
+                flipBox( id = 2,
+                         front_title = "Numerical results",
+                         solidHeader = FALSE,
+                         width = 12,
+                         main_tableUI("main-table-spectral"),
+                         header_img = NULL,
+                         main_img = NULL,
+                         back_content = {
+                           fluidRow(
+                             box(title = "Lomb-Scargle periodogram",
+                                 plotsUI("spectral-plots")
                              )
                            )
                          })
