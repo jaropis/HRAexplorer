@@ -9,15 +9,21 @@
 #'
 #' @return the results of Poincare plot analysis
 #' @export
-get_numerical_results <- function(analysis_type, fileAddresses, separator = "\t", column_data = c(1,2), minmax = c(0, 3000), using_excel = FALSE) {
+get_numerical_results <- function(analysis_type,
+                                  fileAddresses,
+                                  separator = "\t",
+                                  column_data = c(1,2),
+                                  minmax = c(0, 3000),
+                                  using_excel = FALSE,
+                                  use_ULF = "No") {
   if (analysis_type == "poincare")
     return(getPpResults(fileAddresses, separator, column_data, minmax, using_excel))
   if (analysis_type == "runs")
     return(get_runs_results(fileAddresses, separator, column_data, minmax, using_excel))
   if (analysis_type == "spectral")
-    return(get_spectral_results())
+    return(get_spectral_results(fileAddresses, separator, column_data, minmax, using_excel, use_ULF))
   if (analysis_type == "quality")
-    return(get_quality_results())
+    return(get_quality_results(fileAddresses, separator, column_data, minmax, using_excel))
 }
 
 #' function for getting the results of Poincare Plot analysis
@@ -69,4 +75,60 @@ get_runs_results <- function(fileAddresses,
   }
   results <- hrvhra::bind_runs_as_table(results, fileAddresses$name)
   results
+}
+
+#' function for getting the results of Poincare Plot analysis
+#'
+#' @param file_addresses the addresses of the uploaded file(s)
+#' @param separator the separator chosen by the user
+#' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
+#' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
+#' @param using_Excel boolean, whether Excel files are used
+#'
+#' @return the results of Poincare plot analysis
+get_quality_results <- function(fileAddresses,
+                         separator = "\t",
+                         column_data = c(1, 2),
+                         minmax = c(0, 3000),
+                         using_excel = FALSE) {
+  results <- c()
+  for (lineNumber in  1:length(fileAddresses[[1]])){
+    rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
+    temp_results <- hrvhra::describerr(rr_and_flags[[2]])
+    results <- rbind(results, temp_results)
+  }
+  results <- as.data.frame(round(results, 3))
+  results <- cbind(fileAddresses$name, results)
+  colnames(results)[1] <- "file"
+  rownames(results) <- NULL
+  return(results)
+}
+
+#' function for getting the results of Poincare Plot analysis
+#'
+#' @param file_addresses the addresses of the uploaded file(s)
+#' @param separator the separator chosen by the user
+#' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
+#' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
+#' @param using_Excel boolean, whether Excel files are used
+#'
+#' @return the results of Poincare plot analysis
+get_spectral_results <- function(fileAddresses,
+                                separator = "\t",
+                                column_data = c(1, 2),
+                                minmax = c(0, 3000),
+                                using_excel = FALSE,
+                                use_ULF = "No") {
+  results <- c()
+  for (lineNumber in  1:length(fileAddresses[[1]])) {
+    rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
+    temp_results <- hrvhra::calculate_RR_spectrum(rr_and_flags,
+                                                  bands = 'if'(use_ULF == "No", hrvhra::frequency_bands, hrvhra::frequency_bands_24))
+    results <- rbind(results, temp_results)
+  }
+  results <- as.data.frame(round(results, 3))
+  results <- cbind(fileAddresses$name, results)
+  colnames(results)[1] <- "file"
+  rownames(results) <- NULL
+  return(results)
 }
