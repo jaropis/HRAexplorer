@@ -11,7 +11,7 @@ plotsUI <- function(id) {
 #'
 #' @param type_of_plot plot type (poincare, runs, spectrum etc.)
 #' @param data_address address of the file to be read
-#' @param line_number the line holding the name of the file we want to analyze
+#' @param rct_line_number reactive, the line holding the name of the file we want to analyze
 #' @param inp_data_columns numbers of columns holding RR intervals and annotations
 #' @param inp_separator separator used in file
 #' @param inp_minmax minimum and maximum values of RR intervals of sinus origin
@@ -23,33 +23,37 @@ plotsUI <- function(id) {
 plots <- function(input, output, session,
                   type_of_plot = "poincare",
                   data_address,
-                  line_number,
+                  rct_line_number,
                   data_columns,
                   separator,
                   minmax,
                   using_excel,
                   variable_name,
                   color) {
-  if (type_of_plot == "poincare") {
-    output$current_plot <- renderPlot({
+
+  output$current_plot <- renderPlot({
+    req(rct_line_number())
+    if (type_of_plot == "poincare") {
       read_and_filter_one_file(data_address,
-                               line_number = line_number,
+                               line_number = as.numeric(rct_line_number()),
                                separator = separator,
                                column_data = data_columns,
                                minmax = minmax,
                                using_excel = using_excel
       ) %>% # TODO - what about errors??
-        as.data.frame() %>% 
-        hrvhra::pp() %>% 
+        as.data.frame() %>%
+        hrvhra::pp() %>%
         hrvhra::drawpp(vname = variable_name,
                        col = glob_marker_color, bg = color, pch = 21)
-    })
+    }})
 
-    output$downloadPlot <- downloadHandler(
-      filename = "PoincarePlot.png",
-      content = function(file) {
+  output$downloadPlot <- downloadHandler(
+    filename = "PoincarePlot.png",
+    content = function(file) {
+      if (type_of_plot == "poincare") {
+        req(rct_line_number())
         rr_and_flags <- read_and_filter_one_file(data_address,
-                                                 line_number = line_number,
+                                                 line_number = rct_line_number(),
                                                  separator = separator,
                                                  column_data = data_columns,
                                                  minmax = minmax,
@@ -58,7 +62,8 @@ plots <- function(input, output, session,
         hrvhra::drawpp(rr_and_flags$RR, rr_and_flags$annotations,
                        vname = variable_name,
                        col = glob_marker_color, bg = color, pch = 21)
-        dev.off()
-      })
-  }
+        dev.off()} else {
+          NULL
+        }
+    })
 }

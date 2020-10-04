@@ -67,6 +67,24 @@ ui <- dashboardPage(
                            )
                          })
               )
+      ),
+      tabItem(tabName = "quality",
+              fluidRow(
+                flipBox( id = 2,
+                         front_title = "Numerical results",
+                         solidHeader = FALSE,
+                         width = 12,
+                         main_tableUI("main-table-quality"),
+                         header_img = NULL,
+                         main_img = NULL,
+                         back_content = {
+                           fluidRow(
+                             box(title = "Recording quality",
+                                 plotsUI("quality-plots")
+                             )
+                           )
+                         })
+              )
       )
     )
   )
