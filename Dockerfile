@@ -6,6 +6,7 @@ RUN apt-get update \
     libcurl4-openssl-dev \
     libssl-dev \
     libxml2-dev \
+    tar \
     && R CMD javareconf \
     && apt-get -y install r-cran-rjava
 
@@ -17,6 +18,9 @@ RUN install2.r shiny \
                XLConnect \
                devtools \
                remotes \
-               roxygen2
+               roxygen2 \
+               dplyr
 
+# ARG not to use cache at this point
+ARG HRA_VER=unknown
 RUN installGithub.r   jaropis/hrvhra

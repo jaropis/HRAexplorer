@@ -11,7 +11,13 @@ ui <- dashboardPage(
                  icon = icon("heart")),
         menuItem("Runs",
                  tabName = "runs",
-                 icon = icon("chart-line"))
+                 icon = icon("chart-line")),
+        menuItem("Fourer spectrum",
+                 tabName = "fourier_spectrum",
+                 icon = icon("area-chart")),
+        menuItem("Quality",
+                 tabName = "quality",
+                 icon = icon("thumbs-up"))
       )
     ),
   dashboardBody(
