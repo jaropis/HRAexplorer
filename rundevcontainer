@@ -28,7 +28,7 @@ case $1 in
 	;;
     rebuild)
 	docker image rm -f hradev
-	docker image build -t hradev .
+	docker build --build-arg HRA_VER=20160613.2 . -t hradev
 	;;
     *)
 	echo "usage: /runcontainer start/stop/rebuild"

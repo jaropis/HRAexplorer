@@ -5,6 +5,7 @@ options(java.parameters = c("-Xss2560k", "-Xmx2g"))
 library(HRAexplorer)
 library(shinydashboard)
 library(shinydashboardPlus)
+library(dplyr)
 
 # modules ----
 source(file.path("modules", "upload-and-filter-module.R"))

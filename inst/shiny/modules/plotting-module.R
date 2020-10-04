@@ -32,18 +32,17 @@ plots <- function(input, output, session,
                   color) {
   if (type_of_plot == "poincare") {
     output$current_plot <- renderPlot({
-      rr_and_flags <- read_and_filter_one_file(data_address,
-                                               line_number = line_number,
-                                               separator = separator,
-                                               column_data = data_columns,
-                                               minmax = minmax,
-                                               using_excel = using_excel
-                                               )
-      # TODO - what about errors??
-      hrvhra::drawpp(rr_and_flags$RR, rr_and_flags$annotations,
-                     vname = variable_name,
-                     col = glob_marker_color, bg = color, pch = 21)
-
+      read_and_filter_one_file(data_address,
+                               line_number = line_number,
+                               separator = separator,
+                               column_data = data_columns,
+                               minmax = minmax,
+                               using_excel = using_excel
+      ) %>% # TODO - what about errors??
+        as.data.frame() %>% 
+        hrvhra::pp() %>% 
+        hrvhra::drawpp(vname = variable_name,
+                       col = glob_marker_color, bg = color, pch = 21)
     })
 
     output$downloadPlot <- downloadHandler(
