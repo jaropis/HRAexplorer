@@ -8,9 +8,12 @@ single_resultsUI <- function(id) {
 
 single_results <- function(input, output, session,
                            type_of_plot,
-                           line_number,
+                           rct_line_number,
                            rct_current_pp_values) {
-  data_line <- rct_current_pp_values()[line_number, ]
-  html_description <- description_string(data_line, type_of_plot)
-  output$single_table <- renderUI(HTML(html_description))
+  observe({
+    req(rct_line_number())
+    data_line <- rct_current_pp_values()[rct_line_number(), ]
+    html_description <- description_string(data_line, type_of_plot)
+    output$single_table <- renderUI(HTML(html_description))
+  })
 }
