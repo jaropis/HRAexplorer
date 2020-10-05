@@ -23,7 +23,10 @@ ui <- dashboardPage(
   dashboardBody(
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
-      tags$script(src = "javascript/all.js")
+      tags$script(src = "javascript/all.js"),
+      # now loader
+      tags$link(rel = "stylesheet", type = "text/css", href = "css/loader.css"),
+      loader("img/loader2.svg", timeout = 1000, interval = 300, sleep = 500)
     ),
     tabItems(
       tabItem(tabName = "data_import",
