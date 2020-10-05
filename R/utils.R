@@ -30,3 +30,26 @@ calculate_data_addresses <- function() {
   return(dataPaths)
 }
 
+loader <- function(path,
+                   timeout = 1000,
+                   interval = 1000,
+                   sleep = 1000) {
+  if (isTruthy(path)) {
+    tagList(
+      tags$div(
+        class = "spinnerLoading overlay",
+        id = "loader",
+        tags$p(
+          id = "pWithLoader",
+          tags$img(src = path)
+        )
+      ),
+      tags$script(
+        sprintf("waitForEl('div.wrapper', startSpinner, [%d, %d, %d])", timeout, sleep, interval)
+      )
+    )
+  } else {
+    NULL
+  }
+}
+

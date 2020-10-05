@@ -1,0 +1,40 @@
+.overlay {
+  display: black;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-color: white;
+  opacity: .4;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 900000000000;
+}
+
+#loader {
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 900000000001;
+  opacity: 0.5;
+}
+
+#pWithLoader {
+  background: white;
+  position: absolute;
+  top: 25%;
+  left: 35%;
+  height: 35%;
+  width: 35%;
+  -webkit-animation: fadein 2s;
+  -moz-animation: fadein 2s;
+  animation: fadein 2s;
+}
+
+@keyframes fadein {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
