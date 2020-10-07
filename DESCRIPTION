@@ -6,6 +6,10 @@ Author: Jaroslaw Piskorski
 Maintainer: Jaroslaw Piskorski <jaropis@zg.home.pl>
 Description: This software provides a gui for exploring the asymmetry and varia-
     bility of the RR intervals time series
+Depends:
+    hrvhra,
+    dplyr,
+    lubridate
 Imports:
     DT,
     hrvhra,
@@ -13,8 +17,7 @@ Imports:
     shinydashboard,
     shinydashboardPlus,
     XLConnect,
-    dplyr
 License: MIT
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
