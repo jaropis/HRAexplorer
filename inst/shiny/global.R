@@ -39,3 +39,4 @@ glob_init_file_extension <- "rea"
 
 #' other globals
 glob_marker_color = "black"
+
