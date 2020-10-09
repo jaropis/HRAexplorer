@@ -67,6 +67,27 @@ ui <- dashboardPage(
                           })
                )
       ),
+      tabItem(tabName = "hrv_time_domain-dynamic",
+              fluidRow(
+                flipBox( id = 1,
+                         front_title = "Numerical results",
+                         solidHeader = FALSE,
+                         width = 12,
+                         main_tableUI("main-table-dynamic"),
+                         header_img = NULL,
+                         main_img = NULL,
+                         back_content = {
+                           fluidRow(
+                             box(title = "Poincare plot",
+                                 plotsUI("plots")
+                             ),
+                             box(title = "Poincare plot descriptors",
+                                 single_resultsUI("single-results")
+                             )
+                           )
+                         })
+              )
+      ),
       tabItem(tabName = "runs",
               fluidRow(
                 flipBox( id = 2,
