@@ -43,7 +43,7 @@ shinyServer(function(input, output, session){
   })
 
   rct_current_dynamic_pp_results <- reactive({
-    get_numerical_dynamic_results(analysis_type = "poincare_dynamic",
+    get_dynamic_numerical_results(analysis_type = "poincare_dynamic",
                                   data_info$files(),
                                   separator = data_info$separator(),
                                   column_data = data_info$data_columns(),
@@ -90,5 +90,9 @@ shinyServer(function(input, output, session){
   callModule(main_table,
              "main-table-spectral",
              rct_current_values = rct_current_spectral_values
+  )
+  callModule(main_table,
+             "main-table-dynamic",
+             rct_current_values = rct_current_pp_values
   )
 })
