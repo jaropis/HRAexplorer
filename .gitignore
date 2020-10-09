@@ -1,10 +1,9 @@
-.Rbuildignore
-.Rhistory
 .Rproj.user
+.Rhistory
 .RData
-.rstudio/
-Deployment/
+.Ruserdata
+.gitignore
 .DS_Store
-.cache/
 .Renviron
-*~
+.Rbuildignore
+lines_of_code.sh
