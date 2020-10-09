@@ -43,7 +43,7 @@ get_dynamic_pp_results <- function(fileAddresses,
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
-    temp_results <- get_single_pp_windowed_results(RR = rr_and_flags[[1]], annotations = rr_and_flags[[2]]) %>%
+    temp_results <- get_single_pp_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]])) %>%
       colMeans(na.rm = TRUE)
     results <- rbind(results, temp_results)
   }

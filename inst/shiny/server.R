@@ -93,6 +93,6 @@ shinyServer(function(input, output, session){
   )
   callModule(main_table,
              "main-table-dynamic",
-             rct_current_values = rct_current_pp_values
+             rct_current_values = rct_current_dynamic_pp_results
   )
 })

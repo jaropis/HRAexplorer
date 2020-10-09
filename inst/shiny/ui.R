@@ -29,7 +29,7 @@ ui <- dashboardPage(
                menuSubItem("Static",
                            tabName = "quality",
                ),
-               menuSubItem("Dynamec",
+               menuSubItem("Dynamic",
                            tabName = "quality-dynamic")
       )
     )
@@ -67,27 +67,6 @@ ui <- dashboardPage(
                           })
                )
       ),
-      tabItem(tabName = "hrv_time_domain-dynamic",
-              fluidRow(
-                flipBox( id = 1,
-                         front_title = "Numerical results",
-                         solidHeader = FALSE,
-                         width = 12,
-                         main_tableUI("main-table-dynamic"),
-                         header_img = NULL,
-                         main_img = NULL,
-                         back_content = {
-                           fluidRow(
-                             box(title = "Poincare plot",
-                                 plotsUI("plots")
-                             ),
-                             box(title = "Poincare plot descriptors",
-                                 single_resultsUI("single-results")
-                             )
-                           )
-                         })
-              )
-      ),
       tabItem(tabName = "runs",
               fluidRow(
                 flipBox( id = 2,
@@ -108,7 +87,7 @@ ui <- dashboardPage(
         ),
       tabItem(tabName = "spectral",
               fluidRow(
-                flipBox( id = 2,
+                flipBox( id = 3,
                          front_title = "Numerical results",
                          solidHeader = FALSE,
                          width = 12,
@@ -126,7 +105,7 @@ ui <- dashboardPage(
       ),
       tabItem(tabName = "quality",
               fluidRow(
-                flipBox( id = 2,
+                flipBox( id = 4,
                          front_title = "Numerical results",
                          solidHeader = FALSE,
                          width = 12,
@@ -137,6 +116,31 @@ ui <- dashboardPage(
                            fluidRow(
                              box(title = "Recording quality",
                                  plotsUI("quality-plots")
+                             )
+                           )
+                         })
+              )
+      )
+      ,
+      tabItem(tabName = "hrv_time_domain-dynamic",
+              fluidRow(
+                flipBox( id = 5,
+                         front_title = "Numerical results",
+                         solidHeader = FALSE,
+                         width = 12,
+                         tags$p("ala ma kota na przodzie"),
+                         main_tableUI("main-table-dynamic"),
+                         header_img = NULL,
+                         main_img = NULL,
+                         back_content = {
+                           fluidRow(
+                             box(title = "Poincare plot",
+                                 #plotsUI("plots")
+                                 tags$p("tyl 1")
+                             ),
+                             box(title = "Poincare plot descriptors",
+                                 tags$p("tyl 2")
+                                 #single_resultsUI("single-results")
                              )
                            )
                          })
