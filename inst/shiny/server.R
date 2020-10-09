@@ -42,6 +42,15 @@ shinyServer(function(input, output, session){
     )
   })
 
+  rct_current_dynamic_pp_results <- reactive({
+    get_numerical_dynamic_results(analysis_type = "poincare_dynamic",
+                                  data_info$files(),
+                                  separator = data_info$separator(),
+                                  column_data = data_info$data_columns(),
+                                  minmax = data_info$minmax(),
+                                  using_excel = data_info$using_excel())
+  })
+
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
 
