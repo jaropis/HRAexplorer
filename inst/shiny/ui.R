@@ -1,25 +1,39 @@
 ui <- dashboardPage(
   dashboardHeader(title = "HRAExplorer"),
   dashboardSidebar(
-      sidebarMenu(
-        id = "sidebar-tabs",
-        menuItem("Import and filter data",
-                 tabName = "data_import",
-                 icon = icon("database")),
-        menuItem("HRV time domain",
-                 tabName = "hrv_time_domain",
-                 icon = icon("heart")),
-        menuItem("Runs",
-                 tabName = "runs",
-                 icon = icon("chart-line")),
-        menuItem("Fourer spectrum",
-                 tabName = "spectral",
-                 icon = icon("area-chart")),
-        menuItem("Quality",
-                 tabName = "quality",
-                 icon = icon("thumbs-up"))
+    sidebarMenu(
+      id = "sidebar-tabs",
+      menuItem("Import and filter data",
+               tabName = "data_import",
+               icon = icon("database")),
+      menuItem("HRV time domain", icon = icon("heart"),
+               menuSubItem("Static",
+                           tabName = "hrv_time_domain"
+               ),
+               menuSubItem("Dynamic",
+                           tabName = "hrv_time_domain-dynamic")),
+      menuItem("Runs", icon = icon("chart-line"),
+               menuSubItem("Static",
+                           tabName = "runs"
+               ),
+               menuSubItem("Dynamic",
+                           tabName = "runs-dynamic")
+      ),
+      menuItem("Fourer spectrum", icon = icon("area-chart"),
+               menuSubItem("Static",
+                           tabName = "spectral"),
+               menuSubItem("Dynamic",
+                           tabName = "spectral-dynamic")
+      ),
+      menuItem("Quality", icon = icon("thumbs-up"),
+               menuSubItem("Static",
+                           tabName = "quality",
+               ),
+               menuSubItem("Dynamec",
+                           tabName = "quality-dynamic")
       )
-    ),
+    )
+  ),
   dashboardBody(
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
