@@ -2,14 +2,15 @@
 % Please edit documentation in R/data-crunching-functions-dynamic.R
 \name{get_dynamic_pp_results}
 \alias{get_dynamic_pp_results}
-\title{function for getting the results of Poincare Plot analysis}
+\title{function for getting the results of dynamic Poincare Plot analysis}
 \usage{
 get_dynamic_pp_results(
   fileAddresses,
   separator = "\\t",
   column_data = c(1, 2),
   minmax = c(0, 3000),
-  using_excel = FALSE
+  using_excel = FALSE,
+  time_functions_list = glb_time_functions
 )
 }
 \arguments{
@@ -27,5 +28,5 @@ get_dynamic_pp_results(
 the results of Poincare plot analysis
 }
 \description{
-function for getting the results of Poincare Plot analysis
+function for getting the results of dynamic Poincare Plot analysis
 }
