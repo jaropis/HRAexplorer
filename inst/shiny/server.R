@@ -60,6 +60,15 @@ shinyServer(function(input, output, session){
                                   using_excel = data_info$using_excel())
   })
 
+  rct_current_dynamic_spectral_results <- reactive({
+    get_dynamic_numerical_results(analysis_type = "spectral_dynamic",
+                                  data_info$files(),
+                                  separator = data_info$separator(),
+                                  column_data = data_info$data_columns(),
+                                  minmax = data_info$minmax(),
+                                  using_excel = data_info$using_excel())
+  })
+
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
 
@@ -107,5 +116,9 @@ shinyServer(function(input, output, session){
   callModule(main_table,
              "main-table-runs-dynamic",
              rct_current_values = rct_current_dynamic_runs_results
+  )
+  callModule(main_table,
+             "main-table-spectral-dynamic",
+             rct_current_values = rct_current_dynamic_spectral_results
   )
 })
