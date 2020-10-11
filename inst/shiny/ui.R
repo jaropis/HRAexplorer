@@ -120,8 +120,30 @@ ui <- dashboardPage(
                            )
                          })
               )
-      )
-      ,
+      ),
+      tabItem(tabName = "hrv_time_domain-dynamic",
+              fluidRow(
+                flipBox( id = 5,
+                         front_title = "Numerical results",
+                         solidHeader = FALSE,
+                         width = 12,
+                         main_tableUI("main-table-dynamic"),
+                         header_img = NULL,
+                         main_img = NULL,
+                         back_content = {
+                           fluidRow(
+                             box(title = "Poincare plot",
+                                 #plotsUI("plots")
+                                 tags$p("tyl 1")
+                             ),
+                             box(title = "Poincare plot descriptors",
+                                 tags$p("tyl 2")
+                                 #single_resultsUI("single-results")
+                             )
+                           )
+                         })
+              )
+      ),
       tabItem(tabName = "hrv_time_domain-dynamic",
               fluidRow(
                 flipBox( id = 5,
@@ -129,7 +151,7 @@ ui <- dashboardPage(
                          solidHeader = FALSE,
                          width = 12,
                          tags$p("ala ma kota na przodzie"),
-                         main_tableUI("main-table-dynamic"),
+                         main_tableUI("main-table-runs-dynamic"),
                          header_img = NULL,
                          main_img = NULL,
                          back_content = {
