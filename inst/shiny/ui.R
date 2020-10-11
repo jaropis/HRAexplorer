@@ -189,6 +189,29 @@ ui <- dashboardPage(
                            )
                          })
               )
+      ),
+      tabItem(tabName = "quality-dynamic",
+              fluidRow(
+                 flipBox(id = 8,
+                         front_title = "Numerical results",
+                         solidHeader = FALSE,
+                         width = 12,
+                         main_tableUI("main-table-quality-dynamic"),
+                         header_img = NULL,
+                         main_img = NULL,
+                         back_content = {
+                           fluidRow(
+                             box(title = "Poincare plot",
+                                 #plotsUI("plots")
+                                 tags$p("tyl 1")
+                             ),
+                             box(title = "Poincare plot descriptors",
+                                 tags$p("tyl 2")
+                                 #single_resultsUI("single-results")
+                             )
+                           )
+                         })
+              )
       )
     )
   )
