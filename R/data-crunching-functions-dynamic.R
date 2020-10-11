@@ -18,28 +18,33 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   use_ULF = "No") {
   if (analysis_type == "poincare_dynamic")
     return(get_dynamic_pp_results(fileAddresses,
+                                  time_functions_list = glb_time_functions,
                                   separator,
                                   column_data,
                                   minmax,
-                                  using_excel,
-                                  time_functions_list = glb_time_functions))
+                                  using_excel))
   if (analysis_type == "runs_dynamic")
     return(get_dynamic_runs_results(fileAddresses,
+                                    time_functions_list = glb_time_functions,
                                     separator,
                                     column_data,
                                     minmax,
-                                    using_excel,
-                                    time_functions_list = glb_time_functions))
+                                    using_excel))
   if (analysis_type == "spectral_dynamic")
     return(get_dynamic_spectral_results(fileAddresses,
+                                        time_functions_list = glb_time_functions,
                                         separator,
                                         column_data,
                                         minmax,
                                         using_excel,
-                                        use_ULF = use_ULF,
-                                        time_functions_list = glb_time_functions))
+                                        use_ULF = use_ULF))
   if (analysis_type == "quality_dynamic")
-    return(get_quality_results(fileAddresses, separator, column_data, minmax, using_excel))
+    return(get_dynamic_quality_results(fileAddresses,
+                                       time_functions_list = glb_time_functions,
+                                       separator,
+                                       column_data,
+                                       minmax,
+                                       using_excel))
 }
 
 #' function for getting the results of dynamic Poincare Plot analysis
@@ -52,11 +57,11 @@ get_dynamic_numerical_results <- function(analysis_type,
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_pp_results <- function(fileAddresses,
-                           separator = "\t",
-                           column_data = c(1, 2),
-                           minmax = c(0, 3000),
-                           using_excel = FALSE,
-                           time_functions_list = glb_time_functions) {
+                                   time_functions_list = glb_time_functions,
+                                   separator = "\t",
+                                   column_data = c(1, 2),
+                                   minmax = c(0, 3000),
+                                   using_excel = FALSE) {
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
@@ -82,11 +87,11 @@ get_dynamic_pp_results <- function(fileAddresses,
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_runs_results <- function(fileAddresses,
-                                   separator = "\t",
-                                   column_data = c(1, 2),
-                                   minmax = c(0, 3000),
-                                   using_excel = FALSE,
-                                   time_functions_list = glb_time_functions) {
+                                     time_functions_list = glb_time_functions,
+                                     separator = "\t",
+                                     column_data = c(1, 2),
+                                     minmax = c(0, 3000),
+                                     using_excel = FALSE) {
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
@@ -117,12 +122,12 @@ get_dynamic_runs_results <- function(fileAddresses,
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_spectral_results <- function(fileAddresses,
-                                   separator = "\t",
-                                   column_data = c(1, 2),
-                                   minmax = c(0, 3000),
-                                   using_excel = FALSE,
-                                   use_ULF = FALSE,
-                                   time_functions_list = glb_time_functions) {
+                                         use_ULF = FALSE,
+                                         time_functions_list = glb_time_functions,
+                                         separator = "\t",
+                                         column_data = c(1, 2),
+                                         minmax = c(0, 3000),
+                                         using_excel = FALSE) {
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
@@ -139,6 +144,35 @@ get_dynamic_spectral_results <- function(fileAddresses,
   return(results)
 }
 
+#' function for getting the results of dynamic Poincare Plot analysis
+#'
+#' @param file_addresses the addresses of the uploaded file(s)
+#' @param separator the separator chosen by the user
+#' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
+#' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
+#' @param using_Excel boolean, whether Excel files are used
+#'
+#' @return the results of Poincare plot analysis
+get_dynamic_quality_results <- function(fileAddresses,
+                                        time_functions_list = glb_time_functions,
+                                        separator = "\t",
+                                        column_data = c(1, 2),
+                                        minmax = c(0, 3000),
+                                        using_excel = FALSE) {
+  results <- c()
+  for (lineNumber in  1:length(fileAddresses[[1]])){
+    rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
+    temp_results <- get_single_quality_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
+                                                        time_functions_list = time_functions_list) %>%
+      colMeans(na.rm = TRUE)
+    results <- rbind(results, temp_results)
+  }
+  results <- as.data.frame(round(results,3))
+  results <- cbind(fileAddresses$name, results)
+  colnames(results)[1] <- "file"
+  rownames(results) <- NULL
+  return(results)
+}
 
 #' time window functions as a list
 #' @export
@@ -212,30 +246,6 @@ get_single_runs_windowed_results <- function(RR,
 
 }
 
-#' Function calculating windowed quality results for a single RR time series
-#' @param RR rr object
-#' @param window_type type of window, can be time or index
-#' @param slide_type how should the window move: slide or jump
-#' @param window_length length of the window, in minutes or beats, according to window_type
-#' @retur data.frame with results for windows as rows
-#' @export
-get_single_quality_windowed_results <- function(RR,
-                                                time_functions_list = glb_time_functions,
-                                                window_type = "time",
-                                                move_type = "jump",
-                                                window_length = 5,
-                                                cut_end = FALSE,
-                                                return_all = FALSE) {
-  window_slide = paste(window_type, move_type, sep = "_")
-  time_function <- time_functions_list[[window_slide]]
-  lapply(time_function(RR, window = window_length, cut_end = cut_end),
-         function(window_table) {
-           hrvhra::describerr(window_table[[3]])
-         }) %>%
-    dplyr::bind_rows() %>%
-    cut_incomplete_rows(cut_end, return_all)
-}
-
 #' Function calculating windowed spectral results for a single RR time series
 #' @param RR rr object
 #' @param window_type type of window, can be time or index
@@ -261,6 +271,30 @@ get_single_spectral_windowed_results <- function(RR,
   lapply(time_function(RR, window = window_length, cut_end = cut_end),
          function(window_table) {
            hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[2]], annotations = window_table[[3]]), bands)
+         }) %>%
+    dplyr::bind_rows() %>%
+    cut_incomplete_rows(cut_end, return_all)
+}
+
+#' Function calculating windowed quality results for a single RR time series
+#' @param RR rr object
+#' @param window_type type of window, can be time or index
+#' @param slide_type how should the window move: slide or jump
+#' @param window_length length of the window, in minutes or beats, according to window_type
+#' @retur data.frame with results for windows as rows
+#' @export
+get_single_quality_windowed_results <- function(RR,
+                                                time_functions_list = glb_time_functions,
+                                                window_type = "time",
+                                                move_type = "jump",
+                                                window_length = 5,
+                                                cut_end = FALSE,
+                                                return_all = FALSE) {
+  window_slide = paste(window_type, move_type, sep = "_")
+  time_function <- time_functions_list[[window_slide]]
+  lapply(time_function(RR, window = window_length, cut_end = cut_end),
+         function(window_table) {
+           hrvhra::describerr(window_table[[3]])
          }) %>%
     dplyr::bind_rows() %>%
     cut_incomplete_rows(cut_end, return_all)
