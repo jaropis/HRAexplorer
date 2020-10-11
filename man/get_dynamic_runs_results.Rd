@@ -6,11 +6,11 @@
 \usage{
 get_dynamic_runs_results(
   fileAddresses,
+  time_functions_list = glb_time_functions,
   separator = "\\t",
   column_data = c(1, 2),
   minmax = c(0, 3000),
-  using_excel = FALSE,
-  time_functions_list = glb_time_functions
+  using_excel = FALSE
 )
 }
 \arguments{

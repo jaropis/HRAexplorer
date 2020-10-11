@@ -6,12 +6,12 @@
 \usage{
 get_dynamic_spectral_results(
   fileAddresses,
+  use_ULF = FALSE,
+  time_functions_list = glb_time_functions,
   separator = "\\t",
   column_data = c(1, 2),
   minmax = c(0, 3000),
-  using_excel = FALSE,
-  use_ULF = FALSE,
-  time_functions_list = glb_time_functions
+  using_excel = FALSE
 )
 }
 \arguments{
