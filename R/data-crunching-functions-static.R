@@ -16,7 +16,6 @@ get_numerical_results <- function(analysis_type,
                                   minmax = c(0, 3000),
                                   using_excel = FALSE,
                                   use_ULF = "No") {
-  print("tu jestem!")
   if (analysis_type == "poincare")
     return(get_pp_results(fileAddresses, separator, column_data, minmax, using_excel))
   if (analysis_type == "runs")
