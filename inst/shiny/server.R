@@ -105,7 +105,7 @@ shinyServer(function(input, output, session){
              rct_current_values = rct_current_dynamic_pp_results
   )
   callModule(main_table,
-             "main-runs-dynamic",
+             "main-table-runs-dynamic",
              rct_current_values = rct_current_dynamic_runs_results
   )
 })

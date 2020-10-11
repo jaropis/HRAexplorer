@@ -144,13 +144,12 @@ ui <- dashboardPage(
                          })
               )
       ),
-      tabItem(tabName = "hrv_time_domain-dynamic",
+      tabItem(tabName = "runs-dynamic",
               fluidRow(
-                flipBox( id = 5,
+                flipBox( id = 6,
                          front_title = "Numerical results",
                          solidHeader = FALSE,
                          width = 12,
-                         tags$p("ala ma kota na przodzie"),
                          main_tableUI("main-table-runs-dynamic"),
                          header_img = NULL,
                          main_img = NULL,
