@@ -17,11 +17,27 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   using_excel = FALSE,
                                   use_ULF = "No") {
   if (analysis_type == "poincare_dynamic")
-    return(get_dynamic_pp_results(fileAddresses, separator, column_data, minmax, using_excel))
+    return(get_dynamic_pp_results(fileAddresses,
+                                  separator,
+                                  column_data,
+                                  minmax,
+                                  using_excel,
+                                  time_functions_list = glb_time_functions))
   if (analysis_type == "runs_dynamic")
-    return(get_dynamic_runs_results(fileAddresses, separator, column_data, minmax, using_excel))
+    return(get_dynamic_runs_results(fileAddresses,
+                                    separator,
+                                    column_data,
+                                    minmax,
+                                    using_excel,
+                                    time_functions_list = glb_time_functions))
   if (analysis_type == "spectral_dynamic")
-    return(getl_dynamic_spectra_results(fileAddresses, separator, column_data, minmax, using_excel, use_ULF))
+    return(get_dynamic_spectral_results(fileAddresses,
+                                        separator,
+                                        column_data,
+                                        minmax,
+                                        using_excel,
+                                        use_ULF = use_ULF,
+                                        time_functions_list = glb_time_functions))
   if (analysis_type == "quality_dynamic")
     return(get_quality_results(fileAddresses, separator, column_data, minmax, using_excel))
 }
@@ -39,11 +55,13 @@ get_dynamic_pp_results <- function(fileAddresses,
                            separator = "\t",
                            column_data = c(1, 2),
                            minmax = c(0, 3000),
-                           using_excel = FALSE) {
+                           using_excel = FALSE,
+                           time_functions_list = glb_time_functions) {
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
-    temp_results <- get_single_pp_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]])) %>%
+    temp_results <- get_single_pp_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
+                                                   time_functions_list = time_functions_list) %>%
       colMeans(na.rm = TRUE)
     results <- rbind(results, temp_results)
   }
@@ -67,11 +85,13 @@ get_dynamic_runs_results <- function(fileAddresses,
                                    separator = "\t",
                                    column_data = c(1, 2),
                                    minmax = c(0, 3000),
-                                   using_excel = FALSE) {
+                                   using_excel = FALSE,
+                                   time_functions_list = glb_time_functions) {
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
-    temp_results <- get_single_runs_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]])) %>%
+    temp_results <- get_single_runs_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
+                                                     time_functions_list = time_functions_list) %>%
       dplyr::select(-c("file")) %>%
       colMeans(na.rm = TRUE) %>%
       t() %>%
@@ -100,11 +120,15 @@ get_dynamic_spectral_results <- function(fileAddresses,
                                    separator = "\t",
                                    column_data = c(1, 2),
                                    minmax = c(0, 3000),
-                                   using_excel = FALSE) {
+                                   using_excel = FALSE,
+                                   use_ULF = FALSE,
+                                   time_functions_list = glb_time_functions) {
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
-    temp_results <- get_single_spectral_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]])) %>%
+    temp_results <- get_single_spectral_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
+                                                         use_ULF = use_ULF,
+                                                         time_functions_list = time_functions_list) %>%
       colMeans(na.rm = TRUE)
     results <- rbind(results, temp_results)
   }
@@ -223,14 +247,20 @@ get_single_spectral_windowed_results <- function(RR,
                                                  time_functions_list = glb_time_functions,
                                                  window_type = "time",
                                                  move_type = "jump",
+                                                 use_ULF = FALSE,
                                                  window_length = 5,
                                                  cut_end = FALSE,
                                                  return_all = FALSE) {
   window_slide = paste(window_type, move_type, sep = "_")
   time_function <- time_functions_list[[window_slide]]
+  bands <- if (use_ULF == "Yes") {
+    hrvhra::frequency_bands_24
+  } else {
+    hrvhra::frequency_bands
+  }
   lapply(time_function(RR, window = window_length, cut_end = cut_end),
          function(window_table) {
-           hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[2]], annotations = window_table[[3]]))
+           hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[2]], annotations = window_table[[3]]), bands)
          }) %>%
     dplyr::bind_rows() %>%
     cut_incomplete_rows(cut_end, return_all)
