@@ -9,6 +9,7 @@ get_single_spectral_windowed_results(
   time_functions_list = glb_time_functions,
   window_type = "time",
   move_type = "jump",
+  use_ULF = FALSE,
   window_length = 5,
   cut_end = FALSE,
   return_all = FALSE
