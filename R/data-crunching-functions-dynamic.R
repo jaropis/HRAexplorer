@@ -6,6 +6,9 @@
 #' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
+#' @param window_type string, jumping or sliding
+#' @param move_type string, time based or index based
+#' @param window_length numeric, window length
 #'
 #' @return the results of Poincare plot analysis
 #' @export
@@ -15,14 +18,20 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   column_data = c(1,2),
                                   minmax = c(0, 3000),
                                   using_excel = FALSE,
-                                  use_ULF = "No") {
+                                  use_ULF = "No",
+                                  window_type,
+                                  move_type,
+                                  window_length) {
   if (analysis_type == "poincare_dynamic")
     return(get_dynamic_pp_results(fileAddresses,
                                   time_functions_list = glb_time_functions,
                                   separator,
                                   column_data,
                                   minmax,
-                                  using_excel))
+                                  using_excel,
+                                  window_type,
+                                  move_type,
+                                  window_length))
   if (analysis_type == "runs_dynamic")
     return(get_dynamic_runs_results(fileAddresses,
                                     time_functions_list = glb_time_functions,
@@ -54,6 +63,9 @@ get_dynamic_numerical_results <- function(analysis_type,
 #' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
+#' @param window_type string, jumping or sliding
+#' @param move_type string, time based or index based
+#' @param window_length numeric, window length
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_pp_results <- function(fileAddresses,
@@ -61,12 +73,18 @@ get_dynamic_pp_results <- function(fileAddresses,
                                    separator = "\t",
                                    column_data = c(1, 2),
                                    minmax = c(0, 3000),
-                                   using_excel = FALSE) {
+                                   using_excel = FALSE,
+                                   window_type,
+                                   move_type,
+                                   window_length) {
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
     temp_results <- get_single_pp_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
-                                                   time_functions_list = time_functions_list) %>%
+                                                   time_functions_list = time_functions_list,
+                                                   window_type = window_type,
+                                                   move_type = move_type,
+                                                   window_length = window_length) %>%
       colMeans(na.rm = TRUE)
     results <- rbind(results, temp_results)
   }
@@ -211,7 +229,7 @@ get_single_pp_windowed_results <- function(RR,
                                            window_length = 5,
                                            cut_end = FALSE,
                                            return_all = FALSE) {
-  window_slide = paste(window_type, move_type, sep = "_")
+  window_slide = paste(move_type, window_type, sep = "_")
   time_function <- time_functions_list[[window_slide]]
   lapply(time_function(RR, window = window_length, cut_end = cut_end),
          function(window_table) {
