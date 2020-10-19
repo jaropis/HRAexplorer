@@ -33,7 +33,23 @@ data_upload_and_filterUI <- function(id) {
                                  "Calculate ULF?",
                                  choices = c("Yes", "No"),
                                  selected = "No",
-                                 inline = TRUE))
+                                 inline = TRUE)),
+             column(4,
+                    h3("Windowing options"),
+                    selectInput(inputId = ns("window_type"),
+                                label = "Window movement type",
+                                choices = list(jumping = "jump",
+                                               sliding = "slide"),
+                                selected = "jump"),
+                    selectInput(inputId = ns("move_type"),
+                                label = "Window time basis",
+                                choices = list("time based" = "time",
+                                               "index based" = "index"),
+                                selected = c("time based")),
+                    numericInput(inputId = ns("window_length"),
+                                 label = "Window length in minutes",
+                                 value = 5,
+                                 min = 0))
            ))
 }
 
@@ -43,6 +59,20 @@ data_upload_and_filterUI <- function(id) {
 #' @return inputs corresponding to upload and filtering
 #' @export
 data_upload_and_filter <- function(input, output, session) {
+  ns <- session$ns
+  observeEvent(input$move_type, {
+    if (input$move_type == 'time') {
+      updateNumericInput(session,
+                        "window_length",
+                        label = "Window length in minutes",
+                        value = 5)
+    } else {
+      updateNumericInput(session,
+                        "window_length",
+                        label = "Window length in heart beats",
+                        value = 300)
+    }
+  }, ignoreInit = TRUE)
   list(
     variable_name = reactive(input$variable_name),
     using_excel = reactive(input$using_excel),
@@ -51,7 +81,10 @@ data_upload_and_filter <- function(input, output, session) {
     data_columns = reactive(input$data_columns),
     minmax = reactive(input$minmax),
     color = reactive(input$color),
-    use_ULF = reactive(input$use_ULF)
+    use_ULF = reactive(input$use_ULF),
+    window_type = reactive(input$window_type),
+    move_type = reactive(input$move_type),
+    window_length = reactive(input$window_length)
     #go = reactive(input$go),
   )
 }
