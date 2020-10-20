@@ -116,7 +116,9 @@ shinyServer(function(input, output, session){
 
   callModule(main_table,
              "main-table",
-             rct_current_values = rct_current_pp_values
+             rct_current_values = rct_current_pp_values,
+             button_label = "View",
+             button_id = "btn_view_pp_"
   )
   callModule(main_table,
              "main-table-runs",
@@ -132,18 +134,25 @@ shinyServer(function(input, output, session){
   )
   callModule(main_table,
              "main-table-dynamic",
-             rct_current_values = rct_current_dynamic_pp_results
+             rct_current_values = rct_current_dynamic_pp_results,
+             button_label = "Detail",
+             button_id = "btn_view_pp_dynamic_"
   )
   callModule(main_table,
              "main-table-runs-dynamic",
-             rct_current_values = rct_current_dynamic_runs_results
+             rct_current_values = rct_current_dynamic_runs_results,
+             button_id = "btn_view_runs_dynamic_"
   )
   callModule(main_table,
              "main-table-spectral-dynamic",
-             rct_current_values = rct_current_dynamic_spectral_results
+             rct_current_values = rct_current_dynamic_spectral_results,
+             button_label = "Detail",
+             button_id = "btn_view_spectral_dynamic_"
   )
   callModule(main_table,
              "main-table-quality-dynamic",
-             rct_current_values = rct_current_dynamic_quality_results
+             rct_current_values = rct_current_dynamic_quality_results,
+             button_label = "Detail",
+             button_id = "btn_view_quality_dynamic_"
   )
 })

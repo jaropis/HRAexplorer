@@ -4,10 +4,12 @@
 \alias{get_results_matrix}
 \title{function to get results matrix}
 \usage{
-get_results_matrix(current_values)
+get_results_matrix(current_values, button_id = NULL)
 }
 \arguments{
 \item{current_values}{values to be currently displayed}
+
+\item{button_id}{if NULL, button will not be added}
 }
 \value{
 data_frame with values and View buttons

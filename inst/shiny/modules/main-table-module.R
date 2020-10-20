@@ -12,10 +12,9 @@ main_tableUI <- function(id) {
 #'
 #' @return DT
 main_table <- function(input, output, session,
-                       rct_current_values) {
+                       rct_current_values, button_label = "View", button_id = NULL) {
   main_DTable <- reactive({
-    # TODO this is data processing - extract out to main-table-functions
-    results_matrix <- HRAexplorer::get_results_matrix(rct_current_values())
+    results_matrix <- HRAexplorer::get_results_matrix(rct_current_values(), button_label, button_id)
     main_table <- DT::datatable(results_matrix,
                                 options = list(scrollX = '150px'),
                                 escape = FALSE,

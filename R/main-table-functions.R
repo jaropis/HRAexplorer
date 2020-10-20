@@ -1,16 +1,26 @@
 #' function to get results matrix
 #' @param current_values values to be currently displayed
+#' @param button_label label on the button
+#' @param button_id if NULL, button will not be added
 #' @return data_frame with values and View buttons
 #' @export
-get_results_matrix <- function(current_values) {
+get_results_matrix <- function(current_values, button_label = "View", button_id = NULL) {
   results_matrix <- as.data.frame(current_values)
-  buttons_row <- paste0('
-                 <button type="button" class="btn btn-primary" id="btn_view_',1:nrow(results_matrix),'" onclick = "click_more(btn_view_',1:nrow(results_matrix),')">View</button>
-               ')
-  results_matrix <- data.frame(file = results_matrix[, 1, drop = FALSE],
-                               "view" = buttons_row,
-                               results_matrix[, 2:ncol(results_matrix)])
+  if (!is.null(button_id)) {
+    buttons_col <- paste0(
+      sprintf('<button type="button" class="btn btn-primary" id="%s', button_id),
+      1:nrow(results_matrix),
+      sprintf('" onclick = "click_more(%s', button_id),
+      1:nrow(results_matrix),
+      sprintf(')">%s</button>', button_label))
+    return(data.frame(file = results_matrix[, 1, drop = FALSE],
+                      "view" = buttons_col,
+                      results_matrix[, 2:ncol(results_matrix)]))
+  }
+  data.frame(file = results_matrix[, 1, drop = FALSE],
+             results_matrix[, 2:ncol(results_matrix)])
 }
+
 #' function returning Poincare descriptors to be shown on the flipside
 #'
 #' @param data_line named vector with Poincare descriptors
