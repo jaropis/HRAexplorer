@@ -9,9 +9,9 @@ var tabs_list = {
 
 function click_more(buttonID) {
   clicked_line = buttonID.id.split("_")[3];
-  Shiny.setInputValue("foo", clicked_line);
-  tab_number = buttonID.id.split("_")[2];
-  moreButtonId = document.getElementById('btn-' + tabs_list[tab_number] + '-front');
+  input_type = buttonID.id.split("_")[2];
+  Shiny.setInputValue(input_type, clicked_line);
+  moreButtonId = document.getElementById('btn-' + tabs_list[input_type] + '-front');
   moreButtonId.click();
 }
 

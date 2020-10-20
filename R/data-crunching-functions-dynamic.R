@@ -44,7 +44,8 @@ get_dynamic_numerical_results <- function(analysis_type,
                                     using_excel,
                                     window_type,
                                     move_type,
-                                    window_length))
+                                    window_length,
+                                    clicked_file))
   if (analysis_type == "spectral_dynamic")
     return(get_dynamic_spectral_results(fileAddresses,
                                         time_functions_list = glb_time_functions,
@@ -55,7 +56,8 @@ get_dynamic_numerical_results <- function(analysis_type,
                                         use_ULF = use_ULF,
                                         window_type,
                                         move_type,
-                                        window_length))
+                                        window_length,
+                                        clicked_file))
   if (analysis_type == "quality_dynamic")
     return(get_dynamic_quality_results(fileAddresses,
                                        time_functions_list = glb_time_functions,
@@ -65,7 +67,8 @@ get_dynamic_numerical_results <- function(analysis_type,
                                        using_excel,
                                        window_type,
                                        move_type,
-                                       window_length))
+                                       window_length,
+                                       clicked_file))
 }
 
 #' function for getting the results of dynamic Poincare Plot analysis
@@ -130,6 +133,7 @@ get_dynamic_pp_results <- function(fileAddresses,
 #' @param window_type string, jumping or sliding
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
+#' @param clicked_file number of clicked file or NULL
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_runs_results <- function(fileAddresses,
@@ -140,28 +144,40 @@ get_dynamic_runs_results <- function(fileAddresses,
                                      using_excel = FALSE,
                                      window_type,
                                      move_type,
-                                     window_length) {
+                                     window_length,
+                                     clicked_file = NULL) {
   results <- c()
-  for (lineNumber in  1:length(fileAddresses[[1]])){
-    rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
-    temp_results <- get_single_runs_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
-                                                     time_functions_list = time_functions_list,
-                                                     window_type = window_type,
-                                                     move_type = move_type,
-                                                     window_length = window_length) %>%
-      dplyr::select(-c("file")) %>%
-      colMeans(na.rm = TRUE) %>%
-      t() %>%
-      as.data.frame()
+  if (!is.null(clicked_file)) {
+    rr_and_flags <- read_and_filter_one_file(fileAddresses, clicked_file, separator, column_data, minmax, using_excel)
+    single_file_result <- get_single_runs_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
+                                                           time_functions_list = time_functions_list,
+                                                           window_type = window_type,
+                                                           move_type = move_type,
+                                                           window_length = window_length)
+    # single_file_result[, -1] <- round(single_file_result[, -1], digits = 3)
+    return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
+  } else {
+    for (lineNumber in  1:length(fileAddresses[[1]])){
+      rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
+      temp_results <- get_single_runs_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
+                                                       time_functions_list = time_functions_list,
+                                                       window_type = window_type,
+                                                       move_type = move_type,
+                                                       window_length = window_length) %>%
+        dplyr::select(-c("file")) %>%
+        colMeans(na.rm = TRUE) %>%
+        t() %>%
+        as.data.frame()
 
-    results <- plyr::rbind.fill(results, temp_results) # rbinding columns with potentially different cols
+      results <- plyr::rbind.fill(results, temp_results) # rbinding columns with potentially different cols
+    }
+    results[is.na(results)] <- 0
+    results <- as.data.frame(round(results,3))
+    results <- cbind(fileAddresses$name, results)
+    colnames(results)[1] <- "file"
+    rownames(results) <- NULL
+    return(results)
   }
-  results[is.na(results)] <- 0
-  results <- as.data.frame(round(results,3))
-  results <- cbind(fileAddresses$name, results)
-  colnames(results)[1] <- "file"
-  rownames(results) <- NULL
-  return(results)
 }
 
 #' function for getting the results of Poincare Plot analysis
@@ -174,6 +190,7 @@ get_dynamic_runs_results <- function(fileAddresses,
 #' @param window_type string, jumping or sliding
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
+#' @param clicked_file number of clicked file or NULL
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_spectral_results <- function(fileAddresses,
@@ -185,24 +202,37 @@ get_dynamic_spectral_results <- function(fileAddresses,
                                          using_excel = FALSE,
                                          window_type,
                                          move_type,
-                                         window_length) {
+                                         window_length,
+                                         clicked_file) {
   results <- c()
-  for (lineNumber in  1:length(fileAddresses[[1]])) {
-    rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
-    temp_results <- get_single_spectral_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
+  if (!is.null(clicked_file)) {
+    rr_and_flags <- read_and_filter_one_file(fileAddresses, clicked_file, separator, column_data, minmax, using_excel)
+    single_file_result <- get_single_spectral_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
                                                          use_ULF = use_ULF,
                                                          time_functions_list = time_functions_list,
                                                          window_type = window_type,
                                                          move_type = move_type,
                                                          window_length = window_length) %>%
-      colMeans(na.rm = TRUE)
-    results <- rbind(results, temp_results)
+      round(digits = 3)
+    return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
+  } else {
+    for (lineNumber in  1:length(fileAddresses[[1]])) {
+      rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
+      temp_results <- get_single_spectral_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
+                                                           use_ULF = use_ULF,
+                                                           time_functions_list = time_functions_list,
+                                                           window_type = window_type,
+                                                           move_type = move_type,
+                                                           window_length = window_length) %>%
+        colMeans(na.rm = TRUE)
+      results <- rbind(results, temp_results)
+    }
+    results <- as.data.frame(round(results, 3))
+    results <- cbind(fileAddresses$name, results)
+    colnames(results)[1] <- "file"
+    rownames(results) <- NULL
+    return(results)
   }
-  results <- as.data.frame(round(results, 3))
-  results <- cbind(fileAddresses$name, results)
-  colnames(results)[1] <- "file"
-  rownames(results) <- NULL
-  return(results)
 }
 
 #' function for getting the results of dynamic Poincare Plot analysis
@@ -215,6 +245,7 @@ get_dynamic_spectral_results <- function(fileAddresses,
 #' @param window_type string, jumping or sliding
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
+#' @param clicked_file number of clicked file or NULL
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_quality_results <- function(fileAddresses,
@@ -223,10 +254,19 @@ get_dynamic_quality_results <- function(fileAddresses,
                                         column_data = c(1, 2),
                                         minmax = c(0, 3000),
                                         using_excel = FALSE,
-                                        window_type = window_type,
-                                        move_type = move_type,
-                                        window_length = window_length) {
+                                        window_type,
+                                        move_type,
+                                        window_length,
+                                        clicked_file) {
   results <- c()
+  if (!is.null(clicked_file)) {
+    rr_and_flags <- read_and_filter_one_file(fileAddresses, clicked_file, separator, column_data, minmax, using_excel)
+    temp_results <- get_single_quality_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
+                                                        time_functions_list = time_functions_list,
+                                                        window_type = window_type,
+                                                        move_type = move_type,
+                                                        window_length = window_length)
+  } else {
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
     temp_results <- get_single_quality_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
@@ -242,6 +282,7 @@ get_dynamic_quality_results <- function(fileAddresses,
   colnames(results)[1] <- "file"
   rownames(results) <- NULL
   return(results)
+  }
 }
 
 #' time window functions as a list

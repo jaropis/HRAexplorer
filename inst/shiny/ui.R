@@ -150,15 +150,10 @@ ui <- dashboardPage(
                          main_img = NULL,
                          back_content = {
                            fluidRow(
-                             box(title = "Poincare plot",
-                                 #plotsUI("plots")
-                                 tags$p("tyl 1")
-                             ),
-                             box(title = "Poincare plot descriptors",
-                                 tags$p("tyl 2")
-                                 #single_resultsUI("single-results")
-                             )
-                           )
+                             box(width = 12,
+                                 title = "Single file view",
+                                 main_tableUI("details-table-runs")
+                             ))
                          })
               )
       ),
@@ -173,15 +168,10 @@ ui <- dashboardPage(
                          main_img = NULL,
                          back_content = {
                            fluidRow(
-                             box(title = "Poincare plot",
-                                 #plotsUI("plots")
-                                 tags$p("tyl 1")
-                             ),
-                             box(title = "Poincare plot descriptors",
-                                 tags$p("tyl 2")
-                                 #single_resultsUI("single-results")
-                             )
-                           )
+                             box(width = 12,
+                                 title = "Single file view",
+                                 main_tableUI("details-table-spectral")
+                             ))
                          })
               )
       ),
@@ -196,15 +186,10 @@ ui <- dashboardPage(
                          main_img = NULL,
                          back_content = {
                            fluidRow(
-                             box(title = "Poincare plot",
-                                 #plotsUI("plots")
-                                 tags$p("tyl 1")
-                             ),
-                             box(title = "Poincare plot descriptors",
-                                 tags$p("tyl 2")
-                                 #single_resultsUI("single-results")
-                             )
-                           )
+                             box(width = 12,
+                                 title = "Single file view",
+                                 main_tableUI("details-table-quality")
+                             ))
                          })
               )
       )
