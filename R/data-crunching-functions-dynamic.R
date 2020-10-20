@@ -49,7 +49,10 @@ get_dynamic_numerical_results <- function(analysis_type,
                                         column_data,
                                         minmax,
                                         using_excel,
-                                        use_ULF = use_ULF))
+                                        use_ULF = use_ULF,
+                                        window_type,
+                                        move_type,
+                                        window_length))
   if (analysis_type == "quality_dynamic")
     return(get_dynamic_quality_results(fileAddresses,
                                        time_functions_list = glb_time_functions,
@@ -149,6 +152,9 @@ get_dynamic_runs_results <- function(fileAddresses,
 #' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
+#' @param window_type string, jumping or sliding
+#' @param move_type string, time based or index based
+#' @param window_length numeric, window length
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_spectral_results <- function(fileAddresses,
@@ -157,13 +163,19 @@ get_dynamic_spectral_results <- function(fileAddresses,
                                          separator = "\t",
                                          column_data = c(1, 2),
                                          minmax = c(0, 3000),
-                                         using_excel = FALSE) {
+                                         using_excel = FALSE,
+                                         window_type,
+                                         move_type,
+                                         window_length) {
   results <- c()
-  for (lineNumber in  1:length(fileAddresses[[1]])){
+  for (lineNumber in  1:length(fileAddresses[[1]])) {
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
     temp_results <- get_single_spectral_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
                                                          use_ULF = use_ULF,
-                                                         time_functions_list = time_functions_list) %>%
+                                                         time_functions_list = time_functions_list,
+                                                         window_type = window_type,
+                                                         move_type = move_type,
+                                                         window_length = window_length) %>%
       colMeans(na.rm = TRUE)
     results <- rbind(results, temp_results)
   }
@@ -261,8 +273,8 @@ get_single_pp_windowed_results <- function(RR,
 #' @export
 get_single_runs_windowed_results <- function(RR,
                                              time_functions_list = glb_time_functions,
-                                             window_type = "time",
-                                             move_type = "jump",
+                                             window_type = "jump",
+                                             move_type = "time",
                                              window_length = 5,
                                              cut_end = FALSE,
                                              return_all = FALSE) {
@@ -287,13 +299,14 @@ get_single_runs_windowed_results <- function(RR,
 #' @export
 get_single_spectral_windowed_results <- function(RR,
                                                  time_functions_list = glb_time_functions,
-                                                 window_type = "time",
-                                                 move_type = "jump",
+                                                 window_type = "jump",
+                                                 move_type = "time",
                                                  use_ULF = FALSE,
                                                  window_length = 5,
                                                  cut_end = FALSE,
                                                  return_all = FALSE) {
-  window_slide = paste(window_type, move_type, sep = "_")
+  window_slide = paste(move_type, window_type, sep = "_")
+  rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
   bands <- if (use_ULF == "Yes") {
     hrvhra::frequency_bands_24
@@ -302,7 +315,7 @@ get_single_spectral_windowed_results <- function(RR,
   }
   lapply(time_function(RR, window = window_length, cut_end = cut_end),
          function(window_table) {
-           hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[2]], annotations = window_table[[3]]), bands)
+           hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[rr_index]], annotations = window_table[[rr_index + 1]]), bands)
          }) %>%
     dplyr::bind_rows() %>%
     cut_incomplete_rows(cut_end, return_all)
