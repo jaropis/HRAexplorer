@@ -53,6 +53,19 @@ shinyServer(function(input, output, session){
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length())
   })
+  rct_current_single_dynamic_pp <- reactive({
+    req(isTruthy(input$foo))
+    get_dynamic_numerical_results(analysis_type = "poincare_dynamic",
+                                  data_info$files(),
+                                  separator = data_info$separator(),
+                                  column_data = data_info$data_columns(),
+                                  minmax = data_info$minmax(),
+                                  using_excel = data_info$using_excel(),
+                                  window_type = data_info$window_type(),
+                                  move_type = data_info$move_type(),
+                                  window_length = data_info$window_length(),
+                                  clicked_file = as.numeric(input$foo))
+    })
 
   rct_current_dynamic_runs_results <- reactive({
     get_dynamic_numerical_results(analysis_type = "runs_dynamic",
@@ -139,6 +152,10 @@ shinyServer(function(input, output, session){
              button_id = "btn_view_dynamicpp_"
   )
   callModule(main_table,
+             "details-table-pp",
+             rct_current_values = rct_current_single_dynamic_pp
+  )
+  callModule(main_table,
              "main-table-runs-dynamic",
              rct_current_values = rct_current_dynamic_runs_results,
              button_label = "Detail",
@@ -156,4 +173,5 @@ shinyServer(function(input, output, session){
              button_label = "Detail",
              button_id = "btn_view_dynamicquality_"
   )
+
 })
