@@ -54,7 +54,7 @@ shinyServer(function(input, output, session){
                                   window_length = data_info$window_length())
   })
   rct_current_single_dynamic_pp <- reactive({
-    req(isTruthy(input$foo))
+    req(isTruthy(input$dynamicpp))
     get_dynamic_numerical_results(analysis_type = "poincare_dynamic",
                                   data_info$files(),
                                   separator = data_info$separator(),
@@ -64,7 +64,7 @@ shinyServer(function(input, output, session){
                                   window_type = data_info$window_type(),
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
-                                  clicked_file = as.numeric(input$foo))
+                                  clicked_file = as.numeric(input$dynamicpp))
     })
 
   rct_current_dynamic_runs_results <- reactive({
@@ -79,6 +79,20 @@ shinyServer(function(input, output, session){
                                   window_length = data_info$window_length())
   })
 
+  rct_current_single_dynamic_runs_results <- reactive({
+    req(isTruthy(input$dynamicruns))
+    get_dynamic_numerical_results(analysis_type = "runs_dynamic",
+                                  data_info$files(),
+                                  separator = data_info$separator(),
+                                  column_data = data_info$data_columns(),
+                                  minmax = data_info$minmax(),
+                                  using_excel = data_info$using_excel(),
+                                  window_type = data_info$window_type(),
+                                  move_type = data_info$move_type(),
+                                  window_length = data_info$window_length(),
+                                  clicked_file = as.numeric(input$dynamicruns))
+  })
+
   rct_current_dynamic_spectral_results <- reactive({
     get_dynamic_numerical_results(analysis_type = "spectral_dynamic",
                                   data_info$files(),
@@ -89,6 +103,20 @@ shinyServer(function(input, output, session){
                                   window_type = data_info$window_type(),
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length())
+  })
+
+  rct_current_single_dynamic_spectral_results <- reactive({
+    req(input$dynamicspectral)
+    get_dynamic_numerical_results(analysis_type = "spectral_dynamic",
+                                  data_info$files(),
+                                  separator = data_info$separator(),
+                                  column_data = data_info$data_columns(),
+                                  minmax = data_info$minmax(),
+                                  using_excel = data_info$using_excel(),
+                                  window_type = data_info$window_type(),
+                                  move_type = data_info$move_type(),
+                                  window_length = data_info$window_length(),
+                                  clicked_file = as.numeric(input$dynamicspectral))
   })
 
   rct_current_dynamic_quality_results <- reactive({
@@ -103,6 +131,20 @@ shinyServer(function(input, output, session){
                                   window_length = data_info$window_length())
   })
 
+  rct_current_single_dynamic_quality_results <- reactive({
+    req(input$dynamicquality)
+    get_dynamic_numerical_results(analysis_type = "quality_dynamic",
+                                  data_info$files(),
+                                  separator = data_info$separator(),
+                                  column_data = data_info$data_columns(),
+                                  minmax = data_info$minmax(),
+                                  using_excel = data_info$using_excel(),
+                                  window_type = data_info$window_type(),
+                                  move_type = data_info$move_type(),
+                                  window_length = data_info$window_length(),
+                                  clicked_file = as.numeric(input$dynamicquality))
+  })
+
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
 
@@ -110,7 +152,7 @@ shinyServer(function(input, output, session){
              "plots",
              type_of_plot = "poincare",
              data_address = data_info$files(),
-             rct_line_number = reactive(input$foo), # listen for clicks on the main table (View buttons)
+             rct_line_number = reactive(input$staticpp), # listen for clicks on the main table (View buttons)
              separator = data_info$separator(),
              data_columns = data_info$data_columns(),
              minmax = data_info$minmax(),
@@ -123,7 +165,7 @@ shinyServer(function(input, output, session){
   callModule(single_results,
              "single-results",
              type_of_plot = "poincare",
-             rct_line_number = reactive(input$foo), # triggering here - as above
+             rct_line_number = reactive(input$staticpp), # triggering here - as above
              rct_current_pp_values = rct_current_pp_values
   )
 
@@ -162,10 +204,18 @@ shinyServer(function(input, output, session){
              button_id = "btn_view_dynamicruns_"
   )
   callModule(main_table,
+             "details-table-runs",
+             rct_current_values = rct_current_single_dynamic_runs_results
+  )
+  callModule(main_table,
              "main-table-spectral-dynamic",
              rct_current_values = rct_current_dynamic_spectral_results,
              button_label = "Detail",
              button_id = "btn_view_dynamicspectral_"
+  )
+  callModule(main_table,
+             'details-table-spectral',
+             rct_current_values = rct_current_single_dynamic_spectral_results
   )
   callModule(main_table,
              "main-table-quality-dynamic",
@@ -173,5 +223,8 @@ shinyServer(function(input, output, session){
              button_label = "Detail",
              button_id = "btn_view_dynamicquality_"
   )
-
+  callModule(main_table,
+             'details-table-quality',
+             rct_current_values = rct_current_single_dynamic_quality_results
+  )
 })
