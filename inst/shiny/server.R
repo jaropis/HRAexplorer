@@ -84,7 +84,10 @@ shinyServer(function(input, output, session){
                                   separator = data_info$separator(),
                                   column_data = data_info$data_columns(),
                                   minmax = data_info$minmax(),
-                                  using_excel = data_info$using_excel())
+                                  using_excel = data_info$using_excel(),
+                                  window_type = data_info$window_type(),
+                                  move_type = data_info$move_type(),
+                                  window_length = data_info$window_length())
   })
 
   data_info <- callModule(data_upload_and_filter,
