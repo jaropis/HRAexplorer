@@ -38,7 +38,10 @@ get_dynamic_numerical_results <- function(analysis_type,
                                     separator,
                                     column_data,
                                     minmax,
-                                    using_excel))
+                                    using_excel,
+                                    window_type,
+                                    move_type,
+                                    window_length))
   if (analysis_type == "spectral_dynamic")
     return(get_dynamic_spectral_results(fileAddresses,
                                         time_functions_list = glb_time_functions,
@@ -78,7 +81,7 @@ get_dynamic_pp_results <- function(fileAddresses,
                                    move_type,
                                    window_length) {
   results <- c()
-  for (lineNumber in  1:length(fileAddresses[[1]])){
+  for (lineNumber in  1:length(fileAddresses[[1]])) {
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
     temp_results <- get_single_pp_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
                                                    time_functions_list = time_functions_list,
@@ -102,6 +105,9 @@ get_dynamic_pp_results <- function(fileAddresses,
 #' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
+#' @param window_type string, jumping or sliding
+#' @param move_type string, time based or index based
+#' @param window_length numeric, window length
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_runs_results <- function(fileAddresses,
@@ -109,12 +115,18 @@ get_dynamic_runs_results <- function(fileAddresses,
                                      separator = "\t",
                                      column_data = c(1, 2),
                                      minmax = c(0, 3000),
-                                     using_excel = FALSE) {
+                                     using_excel = FALSE,
+                                     window_type,
+                                     move_type,
+                                     window_length) {
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
     temp_results <- get_single_runs_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
-                                                     time_functions_list = time_functions_list) %>%
+                                                     time_functions_list = time_functions_list,
+                                                     window_type = window_type,
+                                                     move_type = move_type,
+                                                     window_length = window_length) %>%
       dplyr::select(-c("file")) %>%
       colMeans(na.rm = TRUE) %>%
       t() %>%
@@ -230,10 +242,11 @@ get_single_pp_windowed_results <- function(RR,
                                            cut_end = FALSE,
                                            return_all = FALSE) {
   window_slide = paste(move_type, window_type, sep = "_")
+  rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
   lapply(time_function(RR, window = window_length, cut_end = cut_end),
          function(window_table) {
-           hrvhra::hrvhra(window_table[[2]], window_table[[3]])
+           hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]])
          }) %>%
     dplyr::bind_rows() %>%
     cut_incomplete_rows(cut_end, return_all)
@@ -253,11 +266,12 @@ get_single_runs_windowed_results <- function(RR,
                                              window_length = 5,
                                              cut_end = FALSE,
                                              return_all = FALSE) {
-  window_slide = paste(window_type, move_type, sep = "_")
+  window_slide = paste(move_type, window_type, sep = "_")
+  rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
   runs_list <- lapply(time_function(RR, window = window_length, cut_end = cut_end),
                       function(window_table) {
-                        hrvhra::countruns(window_table[[2]], window_table[[3]])
+                        hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
                       })
   hrvhra::bind_runs_as_table(runs_list, as.character(seq_along(runs_list))) %>%
     cut_incomplete_rows(cut_end, return_all)
