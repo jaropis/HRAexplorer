@@ -1,9 +1,18 @@
+// this list is 'experimental' and comes from the tabs ids in the UI
+var tabs_list = {
+  "staticpp": '1',
+  "dynamicpp": '5',
+  "staticruns": "2",
+  "dynamicruns": "6",
+  "dynamicspectral": "7",
+  "dynamicquality": "8"};
+
 function click_more(buttonID) {
-  moreButtonId = document.getElementById('btn-1-front');
-  text = buttonID.id.split("_")[3];
-  Shiny.setInputValue("foo", text);
+  clicked_line = buttonID.id.split("_")[3];
+  Shiny.setInputValue("foo", clicked_line);
+  tab_number = buttonID.id.split("_")[2];
+  moreButtonId = document.getElementById('btn-' + tabs_list[tab_number] + '-front');
   moreButtonId.click();
-  console.log(buttonID);
 }
 
 function waitForEl(selector, fun, parameters) {
