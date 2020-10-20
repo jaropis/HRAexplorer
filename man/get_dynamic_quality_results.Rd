@@ -10,7 +10,10 @@ get_dynamic_quality_results(
   separator = "\\t",
   column_data = c(1, 2),
   minmax = c(0, 3000),
-  using_excel = FALSE
+  using_excel = FALSE,
+  window_type = window_type,
+  move_type = move_type,
+  window_length = window_length
 )
 }
 \arguments{
@@ -19,6 +22,12 @@ get_dynamic_quality_results(
 \item{column_data}{a 1x2 vector with the numbers of columns holding RR intervals and annotations}
 
 \item{minmax}{1x2 vector with the maximum and minimum acceptable RR intervals values}
+
+\item{window_type}{string, jumping or sliding}
+
+\item{move_type}{string, time based or index based}
+
+\item{window_length}{numeric, window length}
 
 \item{file_addresses}{the addresses of the uploaded file(s)}
 

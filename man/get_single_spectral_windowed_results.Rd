@@ -7,8 +7,8 @@
 get_single_spectral_windowed_results(
   RR,
   time_functions_list = glb_time_functions,
-  window_type = "time",
-  move_type = "jump",
+  window_type = "jump",
+  move_type = "time",
   use_ULF = FALSE,
   window_length = 5,
   cut_end = FALSE,
@@ -18,11 +18,11 @@ get_single_spectral_windowed_results(
 \arguments{
 \item{RR}{rr object}
 
-\item{window_type}{type of window, can be time or index}
+\item{window_type}{string, jumping or sliding}
 
-\item{window_length}{length of the window, in minutes or beats, according to window_type}
+\item{move_type}{string, time based or index based}
 
-\item{slide_type}{how should the window move: slide or jump}
+\item{window_length}{numeric, window length}
 }
 \description{
 Function calculating windowed spectral results for a single RR time series

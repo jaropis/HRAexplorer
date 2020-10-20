@@ -196,6 +196,9 @@ get_dynamic_spectral_results <- function(fileAddresses,
 #' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
+#' @param window_type string, jumping or sliding
+#' @param move_type string, time based or index based
+#' @param window_length numeric, window length
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_quality_results <- function(fileAddresses,
@@ -250,9 +253,9 @@ cut_incomplete_rows <- function(resulting_table, cut_end, return_all) {
 
 #' Function calculating windowed hrvhra results for a single RR time series
 #' @param RR rr object
-#' @param window_type type of window, can be time or index
-#' @param slide_type how should the window move: slide or jump
-#' @param window_length length of the window, in minutes or beats, according to window_type
+#' @param window_type string, jumping or sliding
+#' @param move_type string, time based or index based
+#' @param window_length numeric, window length
 #' @retur data.frame with results for windows as rows
 #' @export
 get_single_pp_windowed_results <- function(RR,
@@ -278,9 +281,9 @@ get_single_pp_windowed_results <- function(RR,
 
 #' Function calculating windowed runs results for a single RR time series
 #' @param RR rr object
-#' @param window_type type of window, can be time or index
-#' @param slide_type how should the window move: slide or jump
-#' @param window_length length of the window, in minutes or beats, according to window_type
+#' @param window_type string, jumping or sliding
+#' @param move_type string, time based or index based
+#' @param window_length numeric, window length
 #' @retur data.frame with results for windows as rows
 #' @export
 get_single_runs_windowed_results <- function(RR,
@@ -306,9 +309,9 @@ get_single_runs_windowed_results <- function(RR,
 
 #' Function calculating windowed spectral results for a single RR time series
 #' @param RR rr object
-#' @param window_type type of window, can be time or index
-#' @param slide_type how should the window move: slide or jump
-#' @param window_length length of the window, in minutes or beats, according to window_type
+#' @param window_type string, jumping or sliding
+#' @param move_type string, time based or index based
+#' @param window_length numeric, window length
 #' @retur data.frame with results for windows as rows
 #' @export
 get_single_spectral_windowed_results <- function(RR,
@@ -339,9 +342,9 @@ get_single_spectral_windowed_results <- function(RR,
 
 #' Function calculating windowed quality results for a single RR time series
 #' @param RR rr object
-#' @param window_type type of window, can be time or index
-#' @param slide_type how should the window move: slide or jump
-#' @param window_length length of the window, in minutes or beats, according to window_type
+#' @param window_type string, jumping or sliding
+#' @param move_type string, time based or index based
+#' @param window_length numeric, window length
 #' @retur data.frame with results for windows as rows
 #' @export
 get_single_quality_windowed_results <- function(RR,
