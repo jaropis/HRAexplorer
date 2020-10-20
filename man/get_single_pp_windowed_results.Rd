@@ -17,11 +17,11 @@ get_single_pp_windowed_results(
 \arguments{
 \item{RR}{rr object}
 
-\item{window_type}{type of window, can be time or index}
+\item{window_type}{string, jumping or sliding}
 
-\item{window_length}{length of the window, in minutes or beats, according to window_type}
+\item{move_type}{string, time based or index based}
 
-\item{slide_type}{how should the window move: slide or jump}
+\item{window_length}{numeric, window length}
 }
 \description{
 Function calculating windowed hrvhra results for a single RR time series
