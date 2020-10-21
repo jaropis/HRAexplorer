@@ -37,6 +37,17 @@ glob_init_var_name <- "RR"
 glob_init_excel <- FALSE
 glob_init_file_extension <- "rea"
 
-#' other globals
+# other globals
 glob_marker_color = "black"
 
+# variables to study dynamic asymmetry
+glob_dynamic_asymmetry_vars <- c(
+  "SD1d vs SD1a",
+  "SD2a vs SD2d",
+  "SDNNa vs SDNNd"
+)
+runs_a <- paste0("AR", 1:50)
+runs_d <- paste0("DR", 1:50)
+runs_choices <- c(paste0(runs_a, ' vs ', runs_d),
+                  paste0(runs_d, ' vs ', runs_a))
+glob_dynamic_asymmetry_vars <- c(glob_dynamic_asymmetry_vars, runs_choices)
