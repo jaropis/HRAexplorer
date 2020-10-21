@@ -1,6 +1,10 @@
 shinyServer(function(input, output, session){
 
   # now reactive conductor holding the results of Poincare plot calculations
+  rval_current_file_pp <- reactiveVal(NULL)
+  rval_current_file_runs <- reactiveVal(NULL)
+  rval_current_file_spectral <- reactiveVal(NULL)
+  rval_current_file_quality <- reactiveVal(NULL)
 
   rct_current_pp_values <- reactive({
     get_numerical_results(analysis_type = "poincare",
@@ -150,6 +154,55 @@ shinyServer(function(input, output, session){
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
 
+  # Handling download files names for single file analysis
+  observeEvent(input$dynamicpp, {
+    rval_current_file_pp({
+      if(is.null(input$dynamicpp)) {
+        "nic.xlsx"
+      } else {
+        paste0("SingleFileDynamicPP",
+               data_info$files()$name[[as.numeric(input$dynamicpp)]],
+               ".xlsx")
+      }
+    })
+  })
+
+  observeEvent(input$dynamicruns, {
+    rval_current_file_runs({
+      if(is.null(input$dynamicruns)) {
+        "nic.xlsx"
+      } else {
+        paste0("SingleFiledynamicruns",
+               data_info$files()$name[[as.numeric(input$dynamicruns)]],
+               ".xlsx")
+      }
+    })
+  })
+
+  observeEvent(input$dynamicspectral, {
+    rval_current_file_spectral({
+      if(is.null(input$dynamicspectral)) {
+        "nic.xlsx"
+      } else {
+        paste0("SingleFiledynamicspectral",
+               data_info$files()$name[[as.numeric(input$dynamicspectral)]],
+               ".xlsx")
+      }
+    })
+  })
+
+  observeEvent(input$dynamicquality, {
+    rval_current_file_quality({
+      if(is.null(input$dynamicquality)) {
+        "nic.xlsx"
+      } else {
+        paste0("SingleFiledynamicquality",
+               data_info$files()$name[[as.numeric(input$dynamicquality)]],
+               ".xlsx")
+      }
+    })
+  })
+
   callModule(plots,
              "plots",
              type_of_plot = "poincare",
@@ -175,58 +228,71 @@ shinyServer(function(input, output, session){
              "main-table",
              rct_current_values = rct_current_pp_values,
              button_label = "View",
-             button_id = "btn_view_staticpp_"
+             button_id = "btn_view_staticpp_",
+             file_name =reactiveVal("PoincrePlot.xlsx")
+
   )
   callModule(main_table,
              "main-table-runs",
-             rct_current_values = rct_current_runs_values
+             rct_current_values = rct_current_runs_values,
+             file_name =reactiveVal("Runs.xlsx")
   )
   callModule(main_table,
              "main-table-quality",
-             rct_current_values = rct_current_quality_values
+             rct_current_values = rct_current_quality_values,
+             file_name =reactiveVal("Quality.xlsx")
   )
   callModule(main_table,
              "main-table-spectral",
-             rct_current_values = rct_current_spectral_values
+             rct_current_values = rct_current_spectral_values,
+             file_name =reactiveVal("Spectral.xlsx")
   )
   callModule(main_table,
              "main-table-dynamic",
              rct_current_values = rct_current_dynamic_pp_results,
              button_label = "Detail",
-             button_id = "btn_view_dynamicpp_"
+             button_id = "btn_view_dynamicpp_",
+             file_name =reactiveVal("DynamicPP.xlsx")
   )
   callModule(main_table,
              "details-table-pp",
-             rct_current_values = rct_current_single_dynamic_pp
+             rct_current_values = rct_current_single_dynamic_pp,
+             file_name =rval_current_file_pp
   )
   callModule(main_table,
              "main-table-runs-dynamic",
              rct_current_values = rct_current_dynamic_runs_results,
              button_label = "Detail",
-             button_id = "btn_view_dynamicruns_"
+             button_id = "btn_view_dynamicruns_",
+             file_name =reactiveVal("RunsDynamic.xlsx")
   )
   callModule(main_table,
              "details-table-runs",
-             rct_current_values = rct_current_single_dynamic_runs_results
+             rct_current_values = rct_current_single_dynamic_runs_results,
+             file_name =rval_current_file_runs
   )
   callModule(main_table,
              "main-table-spectral-dynamic",
              rct_current_values = rct_current_dynamic_spectral_results,
              button_label = "Detail",
-             button_id = "btn_view_dynamicspectral_"
+             button_id = "btn_view_dynamicspectral_",
+             file_name =reactiveVal("SpectralDynamic.xlsx")
   )
   callModule(main_table,
              'details-table-spectral',
-             rct_current_values = rct_current_single_dynamic_spectral_results
+             rct_current_values = rct_current_single_dynamic_spectral_results,
+             file_name =rval_current_file_spectral
   )
   callModule(main_table,
              "main-table-quality-dynamic",
              rct_current_values = rct_current_dynamic_quality_results,
              button_label = "Detail",
-             button_id = "btn_view_dynamicquality_"
+             button_id = "btn_view_dynamicquality_",
+             file_name =reactive("QualityDynamic.xlsx")
   )
   callModule(main_table,
              'details-table-quality',
-             rct_current_values = rct_current_single_dynamic_quality_results
+             rct_current_values = rct_current_single_dynamic_quality_results,
+             file_name =rval_current_file_quality
   )
 })

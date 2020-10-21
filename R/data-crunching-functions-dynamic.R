@@ -450,7 +450,7 @@ round_and_summarize_dynamic_asym <- function(windowed_results, round_digits = 3,
       prop_sum <- sum(windowed_results[[vars[[1]]]] > windowed_results[[vars[[2]]]])
       prop_test <- prop.test(prop_sum, nrow(windowed_results), alternative = 'greater')
       props <- c(props, prop_test$estimate)
-      p_s <- c(p_s, puj(prop_test$p.value, digits = p_digits))
+      p_s <- c(p_s, puj(prop_test$p.value, rmarkdown = FALSE, digits = p_digits))
     }
     prop_frame <- as.data.frame(t(round(props, round_digits)))
     names(prop_frame) <- paste0(comparisons_in_windowed_results, "_prop")
@@ -489,7 +489,7 @@ puj <- function(p, rmarkdown = TRUE, digits) {
     else return(paste("<em>p</em>=", as.character(round(p, digits)), sep=""))
   } else {
     if (p<0.0001) return ("p<0.0001")
-    else return(as.character(round(p, 4)))
+    else return(paste0('p=',  as.character(round(p, 4))))
   }
 }
 
