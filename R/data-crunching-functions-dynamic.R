@@ -10,6 +10,7 @@
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param clicked_file number of clicked file or NULL
+#' @param asym_comparisons comparisons for dynamic asymmetry analysis
 #'
 #' @return the results of Poincare plot analysis
 #' @export
@@ -23,7 +24,8 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   window_type,
                                   move_type,
                                   window_length,
-                                  clicked_file = NULL) {
+                                  clicked_file = NULL,
+                                  asym_comparisons = NULL) {
   if (analysis_type == "poincare_dynamic")
     return(get_dynamic_pp_results(fileAddresses,
                                   time_functions_list = glb_time_functions,
@@ -34,7 +36,8 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   window_type,
                                   move_type,
                                   window_length,
-                                  clicked_file))
+                                  clicked_file,
+                                  asym_comparisons))
   if (analysis_type == "runs_dynamic")
     return(get_dynamic_runs_results(fileAddresses,
                                     time_functions_list = glb_time_functions,
@@ -45,7 +48,8 @@ get_dynamic_numerical_results <- function(analysis_type,
                                     window_type,
                                     move_type,
                                     window_length,
-                                    clicked_file))
+                                    clicked_file,
+                                    asym_comparisons))
   if (analysis_type == "spectral_dynamic")
     return(get_dynamic_spectral_results(fileAddresses,
                                         time_functions_list = glb_time_functions,
@@ -93,7 +97,8 @@ get_dynamic_pp_results <- function(fileAddresses,
                                    window_type,
                                    move_type,
                                    window_length,
-                                   clicked_file = NULL) {
+                                   clicked_file = NULL,
+                                   asym_comparisons = NULL) {
   results <- c()
   if (!is.null(clicked_file)) {
     rr_and_flags <- read_and_filter_one_file(fileAddresses, clicked_file, separator, column_data, minmax, using_excel)
@@ -112,10 +117,9 @@ get_dynamic_pp_results <- function(fileAddresses,
                                                      window_type = window_type,
                                                      move_type = move_type,
                                                      window_length = window_length) %>%
-        colMeans(na.rm = TRUE)
+        round_and_summarize_dynamic_asym(round_digits = 3, asym_comparisons = asym_comparisons)
       results <- rbind(results, temp_results)
     }
-    results <- as.data.frame(round(results,3))
     results <- cbind(fileAddresses$name, results)
     colnames(results)[1] <- "file"
     rownames(results) <- NULL
@@ -145,7 +149,8 @@ get_dynamic_runs_results <- function(fileAddresses,
                                      window_type,
                                      move_type,
                                      window_length,
-                                     clicked_file = NULL) {
+                                     clicked_file = NULL,
+                                     asym_comparisons = NULL) {
   results <- c()
   if (!is.null(clicked_file)) {
     rr_and_flags <- read_and_filter_one_file(fileAddresses, clicked_file, separator, column_data, minmax, using_excel)
@@ -165,14 +170,11 @@ get_dynamic_runs_results <- function(fileAddresses,
                                                        move_type = move_type,
                                                        window_length = window_length) %>%
         dplyr::select(-c("file")) %>%
-        colMeans(na.rm = TRUE) %>%
-        t() %>%
+        round_and_summarize_dynamic_asym(round_digits = 3, asym_comparisons = asym_comparisons) %>%
         as.data.frame()
-
       results <- plyr::rbind.fill(results, temp_results) # rbinding columns with potentially different cols
     }
     results[is.na(results)] <- 0
-    results <- as.data.frame(round(results,3))
     results <- cbind(fileAddresses$name, results)
     colnames(results)[1] <- "file"
     rownames(results) <- NULL
@@ -423,3 +425,59 @@ get_single_quality_windowed_results <- function(RR,
     dplyr::bind_rows() %>%
     cut_incomplete_rows(cut_end, return_all)
 }
+
+round_and_summarize_dynamic_asym <- function(window, round_digits = 3, p_digits = 4, asym_comparisons = NULL) {
+  cols_to_round <- sapply(window[1, ], is.numeric)
+  result <- window[, cols_to_round] %>%
+    colMeans(na.rm = TRUE) %>%
+    round(digits = round_digits)
+  if (!is.data.frame(result)) {
+    result <- as.data.frame(t(result))
+  }
+  if (!is.null(asym_comparisons)) {
+    comparisons_in_window <- get_comparisons_in_window(window, asym_comparisons)
+    if(length(comparisons_in_window) == 0) {
+      return(result)
+    }
+    p_s <- c()
+    props <- c()
+    for (comparison in comparisons_in_window) {
+      vars <- strsplit(comparison, '>')[[1]]
+      prop_sum <- sum(window[[vars[[1]]]] > window[[vars[[2]]]])
+      prop_test <- prop.test(prop_sum, nrow(window), alternative = 'greater')
+      props <- c(props, prop_test$estimate)
+      p_s <- c(p_s, puj(prop_test$p.value, digits = p_digits))
+    }
+    prop_frame <- as.data.frame(t(round(props, round_digits)))
+    names(prop_frame) <- paste0(comparisons_in_window, "_prop")
+    pval_frame <- as.data.frame(t(p_s))
+    names(pval_frame) <- paste0(comparisons_in_window, "_pVal")
+    result <- cbind(result, prop_frame, pval_frame)
+  }
+  result
+}
+
+get_comparisons_in_window <- function(window, comparisons) {
+  sapply(comparisons, function(comparison) {
+    vars <- strsplit(comparison, '>')[[1]]
+    if (all(vars %in% colnames(window))) {
+      return(comparison)
+    } else {
+      return(NA)
+    }
+  }) %>%
+    Filter(not_na, .) %>%
+    unname()
+}
+
+puj <- function(p, rmarkdown = TRUE, digits) {
+  if (rmarkdown ) {
+    if (p<0.0001) return ("<em>p</em><0.0001")
+    else return(paste("<em>p</em>=", as.character(round(p, digits)), sep=""))
+  } else {
+    if (p<0.0001) return ("p<0.0001")
+    else return(as.character(round(p, 4)))
+  }
+}
+
+not_na <- function(x) !is.na(x)

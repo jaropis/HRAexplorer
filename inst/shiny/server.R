@@ -51,7 +51,8 @@ shinyServer(function(input, output, session){
                                   using_excel = data_info$using_excel(),
                                   window_type = data_info$window_type(),
                                   move_type = data_info$move_type(),
-                                  window_length = data_info$window_length())
+                                  window_length = data_info$window_length(),
+                                  asym_comparisons = data_info$dynamic_asym())
   })
   rct_current_single_dynamic_pp <- reactive({
     req(isTruthy(input$dynamicpp))
@@ -76,7 +77,8 @@ shinyServer(function(input, output, session){
                                   using_excel = data_info$using_excel(),
                                   window_type = data_info$window_type(),
                                   move_type = data_info$move_type(),
-                                  window_length = data_info$window_length())
+                                  window_length = data_info$window_length(),
+                                  asym_comparisons = data_info$dynamic_asym())
   })
 
   rct_current_single_dynamic_runs_results <- reactive({

@@ -52,7 +52,7 @@ data_upload_and_filterUI <- function(id) {
                                  min = 0)),
              box(width = 4,
                     h3("Dynamic asymmetry"),
-                    selectizeInput(inputId = ns('dynamic-asym'),
+                    selectizeInput(inputId = ns('dynamic_asym'),
                                    label = "Select comparisons\nfor dynamic asymmetry",
                                    choices = glob_dynamic_asymmetry_vars,
                                    selected = "",
@@ -91,7 +91,7 @@ data_upload_and_filter <- function(input, output, session) {
     use_ULF = reactive(input$use_ULF),
     window_type = reactive(input$window_type),
     move_type = reactive(input$move_type),
-    window_length = reactive(input$window_length)
-    #go = reactive(input$go),
+    window_length = reactive(input$window_length),
+    dynamic_asym = reactive(input$dynamic_asym)
   )
 }

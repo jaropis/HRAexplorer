@@ -42,12 +42,12 @@ glob_marker_color = "black"
 
 # variables to study dynamic asymmetry
 glob_dynamic_asymmetry_vars <- c(
-  "SD1d vs SD1a",
-  "SD2a vs SD2d",
-  "SDNNa vs SDNNd"
+  "SD1d>SD1a",
+  "SD2a>SD2d",
+  "SDNNa>SDNNd"
 )
 runs_a <- paste0("AR", 1:50)
 runs_d <- paste0("DR", 1:50)
-runs_choices <- c(paste0(runs_a, ' vs ', runs_d),
-                  paste0(runs_d, ' vs ', runs_a))
+runs_choices <- c(paste0(runs_a, '>', runs_d),
+                  paste0(runs_d, '>', runs_a))
 glob_dynamic_asymmetry_vars <- c(glob_dynamic_asymmetry_vars, runs_choices)
