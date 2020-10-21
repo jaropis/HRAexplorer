@@ -5,14 +5,14 @@
 \title{Function adding dynamic asymmetry tests and rounding values}
 \usage{
 round_and_summarize_dynamic_asym(
-  window,
+  windowed_results,
   round_digits = 3,
   p_digits = 4,
   asym_comparisons = NULL
 )
 }
 \arguments{
-\item{window}{result of a numerical function applied to an RR window}
+\item{windowed_results}{result of a numerical function applied to an RR window}
 
 \item{round_digits}{how much to round the descirptors}
 
