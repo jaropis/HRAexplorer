@@ -530,6 +530,9 @@ sort_ardrn <- function(ardrn_vec, type = "DR") {
 #' @param ardr_p comparison names
 #' @param stub what the stub of the comparison is (_prop or _pVal)
 sort_ps <- function(ardr_p, stub = "_prop") {
+  if (length(ardr_p) == 0) {
+    return(NULL)
+  }
   pattern <- paste0("(DR)|(AR)|(", stub, ")")
   names_to_sort <- gsub(pattern = pattern, replacement = "", ardr_p) %>%
     sapply(function(elem) strsplit(elem, split = ">")[[1]][1] %>% as.numeric()) %>%
