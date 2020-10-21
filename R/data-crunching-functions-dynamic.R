@@ -178,7 +178,7 @@ get_dynamic_runs_results <- function(fileAddresses,
     results <- cbind(fileAddresses$name, results)
     colnames(results)[1] <- "file"
     rownames(results) <- NULL
-    return(results)
+    return(results %>% sort_out_runs())
   }
 }
 
@@ -363,7 +363,6 @@ get_single_runs_windowed_results <- function(RR,
                       })
   hrvhra::bind_runs_as_table(runs_list, as.character(seq_along(runs_list))) %>%
     cut_incomplete_rows(cut_end, return_all)
-
 }
 
 #' Function calculating windowed spectral results for a single RR time series
@@ -427,36 +426,36 @@ get_single_quality_windowed_results <- function(RR,
 }
 
 #' Function adding dynamic asymmetry tests and rounding values
-#' @param window result of a numerical function applied to an RR window
+#' @param windowed_results result of a numerical function applied to an RR window
 #' @param round_digits how much to round the descirptors
 #' @param p_digits how should the p-value be rounded
 #' @param asym_comparisons vector of strings, containing comparisons of the form AR1>DR1, SD1d>SD1a etc for use in dynamic asymmetry
-round_and_summarize_dynamic_asym <- function(window, round_digits = 3, p_digits = 4, asym_comparisons = NULL) {
-  cols_to_round <- sapply(window[1, ], is.numeric)
-  result <- window[, cols_to_round] %>%
+round_and_summarize_dynamic_asym <- function(windowed_results, round_digits = 3, p_digits = 4, asym_comparisons = NULL) {
+  cols_to_round <- sapply(windowed_results[1, ], is.numeric)
+  result <- windowed_results[, cols_to_round] %>%
     colMeans(na.rm = TRUE) %>%
     round(digits = round_digits)
   if (!is.data.frame(result)) {
     result <- as.data.frame(t(result))
   }
   if (!is.null(asym_comparisons)) {
-    comparisons_in_window <- get_comparisons_in_window(window, asym_comparisons)
-    if(length(comparisons_in_window) == 0) {
+    comparisons_in_windowed_results <- get_comparisons_in_windowed_results(windowed_results, asym_comparisons)
+    if(length(comparisons_in_windowed_results) == 0) {
       return(result)
     }
     p_s <- c()
     props <- c()
-    for (comparison in comparisons_in_window) {
+    for (comparison in comparisons_in_windowed_results) {
       vars <- strsplit(comparison, '>')[[1]]
-      prop_sum <- sum(window[[vars[[1]]]] > window[[vars[[2]]]])
-      prop_test <- prop.test(prop_sum, nrow(window), alternative = 'greater')
+      prop_sum <- sum(windowed_results[[vars[[1]]]] > windowed_results[[vars[[2]]]])
+      prop_test <- prop.test(prop_sum, nrow(windowed_results), alternative = 'greater')
       props <- c(props, prop_test$estimate)
       p_s <- c(p_s, puj(prop_test$p.value, digits = p_digits))
     }
     prop_frame <- as.data.frame(t(round(props, round_digits)))
-    names(prop_frame) <- paste0(comparisons_in_window, "_prop")
+    names(prop_frame) <- paste0(comparisons_in_windowed_results, "_prop")
     pval_frame <- as.data.frame(t(p_s))
-    names(pval_frame) <- paste0(comparisons_in_window, "_pVal")
+    names(pval_frame) <- paste0(comparisons_in_windowed_results, "_pVal")
     result <- cbind(result, prop_frame, pval_frame)
   }
   result
@@ -464,13 +463,13 @@ round_and_summarize_dynamic_asym <- function(window, round_digits = 3, p_digits 
 
 #' Function extracting which comparisons can be applied to a window
 #'
-#' @param window windowed results to apply the comparisons
+#' @param windowed_results windowed results to apply the comparisons
 #' @param asym_comparisons vector of strings, containing comparisons of the form AR1>DR1, SD1d>SD1a etc for use in dynamic asymmetry
 #' @return vector of strings, containing comparisons of the form AR1>DR1, SD1d>SD1a etc for use in dynamic asymmetry
-get_comparisons_in_window <- function(window, comparisons) {
+get_comparisons_in_windowed_results <- function(windowed_results, comparisons) {
   sapply(comparisons, function(comparison) {
     vars <- strsplit(comparison, '>')[[1]]
-    if (all(vars %in% colnames(window))) {
+    if (all(vars %in% colnames(windowed_results))) {
       return(comparison)
     } else {
       return(NA)
@@ -497,3 +496,44 @@ puj <- function(p, rmarkdown = TRUE, digits) {
 #' Function for use in Filter equivalent to !is.na
 #' @param x data
 not_na <- function(x) !is.na(x)
+
+#' Function to sort out the coluns of the runs results table
+#' @param results windowed results
+sort_out_runs <- function(results) {
+  runs_names <- names(results)
+  ARs <- runs_names[grepl('AR', runs_names) & !grepl('_', runs_names)] %>%
+    sort_ardrn(type = "AR")
+  DRs <- runs_names[grepl('DR', runs_names) & !grepl('_', runs_names)] %>%
+    sort_ardrn(type = "DR")
+  Ns <- runs_names[grepl('N', runs_names) & !grepl('_', runs_names)] %>%
+    sort_ardrn(type = 'N')
+  compars_props <- runs_names[grepl('_prop', runs_names)] %>%
+    sort_ps(stub = '_prop')
+  compars_pvals <- runs_names[grepl('_pVal', runs_names)] %>%
+    sort_ps(stub = '_pVal')
+  rest <- runs_names[!(runs_names %in% c(ARs, DRs, Ns, compars_props, compars_pvals))]
+  results[c(rest, ARs, DRs, Ns,  compars_props, compars_pvals)]
+}
+
+#' Sorting function for runs
+#' @param ardrn_vec vector of runs names
+#' @param type DR, AR or N
+sort_ardrn <- function(ardrn_vec, type = "DR") {
+  ardrn_vec %>%
+    sub(pattern = type, replacement = "", .) %>%
+    as.numeric() %>%
+    sort() %>%
+    paste0(type, .)
+}
+
+#' Sorting function for comparisons
+#' @param ardr_p comparison names
+#' @param stub what the stub of the comparison is (_prop or _pVal)
+sort_ps <- function(ardr_p, stub = "_prop") {
+  pattern <- paste0("(DR)|(AR)|(", stub, ")")
+  names_to_sort <- gsub(pattern = pattern, replacement = "", ardr_p) %>%
+    sapply(function(elem) strsplit(elem, split = ">")[[1]][1] %>% as.numeric()) %>%
+    sort()
+  names(names_to_sort) <- ardr_p
+  names(sort(names_to_sort))
+}
