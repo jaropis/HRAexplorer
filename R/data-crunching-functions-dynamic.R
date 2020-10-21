@@ -426,6 +426,11 @@ get_single_quality_windowed_results <- function(RR,
     cut_incomplete_rows(cut_end, return_all)
 }
 
+#' Function adding dynamic asymmetry tests and rounding values
+#' @param window result of a numerical function applied to an RR window
+#' @param round_digits how much to round the descirptors
+#' @param p_digits how should the p-value be rounded
+#' @param asym_comparisons vector of strings, containing comparisons of the form AR1>DR1, SD1d>SD1a etc for use in dynamic asymmetry
 round_and_summarize_dynamic_asym <- function(window, round_digits = 3, p_digits = 4, asym_comparisons = NULL) {
   cols_to_round <- sapply(window[1, ], is.numeric)
   result <- window[, cols_to_round] %>%
@@ -457,6 +462,11 @@ round_and_summarize_dynamic_asym <- function(window, round_digits = 3, p_digits 
   result
 }
 
+#' Function extracting which comparisons can be applied to a window
+#'
+#' @param window windowed results to apply the comparisons
+#' @param asym_comparisons vector of strings, containing comparisons of the form AR1>DR1, SD1d>SD1a etc for use in dynamic asymmetry
+#' @return vector of strings, containing comparisons of the form AR1>DR1, SD1d>SD1a etc for use in dynamic asymmetry
 get_comparisons_in_window <- function(window, comparisons) {
   sapply(comparisons, function(comparison) {
     vars <- strsplit(comparison, '>')[[1]]
@@ -470,6 +480,10 @@ get_comparisons_in_window <- function(window, comparisons) {
     unname()
 }
 
+#' Function formatting p-values - copied from my package shiny-tools
+#' @param p p value to be formated
+#' @param rmarkdown, boolea, whether to use rmarkdown
+#' @param digits how much to round the p-value
 puj <- function(p, rmarkdown = TRUE, digits) {
   if (rmarkdown ) {
     if (p<0.0001) return ("<em>p</em><0.0001")
@@ -480,4 +494,6 @@ puj <- function(p, rmarkdown = TRUE, digits) {
   }
 }
 
+#' Function for use in Filter equivalent to !is.na
+#' @param x data
 not_na <- function(x) !is.na(x)
