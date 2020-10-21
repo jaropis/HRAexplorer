@@ -4,10 +4,12 @@
 \alias{get_results_matrix}
 \title{function to get results matrix}
 \usage{
-get_results_matrix(current_values, button_id = NULL)
+get_results_matrix(current_values, button_label = "View", button_id = NULL)
 }
 \arguments{
 \item{current_values}{values to be currently displayed}
+
+\item{button_label}{label on the button}
 
 \item{button_id}{if NULL, button will not be added}
 }

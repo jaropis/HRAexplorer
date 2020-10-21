@@ -14,7 +14,9 @@ get_dynamic_numerical_results(
   use_ULF = "No",
   window_type,
   move_type,
-  window_length
+  window_length,
+  clicked_file = NULL,
+  asym_comparisons = NULL
 )
 }
 \arguments{
@@ -31,6 +33,10 @@ get_dynamic_numerical_results(
 \item{move_type}{string, time based or index based}
 
 \item{window_length}{numeric, window length}
+
+\item{clicked_file}{number of clicked file or NULL}
+
+\item{asym_comparisons}{comparisons for dynamic asymmetry analysis}
 
 \item{file_addresses}{the addresses of the uploaded file(s)}
 

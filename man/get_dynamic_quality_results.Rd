@@ -11,9 +11,10 @@ get_dynamic_quality_results(
   column_data = c(1, 2),
   minmax = c(0, 3000),
   using_excel = FALSE,
-  window_type = window_type,
-  move_type = move_type,
-  window_length = window_length
+  window_type,
+  move_type,
+  window_length,
+  clicked_file
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ get_dynamic_quality_results(
 \item{move_type}{string, time based or index based}
 
 \item{window_length}{numeric, window length}
+
+\item{clicked_file}{number of clicked file or NULL}
 
 \item{file_addresses}{the addresses of the uploaded file(s)}
 

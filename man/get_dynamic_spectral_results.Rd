@@ -14,7 +14,8 @@ get_dynamic_spectral_results(
   using_excel = FALSE,
   window_type,
   move_type,
-  window_length
+  window_length,
+  clicked_file
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ get_dynamic_spectral_results(
 \item{move_type}{string, time based or index based}
 
 \item{window_length}{numeric, window length}
+
+\item{clicked_file}{number of clicked file or NULL}
 
 \item{file_addresses}{the addresses of the uploaded file(s)}
 
