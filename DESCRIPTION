@@ -16,7 +16,7 @@ Imports:
     shiny,
     shinydashboard,
     shinydashboardPlus,
-    XLConnect,
+    XLConnect (>= 1.0.1),
     plyr
 License: MIT
 Encoding: UTF-8
