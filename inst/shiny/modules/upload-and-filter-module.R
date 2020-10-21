@@ -2,7 +2,7 @@ data_upload_and_filterUI <- function(id) {
   ns <- NS(id)
   fluidRow(id = "first_row",
            fluidRow(
-             column(4,
+             box(width = 4,
                     h3("Files to upload"),
                     fileInput(ns("files"),
                               label="Select files to upload",
@@ -14,12 +14,12 @@ data_upload_and_filterUI <- function(id) {
                     textInput(ns("data_columns"), "enter the column for RR intervals and flags - see explanations",
                               glob_init_columns),
              ),
-             column(4,
+             box(width = 4,
                     h3("Filters"),
                     textInput(ns("minmax"),"minimum and maximum RR length",
                               glob_init_min_max_sinus)
              ),
-             column(4,
+             box(width = 4,
                     h3("Output format"),
                     textInput(ns("variable_name"),"variable name",
                               value = glob_init_var_name),
@@ -27,14 +27,14 @@ data_upload_and_filterUI <- function(id) {
                                 selected = glob_init_color)
              )),
            fluidRow(
-             column(4,
+             box(width = 4,
                     h3("Spectral Analysis"),
                     radioButtons(ns("use_ULF"),
                                  "Calculate ULF?",
                                  choices = c("Yes", "No"),
                                  selected = "No",
                                  inline = TRUE)),
-             column(4,
+             box(width = 4,
                     h3("Windowing options"),
                     selectInput(inputId = ns("window_type"),
                                 label = "Window movement type",
@@ -49,7 +49,14 @@ data_upload_and_filterUI <- function(id) {
                     numericInput(inputId = ns("window_length"),
                                  label = "Window length in minutes",
                                  value = 5,
-                                 min = 0))
+                                 min = 0)),
+             box(width = 4,
+                    h3("Dynamic asymmetry"),
+                    selectizeInput(inputId = ns('dynamic-asym'),
+                                   label = "Select comparisons\nfor dynamic asymmetry",
+                                   choices = glob_dynamic_asymmetry_vars,
+                                   selected = "",
+                                   multiple = TRUE))
            ))
 }
 
