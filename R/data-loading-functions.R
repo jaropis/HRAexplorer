@@ -35,12 +35,7 @@ read_and_filter_one_file <- function(file_addresses, line_number, separator, col
   javaerror <- FALSE; csverror <- FALSE # these show whether the function should return "some_problem" and exit
   if (using_excel){
     if (data_file=="../initial_data/RR.csv") data_file="../initial_data/RR.xlsx" # just making sure that the XLConnect does not crash on text
-    tryCatch(
-      wb <- XLConnect::loadWorkbook(data_file),
-      error = function(e) javaerror <<- TRUE # if java fails, "some_problem" will be returned and it should be handled in reactive plot
-    )
-    if (javaerror) return(data.frame("some_problem"))
-    data <- XLConnect::readWorksheet(wb, sheet = 1) # this will never happen if java fails
+    data <- openxlsx::read.xlsx(data_file) # this will never happen if java fails
   } else {
     data <- read.csv(data_file, sep = separator, header = T, row.names=NULL)
   }
@@ -48,13 +43,13 @@ read_and_filter_one_file <- function(file_addresses, line_number, separator, col
   RR_idx <- column_idx[1]
   flag_idx <- ifelse(length(column_idx)>1, column_idx[2], 0)
   tryCatch( # this will go wrong if the wrong type of file is selected
-    RR <- data[[RR_idx]],
+    RR <- as.numeric(data[[RR_idx]]),
     error = function(e) csverror <<- TRUE  # i just return some_problem and it should be handled in the reactive plot
   )
   if (csverror) return(data.frame("some_problem"))
   if (flag_idx>0){
     tryCatch( # now, an error can also happen if there is a flags column, but it does not correspond to an actual column flag
-      flags <- data[[flag_idx]],
+      flags <- as.numeric(data[[flag_idx]]),
       error = function(e) csverror <<- TRUE
     )
     if (csverror) return(data.frame("some_problem")) # if this happens, return some_problem

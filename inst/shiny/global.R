@@ -37,6 +37,12 @@ glob_init_var_name <- "RR"
 glob_init_excel <- FALSE
 glob_init_file_extension <- "rea"
 
+glob_separators <- list(
+  space = " ",
+  tabulator = "\t",
+  "," = ",",
+  ";"  = ";"
+)
 # other globals
 glob_marker_color = "black"
 

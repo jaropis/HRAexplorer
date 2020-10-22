@@ -38,6 +38,6 @@ main_table <- function(input, output, session,
       file_name()
     },
     content = function(file) {
-      XLConnect::writeWorksheetToFile(file = file, data=rct_current_values(), sheet="Poincare plot")
+      openxlsx::write.xlsx(x = rct_current_values(), file = file)
     })
 }
