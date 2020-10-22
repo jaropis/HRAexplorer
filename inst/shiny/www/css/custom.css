@@ -11,7 +11,7 @@
   display: none;
 }
 
-.card-background-1 {
+[class^='card-background'] {
   height: 1em !important;
 }
 
@@ -26,9 +26,7 @@
   margin-right: 10px;
 }
 
-/* remove the More button from flipBox
-[id^="btn-"][id$="-front"]  #btn-1-front*/
-
+/* remove the More button from flipBox */
 [id^="btn-"][id$="-front"] {
   display: none !important;
 }
