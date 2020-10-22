@@ -34,8 +34,8 @@ read_and_filter_one_file <- function(file_addresses, line_number, separator, col
   data_file <- file_addresses$datapath[line_number]
   javaerror <- FALSE; csverror <- FALSE # these show whether the function should return "some_problem" and exit
   if (using_excel){
-    if (data_file=="../initial_data/RR.csv") data_file="../initial_data/RR.xlsx" # just making sure that the XLConnect does not crash on text
-    data <- openxlsx::read.xlsx(data_file) # this will never happen if java fails
+    if (data_file=="../initial_data/RR.csv") data_file="../initial_data/RR.xlsx"
+    data <- openxlsx::read.xlsx(data_file)
   } else {
     data <- read.csv(data_file, sep = separator, header = T, row.names=NULL)
   }
