@@ -26,9 +26,11 @@
   margin-right: 10px;
 }
 
-/* remove the More button from flipBox */
-#btn-1 {
-  display: none;
+/* remove the More button from flipBox
+[id^="btn-"][id$="-front"]  #btn-1-front*/
+
+[id^="btn-"][id$="-front"] {
+  display: none !important;
 }
 
 #first_row {
