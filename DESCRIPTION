@@ -16,8 +16,9 @@ Imports:
     shiny,
     shinydashboard,
     shinydashboardPlus,
-    XLConnect (>= 1.0.1),
-    plyr
+    openxlsx,
+    plyr, 
+    shinyalert
 License: MIT
 Encoding: UTF-8
 LazyData: true

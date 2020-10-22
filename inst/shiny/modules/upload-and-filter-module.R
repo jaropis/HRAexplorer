@@ -13,6 +13,7 @@ data_upload_and_filterUI <- function(id) {
                                 list(glob_init_separator, ",", ";", "space", "\t")),
                     textInput(ns("data_columns"), "enter the column for RR intervals and flags - see explanations",
                               glob_init_columns),
+                 actionButton(inputId = ns('preview'), label = "Preview")
              ),
              box(width = 4,
                     h3("Filters"),
@@ -67,6 +68,28 @@ data_upload_and_filterUI <- function(id) {
 #' @export
 data_upload_and_filter <- function(input, output, session) {
   ns <- session$ns
+  current_sample_data <- reactiveVal(NULL)
+  dataModal <- function() {
+    if (!input$using_excel) {
+      current_sample_data(read.csv(calculate_data_addresses()[1, c("datapath")], sep = glob_separators[[input$separator]])[1:3, ])
+    }
+    modalDialog(size = "l",
+      DT::dataTableOutput(ns('sample_data')),
+      footer = tagList(
+        modalButton("Done")
+      )
+    )
+  }
+
+  observeEvent(input$preview, {
+   showModal(dataModal())
+  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+
+  output$sample_data <- DT::renderDT({
+    req(current_sample_data())
+    current_sample_data()
+  })
+
   observeEvent(input$move_type, {
     if (input$move_type == 'time') {
       updateNumericInput(session,
