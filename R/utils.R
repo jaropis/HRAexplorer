@@ -67,3 +67,17 @@ check_for_excel <- function(files_list) {
     return (FALSE)
   }
 }
+
+#' Function producing sample table for preview
+#' @param samp_table data frame
+#' @return data frame
+#'
+#' @export
+sample_table <- function(samp_table) {
+  values <- lapply(samp_table, as.character) %>%
+    as.data.frame()
+  samp_names <- names(samp_table)
+  result <- rbind(samp_names, values)
+  names(result) <- as.character(seq_len(ncol(samp_table)))
+  result
+}
