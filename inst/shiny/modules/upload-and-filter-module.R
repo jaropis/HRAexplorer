@@ -7,8 +7,6 @@ data_upload_and_filterUI <- function(id) {
                     fileInput(ns("files"),
                               label="Select files to upload",
                               multiple=TRUE),
-                    checkboxInput(ns("using_excel"), "using Excel",
-                                  value = glob_init_excel),
                     selectInput(ns("separator"), "select separator",
                                 list(glob_init_separator, ",", ";", "space", "\t")),
                     textInput(ns("data_columns"), "enter the column for RR intervals and flags - see explanations",
@@ -105,7 +103,7 @@ data_upload_and_filter <- function(input, output, session) {
   }, ignoreInit = TRUE)
   list(
     variable_name = reactive(input$variable_name),
-    using_excel = reactive(input$using_excel),
+    using_excel = reactive(check_for_excel(input$files %||% calculate_data_addresses())),
     files = reactive(input$files %||% calculate_data_addresses()),
     separator = reactive(get_sep(input$separator)),
     data_columns = reactive(input$data_columns),

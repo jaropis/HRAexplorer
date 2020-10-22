@@ -53,3 +53,17 @@ loader <- function(path,
   }
 }
 
+#' Function checking if the uploaded files are Excel files
+#' @param files_list
+#' @return boolean
+#'
+#' @export
+check_for_excel <- function(files_list) {
+  first_file_split <- files_list[1, ]$datapath %>%
+    strsplit(split = "\\.")
+  if (first_file_split[[1]][length(first_file_split[[1]])] %in% c('xlsx', 'xls')) {
+    return (TRUE)
+  } else {
+    return (FALSE)
+  }
+}
