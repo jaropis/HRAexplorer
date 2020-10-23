@@ -18,6 +18,7 @@ plotsUI <- function(id) {
 #' @param inp_using_excel whether or not use Excel format
 #' @param inp_variable_name name of the variable for display
 #' @param inp_color color for plotting
+#' @param flags_coding list with flags_coding
 #'
 #' @return plot (also causes side effect of saving the plot to disc)
 plots <- function(input, output, session,
@@ -29,7 +30,8 @@ plots <- function(input, output, session,
                   minmax,
                   using_excel,
                   variable_name,
-                  color) {
+                  color,
+                  flags_coding) {
 
   output$current_plot <- renderPlot({
     req(rct_line_number())
@@ -39,7 +41,8 @@ plots <- function(input, output, session,
                                separator = separator,
                                column_data = data_columns,
                                minmax = minmax,
-                               using_excel = using_excel
+                               using_excel = using_excel,
+                               flags_coding = flags_coding
       ) %>% # TODO - what about errors??
         as.data.frame() %>%
         hrvhra::pp() %>%

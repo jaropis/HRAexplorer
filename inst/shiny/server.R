@@ -238,7 +238,8 @@ shinyServer(function(input, output, session){
              minmax = data_info$minmax(),
              using_excel = data_info$using_excel(),
              variable_name = data_info$variable_name(),
-             color = data_info$color()
+             color = data_info$color(),
+             flags_coding = data_info$flags_coding()
   )
 
   # call results for a single file on the plot page
