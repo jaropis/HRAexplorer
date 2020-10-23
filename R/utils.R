@@ -58,14 +58,16 @@ loader <- function(path,
 #' @return boolean
 #'
 #' @export
-check_for_excel <- function(files_list) {
+check_for_format <- function(files_list) {
   first_file_split <- files_list[1, ]$datapath %>%
     strsplit(split = "\\.")
   if (first_file_split[[1]][length(first_file_split[[1]])] %in% c('xlsx', 'xls')) {
-    return (TRUE)
-  } else {
-    return (FALSE)
+    return ('excel')
   }
+  if (first_file_split[[1]][length(first_file_split[[1]])] %in% 'mat') {
+    return ('matlab')
+  }
+  return('csv')
 }
 
 #' Function producing sample table for preview
@@ -89,11 +91,20 @@ sample_table <- function(samp_table) {
 #'
 #' @export
 raw_read_one_file <- function(file_addresses, file_no = 1, separator) {
-  if (!check_for_excel(file_addresses)) {
-    read.csv((file_addresses %||% calculate_data_addresses())[file_no, c("datapath")], sep = separator)
-  } else {
-    openxlsx::read.xlsx((file_addresses %||% calculate_data_addresses())[file_no, c("datapath")])
+  file_format <- check_for_format(file_addresses)
+  if (file_format == 'csv') {
+    return_data <- read.csv(file_addresses[file_no, c("datapath")], sep = separator)
   }
+  if (file_format == 'excel') {
+    return_data <- openxlsx::read.xlsx(file_addresses[file_no, c("datapath")])
+  }
+  if (file_format == 'matlab') {
+    # this is our internal formad used for a specific study - don't expect the app to work with your matlab
+    return_data <- R.matlab::readMat(file_addresses[file_no, c("datapath")])
+    return_data <- data.frame(RR = diff(as.vector(return_data[["beatpos"]])),
+                              beats = return_data[["beats"]][2:length(return_data[["beats"]])])
+  }
+  return_data
 }
 
 #' Function collecting unique flags to be used in beat type dropdowns
