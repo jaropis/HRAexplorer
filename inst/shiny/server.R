@@ -1,3 +1,4 @@
+options(shiny.maxRequestSize=300*1024^2)
 shinyServer(function(input, output, session){
 
   # now reactive conductor holding the results of Poincare plot calculations
