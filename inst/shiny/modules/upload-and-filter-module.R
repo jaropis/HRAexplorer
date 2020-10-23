@@ -16,7 +16,23 @@ data_upload_and_filterUI <- function(id) {
              box(width = 4,
                     h3("Filters"),
                     textInput(ns("minmax"),"minimum and maximum RR length",
-                              glob_init_min_max_sinus)
+                              glob_init_min_max_sinus),
+                 selectInput(inputId = ns("sinus"),
+                             label = "Sinus beat flag",
+                             choices = "",
+                             selected = ""),
+                 selectInput(inputId = ns("ventricular"),
+                             label = "Ventricular beat flag",
+                             choices = "",
+                             selected = ""),
+                 selectInput(inputId = ns("supraventricular"),
+                             label = "Supraventricular beat flag",
+                             choices = "",
+                             selected = ""),
+                 selectInput(inputId = ns("artefact"),
+                             label = "Artefact flag",
+                             choices = "",
+                             selected = "")
              ),
              box(width = 4,
                     h3("Output format"),
@@ -68,12 +84,10 @@ data_upload_and_filter <- function(input, output, session) {
   ns <- session$ns
   current_sample_data <- reactiveVal(NULL)
   dataModal <- function() {
+    raw_read_one_file(input$files %||% calculate_data_addresses(), file_no = 1, glob_separators[[input$separator]]) %>%
+      sample_table() %>%
+      current_sample_data()
 
-    if (!check_for_excel(input$files %||% calculate_data_addresses())) {
-      current_sample_data(sample_table(read.csv((input$files %||% calculate_data_addresses())[1, c("datapath")], sep = glob_separators[[input$separator]])[1:3, ]))
-    } else {
-      current_sample_data(sample_table(openxlsx::read.xlsx((input$files %||% calculate_data_addresses())[1, c("datapath")])[1:3, ]))
-    }
     modalDialog(size = "l",
       tags$div(id = "table_div",
         DT::dataTableOutput(ns('sample_data'))
@@ -87,6 +101,10 @@ data_upload_and_filter <- function(input, output, session) {
   observeEvent(input$preview, {
    showModal(dataModal())
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
+
+  observeEvent(input$files, {
+  #TUTU
+  })
 
   output$sample_data <- DT::renderDT({
     req(current_sample_data())

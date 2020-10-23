@@ -81,3 +81,17 @@ sample_table <- function(samp_table) {
   names(result) <- as.character(seq_len(ncol(samp_table)))
   result
 }
+
+#' Function to read one file raw, without any pre or post processing
+#' @param file_addresses file addresses on disk
+#' @param file_no number of the file to be read
+#' @return data.frame
+#'
+#' @export
+raw_read_one_file <- function(file_addresses, file_no = 1, separator) {
+  if (!check_for_excel(file_addresses)) {
+    read.csv((file_addresses %||% calculate_data_addresses())[file_no, c("datapath")], sep = separator)
+  } else {
+    openxlsx::read.xlsx((file_addresses %||% calculate_data_addresses())[file_no, c("datapath")])
+  }
+}

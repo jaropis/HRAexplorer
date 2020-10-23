@@ -31,31 +31,17 @@ read_numbers_from_field <- function(list_argument){
 #' @return list with two elements, RR intervals column and annotations column
 #' @export
 read_and_filter_one_file <- function(file_addresses, line_number, separator, column_data, minmax, using_excel) {
-  data_file <- file_addresses$datapath[line_number]
-  javaerror <- FALSE; csverror <- FALSE # these show whether the function should return "some_problem" and exit
-  if (using_excel){
-    if (data_file=="../initial_data/RR.csv") data_file="../initial_data/RR.xlsx"
-    data <- openxlsx::read.xlsx(data_file)
-  } else {
-    data <- read.csv(data_file, sep = separator, header = T, row.names=NULL)
-  }
+  data <- raw_read_one_file(file_addresses, line_number, sep = separator)
   column_idx <- read_numbers_from_field(column_data)
   RR_idx <- column_idx[1]
   flag_idx <- ifelse(length(column_idx)>1, column_idx[2], 0)
-  tryCatch( # this will go wrong if the wrong type of file is selected
-    RR <- as.numeric(data[[RR_idx]]),
-    error = function(e) csverror <<- TRUE  # i just return some_problem and it should be handled in the reactive plot
-  )
-  if (csverror) return(data.frame("some_problem"))
-  if (flag_idx>0){
-    tryCatch( # now, an error can also happen if there is a flags column, but it does not correspond to an actual column flag
-      flags <- as.numeric(data[[flag_idx]]),
-      error = function(e) csverror <<- TRUE
-    )
-    if (csverror) return(data.frame("some_problem")) # if this happens, return some_problem
-  }
-  else
+  RR <- as.numeric(data[[RR_idx]])
+  if (flag_idx > 0) {
+    flags <- as.numeric(data[[flag_idx]])
+  } else {
     flags <- RR*0
+  }
+
   # time based filtering here
   minmax <- read_numbers_from_field(minmax)
   which_min <- RR <= minmax[1]
