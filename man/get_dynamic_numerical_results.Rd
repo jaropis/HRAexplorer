@@ -16,7 +16,8 @@ get_dynamic_numerical_results(
   move_type,
   window_length,
   clicked_file = NULL,
-  asym_comparisons = NULL
+  asym_comparisons = NULL,
+  flags_coding
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ get_dynamic_numerical_results(
 \item{clicked_file}{number of clicked file or NULL}
 
 \item{asym_comparisons}{comparisons for dynamic asymmetry analysis}
+
+\item{flags_coding}{list with flags_coding}
 
 \item{file_addresses}{the addresses of the uploaded file(s)}
 

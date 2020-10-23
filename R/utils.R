@@ -116,11 +116,9 @@ collect_unique_flags <- function(file_addresses, data_columns, separator) {
     unique_flags <- round(unique_flags)
   },
   error = function(cond) return (FALSE),
-  warning = function(cond) {print(cond); return (FALSE)})
+  warning = function(cond) return (FALSE))
 
   if (is.numeric(unique_flags)) {
-    unique_flags <- as.integer(unique_flags)
-    print(unique_flags)
   }
   unique_flags
 }
