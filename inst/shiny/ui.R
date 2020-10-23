@@ -57,13 +57,14 @@ ui <- dashboardPage(
                           main_img = NULL,
                           back_content = {
                             fluidRow(
-                              box(title = "Poincare plot",
-                                  plotsUI("plots")
-                              ),
-                              box(title = "Poincare plot descriptors",
-                                  single_resultsUI("single-results")
-                              )
-                            )
+                              box(width = 12,
+                                box(title = "Poincare plot",
+                                    plotsUI("plots")
+                                ),
+                                box(title = "Poincare plot descriptors",
+                                    single_resultsUI("single-results")
+                                )
+                              ))
                           })
                )
       ),
