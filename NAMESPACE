@@ -2,7 +2,7 @@
 
 export("%||%")
 export(calculate_data_addresses)
-export(check_for_excel)
+export(check_for_format)
 export(collect_unique_flags)
 export(description_string)
 export(flags_and_codes)

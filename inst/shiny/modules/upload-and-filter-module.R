@@ -86,14 +86,15 @@ data_upload_and_filterUI <- function(id) {
 #' @export
 data_upload_and_filter <- function(input, output, session) {
   ns <- session$ns
-  current_sample_data <- reactiveVal(NULL)
-  beat_choices <- reactiveVal(NULL)
-  flags_coding <- reactiveVal(NULL)
+  rval_current_sample_data <- reactiveVal(NULL)
+  rval_beat_choices <- reactiveVal(NULL)
+  rval_flags_coding <- reactiveVal(NULL)
+  rval_data_cols_reset <- reactiveVal(FALSE)
 
   dataModal <- function() {
     raw_read_one_file(input$files %||% calculate_data_addresses(), file_no = 1, glob_separators[[input$separator]]) %>%
       sample_table() %>%
-      current_sample_data()
+      rval_current_sample_data()
 
     modalDialog(size = "l",
       tags$div(id = "table_div",
@@ -110,23 +111,39 @@ data_upload_and_filter <- function(input, output, session) {
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
   observeEvent(input$files, {
+    updateTextInput(session,inputId = "data_columns", value = "")
+    updateSelectizeInput(session, "sinus", selected = "")
+    updateSelectizeInput(session, "ventricular", selected = "")
+    updateSelectizeInput(session, "supraventricular", selected = "")
+    updateSelectizeInput(session, "artefact", selected = "")
+  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+
+  observeEvent(input$data_columns, {
+    req(isTruthy(input$data_columns))
+    rval_data_cols_reset(TRUE)
+  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+
+  observeEvent(c(input$files, input$data_columns), {
+    req(rval_data_cols_reset())
     req(input$data_columns)
     if (length(strsplit(input$data_columns, " ")[[1]]) == 1) {
       c(0)
     } else {
       collect_unique_flags(input$files, input$data_columns, input$separator)
     } %>%
-      beat_choices()
-    updateSelectizeInput(session, "sinus", choices = beat_choices())
-    updateSelectizeInput(session, "ventricular", choices = beat_choices())
-    updateSelectizeInput(session, "supraventricular", choices = beat_choices())
-    updateSelectizeInput(session, "artefact", choices = beat_choices())
+      rval_beat_choices()
+    updateSelectizeInput(session, "sinus", choices = rval_beat_choices())
+    updateSelectizeInput(session, "ventricular", choices = rval_beat_choices())
+    updateSelectizeInput(session, "supraventricular", choices = rval_beat_choices())
+    updateSelectizeInput(session, "artefact", choices = rval_beat_choices())
+    updateTextInput(session, "data_columns", value = NULL)
   })
 
   observeEvent(c(input$sinus, input$ventricular, input$supraventricular, input$artefact), {
-    if (!is.null(beat_choices()) && all(beat_choices() %in% c(input$sinus, input$ventricular, input$supraventricular, input$artefact)) ||
-        is.null(beat_choices()) && identical(c(input$sinus, input$ventricular, input$supraventricular, input$artefact), c("0", "1", "2", "3"))) { # the latter happens at the beginning
-      flags_coding(list(sinus = as.numeric(input$sinus),
+    req(input$data_columns)
+    if (!is.null(rval_beat_choices()) && all(rval_beat_choices() %in% c(input$sinus, input$ventricular, input$supraventricular, input$artefact)) ||
+        is.null(rval_beat_choices()) && identical(c(input$sinus, input$ventricular, input$supraventricular, input$artefact), c("0", "1", "2", "3"))) { # the latter happens at the beginning
+      rval_flags_coding(list(sinus = as.numeric(input$sinus),
                         ventricular = as.numeric(input$ventricular),
                         supraventricular = as.numeric(input$supraventricular),
                         artefact = as.numeric(input$artefact)))
@@ -134,8 +151,8 @@ data_upload_and_filter <- function(input, output, session) {
   })
 
   output$sample_data <- DT::renderDT({
-    req(current_sample_data())
-    current_sample_data()
+    req(rval_current_sample_data())
+    rval_current_sample_data()
   }, options = list(dom = 'tr'))
 
   observeEvent(input$move_type, {
@@ -164,6 +181,6 @@ data_upload_and_filter <- function(input, output, session) {
     move_type = reactive(input$move_type),
     window_length = reactive(input$window_length),
     dynamic_asym = reactive(input$dynamic_asym),
-    flags_coding = flags_coding # this is reactive itself
+    flags_coding = rval_flags_coding # this is reactive itself
   )
 }
