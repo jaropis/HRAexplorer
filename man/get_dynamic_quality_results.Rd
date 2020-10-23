@@ -14,7 +14,8 @@ get_dynamic_quality_results(
   window_type,
   move_type,
   window_length,
-  clicked_file
+  clicked_file,
+  flags_coding
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ get_dynamic_quality_results(
 \item{window_length}{numeric, window length}
 
 \item{clicked_file}{number of clicked file or NULL}
+
+\item{flags_coding}{list with flags_coding}
 
 \item{file_addresses}{the addresses of the uploaded file(s)}
 

@@ -9,7 +9,8 @@ get_pp_results(
   separator = "\\t",
   column_data = c(1, 2),
   minmax = c(0, 3000),
-  using_excel = FALSE
+  using_excel = FALSE,
+  flags_coding
 )
 }
 \arguments{
@@ -18,6 +19,8 @@ get_pp_results(
 \item{column_data}{a 1x2 vector with the numbers of columns holding RR intervals and annotations}
 
 \item{minmax}{1x2 vector with the maximum and minimum acceptable RR intervals values}
+
+\item{flags_coding}{list with flags_coding}
 
 \item{file_addresses}{the addresses of the uploaded file(s)}
 

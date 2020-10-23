@@ -10,7 +10,8 @@ read_and_filter_one_file(
   separator,
   column_data,
   minmax,
-  using_excel
+  using_excel,
+  flags_coding
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ read_and_filter_one_file(
 \item{minmax}{tex, two numbers, the minimum RR to be counted as RR of sinus origin, likewise for maximum}
 
 \item{using_excel}{boolean, whether the files are Excel files}
+
+\item{flags_coding}{list with flags_coding}
 }
 \value{
 list with two elements, RR intervals column and annotations column
