@@ -124,7 +124,8 @@ data_upload_and_filter <- function(input, output, session) {
   })
 
   observeEvent(c(input$sinus, input$ventricular, input$supraventricular, input$artefact), {
-    if (!is.null(beat_choices()) && all(beat_choices() %in% c(input$sinus, input$ventricular, input$supraventricular, input$artefact))) {
+    if (!is.null(beat_choices()) && all(beat_choices() %in% c(input$sinus, input$ventricular, input$supraventricular, input$artefact)) ||
+        is.null(beat_choices()) && identical(c(input$sinus, input$ventricular, input$supraventricular, input$artefact), c("0", "1", "2", "3"))) { # the latter happens at the beginning
       flags_coding(list(sinus = as.numeric(input$sinus),
                         ventricular = as.numeric(input$ventricular),
                         supraventricular = as.numeric(input$supraventricular),

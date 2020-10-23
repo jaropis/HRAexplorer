@@ -32,7 +32,8 @@ read_numbers_from_field <- function(list_argument){
 #' @return list with two elements, RR intervals column and annotations column
 #' @export
 read_and_filter_one_file <- function(file_addresses, line_number, separator, column_data, minmax, using_excel, flags_coding) {
-  print(flags_coding)
+  print("dupa jasiu")
+  print(flags_coding[[1]])
   data <- raw_read_one_file(file_addresses, line_number, sep = separator)
   column_idx <- read_numbers_from_field(column_data)
   RR_idx <- column_idx[1]
