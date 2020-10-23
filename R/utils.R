@@ -95,3 +95,32 @@ raw_read_one_file <- function(file_addresses, file_no = 1, separator) {
     openxlsx::read.xlsx((file_addresses %||% calculate_data_addresses())[file_no, c("datapath")])
   }
 }
+
+#' Function collecting unique flags to be used in beat type dropdowns
+#' @param file addresses file addresses on disk
+#' @param data_columns string with numbers of columns with analyzed data
+#' @param separator separator
+#' @return vector
+#'
+#' @export
+collect_unique_flags <- function(file_addresses, data_columns, separator) {
+  unique_flags <- c()
+  flag_column <- as.numeric(strsplit(data_columns, " ")[[1]][2])
+  for (idx in seq(nrow(file_addresses))) {
+    file_data <- raw_read_one_file(file_addresses[idx, ], separator = separator)
+    unique_flags <- c(unique_flags, unique(file_data[[flag_column]]))
+  }
+
+  rounding <- tryCatch({
+    unique_flags <- as.numeric(unique_flags)
+    unique_flags <- round(unique_flags)
+  },
+  error = function(cond) return (FALSE),
+  warning = function(cond) {print(cond); return (FALSE)})
+
+  if (is.numeric(unique_flags)) {
+    unique_flags <- as.integer(unique_flags)
+    print(unique_flags)
+  }
+  unique_flags
+}

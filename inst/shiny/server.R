@@ -7,46 +7,55 @@ shinyServer(function(input, output, session){
   rval_current_file_quality <- reactiveVal(NULL)
 
   rct_current_pp_values <- reactive({
+    req(data_info$flags_coding())
     get_numerical_results(analysis_type = "poincare",
                           data_info$files(),
                           separator = data_info$separator(),
                           column_data = data_info$data_columns(),
                           minmax = data_info$minmax(),
-                          using_excel = data_info$using_excel()
+                          using_excel = data_info$using_excel(),
+                          flags_coding = data_info$flags_coding()
     )
   })
 
   rct_current_runs_values <- reactive({
+    req(data_info$flags_coding())
     get_numerical_results(analysis_type = "runs",
                           data_info$files(),
                           separator = data_info$separator(),
                           column_data = data_info$data_columns(),
                           minmax = data_info$minmax(),
-                          using_excel = data_info$using_excel()
+                          using_excel = data_info$using_excel(),
+                          flags_coding = data_info$flags_coding()
     )
   })
 
   rct_current_spectral_values <- reactive({
+    req(data_info$flags_coding())
     get_numerical_results(analysis_type = "spectral",
                           data_info$files(),
                           separator = data_info$separator(),
                           column_data = data_info$data_columns(),
                           minmax = data_info$minmax(),
                           using_excel = data_info$using_excel(),
-                          use_ULF = data_info$use_ULF()
+                          use_ULF = data_info$use_ULF(),
+                          flags_coding = data_info$flags_coding()
     )
   })
   rct_current_quality_values <- reactive({
+    req(data_info$flags_coding())
     get_numerical_results(analysis_type = "quality",
                           data_info$files(),
                           separator = data_info$separator(),
                           column_data = data_info$data_columns(),
                           minmax = data_info$minmax(),
-                          using_excel = data_info$using_excel()
+                          using_excel = data_info$using_excel(),
+                          flags_coding = data_info$flags_coding()
     )
   })
 
   rct_current_dynamic_pp_results <- reactive({
+    req(data_info$flags_coding())
     get_dynamic_numerical_results(analysis_type = "poincare_dynamic",
                                   data_info$files(),
                                   separator = data_info$separator(),
@@ -56,9 +65,11 @@ shinyServer(function(input, output, session){
                                   window_type = data_info$window_type(),
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
-                                  asym_comparisons = data_info$dynamic_asym())
+                                  asym_comparisons = data_info$dynamic_asym(),
+                                  flags_coding = data_info$flags_coding())
   })
   rct_current_single_dynamic_pp <- reactive({
+    req(data_info$flags_coding())
     req(isTruthy(input$dynamicpp))
     get_dynamic_numerical_results(analysis_type = "poincare_dynamic",
                                   data_info$files(),
@@ -69,10 +80,12 @@ shinyServer(function(input, output, session){
                                   window_type = data_info$window_type(),
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
-                                  clicked_file = as.numeric(input$dynamicpp))
+                                  clicked_file = as.numeric(input$dynamicpp),
+                                  flags_coding = data_info$flags_coding())
     })
 
   rct_current_dynamic_runs_results <- reactive({
+    req(data_info$flags_coding())
     get_dynamic_numerical_results(analysis_type = "runs_dynamic",
                                   data_info$files(),
                                   separator = data_info$separator(),
@@ -82,10 +95,12 @@ shinyServer(function(input, output, session){
                                   window_type = data_info$window_type(),
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
-                                  asym_comparisons = data_info$dynamic_asym())
+                                  asym_comparisons = data_info$dynamic_asym(),
+                                  flags_coding = data_info$flags_coding())
   })
 
   rct_current_single_dynamic_runs_results <- reactive({
+    req(data_info$flags_coding())
     req(isTruthy(input$dynamicruns))
     get_dynamic_numerical_results(analysis_type = "runs_dynamic",
                                   data_info$files(),
@@ -96,10 +111,12 @@ shinyServer(function(input, output, session){
                                   window_type = data_info$window_type(),
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
-                                  clicked_file = as.numeric(input$dynamicruns))
+                                  clicked_file = as.numeric(input$dynamicruns),
+                                  flags_coding = data_info$flags_coding())
   })
 
   rct_current_dynamic_spectral_results <- reactive({
+    req(data_info$flags_coding())
     get_dynamic_numerical_results(analysis_type = "spectral_dynamic",
                                   data_info$files(),
                                   separator = data_info$separator(),
@@ -108,10 +125,13 @@ shinyServer(function(input, output, session){
                                   using_excel = data_info$using_excel(),
                                   window_type = data_info$window_type(),
                                   move_type = data_info$move_type(),
-                                  window_length = data_info$window_length())
+                                  window_length = data_info$window_length(),
+                                  flags_coding = data_info$flags_coding())
+
   })
 
   rct_current_single_dynamic_spectral_results <- reactive({
+    req(data_info$flags_coding())
     req(input$dynamicspectral)
     get_dynamic_numerical_results(analysis_type = "spectral_dynamic",
                                   data_info$files(),
@@ -122,23 +142,12 @@ shinyServer(function(input, output, session){
                                   window_type = data_info$window_type(),
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
-                                  clicked_file = as.numeric(input$dynamicspectral))
+                                  clicked_file = as.numeric(input$dynamicspectral),
+                                  flags_coding = data_info$flags_coding())
   })
 
   rct_current_dynamic_quality_results <- reactive({
-    get_dynamic_numerical_results(analysis_type = "quality_dynamic",
-                                  data_info$files(),
-                                  separator = data_info$separator(),
-                                  column_data = data_info$data_columns(),
-                                  minmax = data_info$minmax(),
-                                  using_excel = data_info$using_excel(),
-                                  window_type = data_info$window_type(),
-                                  move_type = data_info$move_type(),
-                                  window_length = data_info$window_length())
-  })
-
-  rct_current_single_dynamic_quality_results <- reactive({
-    req(input$dynamicquality)
+    req(data_info$flags_coding())
     get_dynamic_numerical_results(analysis_type = "quality_dynamic",
                                   data_info$files(),
                                   separator = data_info$separator(),
@@ -148,7 +157,23 @@ shinyServer(function(input, output, session){
                                   window_type = data_info$window_type(),
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
-                                  clicked_file = as.numeric(input$dynamicquality))
+                                  flags_coding = data_info$flags_coding())
+  })
+
+  rct_current_single_dynamic_quality_results <- reactive({
+    req(input$dynamicquality)
+    req(data_info$flags_coding())
+    get_dynamic_numerical_results(analysis_type = "quality_dynamic",
+                                  data_info$files(),
+                                  separator = data_info$separator(),
+                                  column_data = data_info$data_columns(),
+                                  minmax = data_info$minmax(),
+                                  using_excel = data_info$using_excel(),
+                                  window_type = data_info$window_type(),
+                                  move_type = data_info$move_type(),
+                                  window_length = data_info$window_length(),
+                                  clicked_file = as.numeric(input$dynamicquality),
+                                  flags_coding = data_info$flags_coding())
   })
 
   data_info <- callModule(data_upload_and_filter,
