@@ -329,7 +329,7 @@ cut_incomplete_rows <- function(resulting_table, cut_end, return_all) {
 #' @param window_type string, jumping or sliding
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
-#' @retur data.frame with results for windows as rows
+#' @return data.frame with results for windows as rows
 #' @export
 get_single_pp_windowed_results <- function(RR,
                                            time_functions_list = glb_time_functions,
@@ -357,7 +357,7 @@ get_single_pp_windowed_results <- function(RR,
 #' @param window_type string, jumping or sliding
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
-#' @retur data.frame with results for windows as rows
+#' @return data.frame with results for windows as rows
 #' @export
 get_single_runs_windowed_results <- function(RR,
                                              time_functions_list = glb_time_functions,
@@ -384,7 +384,7 @@ get_single_runs_windowed_results <- function(RR,
 #' @param window_type string, jumping or sliding
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
-#' @retur data.frame with results for windows as rows
+#' @return data.frame with results for windows as rows
 #' @export
 get_single_spectral_windowed_results <- function(RR,
                                                  time_functions_list = glb_time_functions,
@@ -417,7 +417,7 @@ get_single_spectral_windowed_results <- function(RR,
 #' @param window_type string, jumping or sliding
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
-#' @retur data.frame with results for windows as rows
+#' @return data.frame with results for windows as rows
 #' @export
 get_single_quality_windowed_results <- function(RR,
                                                 time_functions_list = glb_time_functions,
