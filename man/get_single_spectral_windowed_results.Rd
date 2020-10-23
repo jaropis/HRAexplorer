@@ -24,6 +24,9 @@ get_single_spectral_windowed_results(
 
 \item{window_length}{numeric, window length}
 }
+\value{
+data.frame with results for windows as rows
+}
 \description{
 Function calculating windowed spectral results for a single RR time series
 }
