@@ -20,6 +20,15 @@ read_numbers_from_field <- function(list_argument){
   return(myData)
 }
 
+#' List with usual flags coding
+#' @export
+flags_and_codes = list(
+  sinus = 0,
+  ventricular = 1,
+  supraventricular = 2,
+  artefact = 3
+)
+
 #' function to read and filter a single file containing rr intervals and annotations
 #' @param file_addresses list with name, size, type and path of files with rr intervals
 #' @param line_number the position of the file being loaded on the list
@@ -32,8 +41,6 @@ read_numbers_from_field <- function(list_argument){
 #' @return list with two elements, RR intervals column and annotations column
 #' @export
 read_and_filter_one_file <- function(file_addresses, line_number, separator, column_data, minmax, using_excel, flags_coding) {
-  print("dupa jasiu")
-  print(flags_coding[[1]])
   data <- raw_read_one_file(file_addresses, line_number, sep = separator)
   column_idx <- read_numbers_from_field(column_data)
   RR_idx <- column_idx[1]
@@ -41,6 +48,11 @@ read_and_filter_one_file <- function(file_addresses, line_number, separator, col
   RR <- as.numeric(data[[RR_idx]])
   if (flag_idx > 0) {
     flags <- as.numeric(data[[flag_idx]])
+    for (flag in names(flags_coding)) {
+      if (length(flags_coding[[flag]]) > 0) {
+        flags[flags %in% flags_coding[[flag]]] <- flags_and_codes[[flag]]
+      }
+    }
   } else {
     flags <- RR*0
   }
