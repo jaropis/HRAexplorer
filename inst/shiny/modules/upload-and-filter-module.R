@@ -17,22 +17,26 @@ data_upload_and_filterUI <- function(id) {
                     h3("Filters"),
                     textInput(ns("minmax"),"minimum and maximum RR length",
                               glob_init_min_max_sinus),
-                 selectInput(inputId = ns("sinus"),
+                 selectizeInput(inputId = ns("sinus"),
                              label = "Sinus beat flag",
-                             choices = "",
-                             selected = ""),
-                 selectInput(inputId = ns("ventricular"),
+                             choices = c(0),
+                             selected = c(0),
+                             multiple = TRUE),
+                 selectizeInput(inputId = ns("ventricular"),
                              label = "Ventricular beat flag",
-                             choices = "",
-                             selected = ""),
-                 selectInput(inputId = ns("supraventricular"),
+                             choices = c(1),
+                             selected = c(1),
+                             multiple = TRUE),
+                 selectizeInput(inputId = ns("supraventricular"),
                              label = "Supraventricular beat flag",
-                             choices = "",
-                             selected = ""),
-                 selectInput(inputId = ns("artefact"),
+                             choices = c(2),
+                             selected = c(2),
+                             multiple = TRUE),
+                 selectizeInput(inputId = ns("artefact"),
                              label = "Artefact flag",
-                             choices = "",
-                             selected = "")
+                             choices = c(3),
+                             selected = c(3),
+                             multiple = TRUE)
              ),
              box(width = 4,
                     h3("Output format"),
@@ -83,6 +87,9 @@ data_upload_and_filterUI <- function(id) {
 data_upload_and_filter <- function(input, output, session) {
   ns <- session$ns
   current_sample_data <- reactiveVal(NULL)
+  beat_choices <- reactiveVal(NULL)
+  flags_coding <- reactiveVal(NULL)
+
   dataModal <- function() {
     raw_read_one_file(input$files %||% calculate_data_addresses(), file_no = 1, glob_separators[[input$separator]]) %>%
       sample_table() %>%
@@ -103,7 +110,26 @@ data_upload_and_filter <- function(input, output, session) {
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
   observeEvent(input$files, {
-  #TUTU
+    req(input$data_columns)
+    if (length(strsplit(input$data_columns, " ")[[1]]) == 1) {
+      c(0)
+    } else {
+      collect_unique_flags(input$files, input$data_columns, input$separator)
+    } %>%
+      beat_choices()
+    updateSelectizeInput(session, "sinus", choices = beat_choices())
+    updateSelectizeInput(session, "ventricular", choices = beat_choices())
+    updateSelectizeInput(session, "supraventricular", choices = beat_choices())
+    updateSelectizeInput(session, "artefact", choices = beat_choices())
+  })
+
+  observeEvent(c(input$sinus, input$ventricular, input$supraventricular, input$artefact), {
+    if (!is.null(beat_choices()) && all(beat_choices() %in% c(input$sinus, input$ventricular, input$supraventricular, input$artefact))) {
+      flags_coding(list(sinus = as.numeric(input$sinus),
+                        ventricular = as.numeric(input$ventricular),
+                        supraventricular = as.numeric(input$supraventricular),
+                        artefact = as.numeric(input$artefact)))
+    }
   })
 
   output$sample_data <- DT::renderDT({
@@ -136,6 +162,7 @@ data_upload_and_filter <- function(input, output, session) {
     window_type = reactive(input$window_type),
     move_type = reactive(input$move_type),
     window_length = reactive(input$window_length),
-    dynamic_asym = reactive(input$dynamic_asym)
+    dynamic_asym = reactive(input$dynamic_asym),
+    flags_coding = reactive(flags_coding)
   )
 }

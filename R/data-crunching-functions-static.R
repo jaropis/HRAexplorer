@@ -6,6 +6,7 @@
 #' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
+#' @param flags_coding list with flags_coding
 #'
 #' @return the results of Poincare plot analysis
 #' @export
@@ -15,15 +16,16 @@ get_numerical_results <- function(analysis_type,
                                   column_data = c(1,2),
                                   minmax = c(0, 3000),
                                   using_excel = FALSE,
-                                  use_ULF = "No") {
+                                  use_ULF = "No",
+                                  flags_coding) {
   if (analysis_type == "poincare")
-    return(get_pp_results(fileAddresses, separator, column_data, minmax, using_excel))
+    return(get_pp_results(fileAddresses, separator, column_data, minmax, using_excel,flags_coding))
   if (analysis_type == "runs")
-    return(get_runs_results(fileAddresses, separator, column_data, minmax, using_excel))
+    return(get_runs_results(fileAddresses, separator, column_data, minmax, using_excel, flags_coding))
   if (analysis_type == "spectral")
-    return(get_spectral_results(fileAddresses, separator, column_data, minmax, using_excel, use_ULF))
+    return(get_spectral_results(fileAddresses, separator, column_data, minmax, using_excel, use_ULF, flags_coding))
   if (analysis_type == "quality")
-    return(get_quality_results(fileAddresses, separator, column_data, minmax, using_excel))
+    return(get_quality_results(fileAddresses, separator, column_data, minmax, using_excel, flags_coding))
 }
 
 #' function for getting the results of Poincare Plot analysis
@@ -33,16 +35,19 @@ get_numerical_results <- function(analysis_type,
 #' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
+#' @param flags_coding list with flags_coding
 #'
 #' @return the results of Poincare plot analysis
+#' @export
 get_pp_results <- function(fileAddresses,
                          separator = "\t",
                          column_data = c(1, 2),
                          minmax = c(0, 3000),
-                         using_excel = FALSE) {
+                         using_excel = FALSE,
+                         flags_coding) {
   results <- c()
     for (lineNumber in  1:length(fileAddresses[[1]])){
-      rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
+      rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding)
       temp_results <- hrvhra::hrvhra(rr_and_flags[[1]], rr_and_flags[[2]])
       results <- rbind(results, temp_results)
     }
@@ -60,16 +65,19 @@ get_pp_results <- function(fileAddresses,
 #' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
+#' @param flags_coding list with flags_coding
 #'
 #' @return the results of Poincare plot analysis
+#' @export
 get_runs_results <- function(fileAddresses,
                              separator = "\t",
                              column_data = c(1, 2),
                              minmax = c(0, 3000),
-                             using_excel = FALSE) {
+                             using_excel = FALSE,
+                             flags_coding) {
   results <- list()
   for (lineNumber in  1:length(fileAddresses[[1]])){
-    rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
+    rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding)
     temp_results <- list(hrvhra::countruns(rr_and_flags[[1]], rr_and_flags[[2]]))
     results <- c(results, temp_results)
   }
@@ -84,16 +92,19 @@ get_runs_results <- function(fileAddresses,
 #' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
+#' @param flags_coding list with flags_coding
 #'
 #' @return the results of Poincare plot analysis
+#' @export
 get_quality_results <- function(fileAddresses,
                          separator = "\t",
                          column_data = c(1, 2),
                          minmax = c(0, 3000),
-                         using_excel = FALSE) {
+                         using_excel = FALSE,
+                         flags_coding) {
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])){
-    rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
+    rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding)
     temp_results <- hrvhra::describerr(rr_and_flags[[2]])
     results <- rbind(results, temp_results)
   }
@@ -111,17 +122,20 @@ get_quality_results <- function(fileAddresses,
 #' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
+#' @param flags_coding list with flags_coding
 #'
 #' @return the results of Poincare plot analysis
+#' @export
 get_spectral_results <- function(fileAddresses,
                                 separator = "\t",
                                 column_data = c(1, 2),
                                 minmax = c(0, 3000),
                                 using_excel = FALSE,
-                                use_ULF = "No") {
+                                use_ULF = "No",
+                                flags_coding) {
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])) {
-    rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel)
+    rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding)
     temp_results <- hrvhra::calculate_RR_spectrum(rr_and_flags,
                                                   bands = 'if'(use_ULF == "No", hrvhra::frequency_bands, hrvhra::frequency_bands_24))
     results <- rbind(results, temp_results)
