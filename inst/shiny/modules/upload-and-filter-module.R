@@ -163,6 +163,6 @@ data_upload_and_filter <- function(input, output, session) {
     move_type = reactive(input$move_type),
     window_length = reactive(input$window_length),
     dynamic_asym = reactive(input$dynamic_asym),
-    flags_coding = reactive(flags_coding)
+    flags_coding = flags_coding # this is reactive itself
   )
 }
