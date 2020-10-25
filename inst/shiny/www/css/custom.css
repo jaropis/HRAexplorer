@@ -52,3 +52,9 @@
 .div_between {
   width: 10px;
 }
+
+#choices_box {
+  height: 63px;
+  margin-top: -20px;
+  padding-top: 6px;
+}

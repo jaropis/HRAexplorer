@@ -2,6 +2,8 @@ data_upload_and_filterUI <- function(id) {
   ns <- NS(id)
   fluidRow(id = "first_row",
            fluidRow(
+             box(width = 12, id = "choices_box",
+                 htmlOutput(ns("confirm_choices"))),
              box(width = 4,
                     h3("Files to upload"),
                     fileInput(ns("files"),
@@ -135,7 +137,6 @@ data_upload_and_filter <- function(input, output, session) {
     req(input$data_columns)
     data_columns <- as.numeric(strsplit(input$data_columns, "[ ]+")[[1]])
     req(all(data_columns %in% seq(ncol(rval_current_sample_data()))))
-    browser()
     if (length(data_columns) == 1) {
       rval_beat_choices("no choices")
     } else {
@@ -151,7 +152,6 @@ data_upload_and_filter <- function(input, output, session) {
 
   observeEvent(c(input$sinus, input$ventricular, input$supraventricular, input$artefact), {
     req(input$data_columns)
-    browser()
     if (!is.null(rval_beat_choices()) &&
         (all(rval_beat_choices() %in% c(input$sinus, input$ventricular, input$supraventricular, input$artefact)) || rval_beat_choices() == "no choices")  ||
         is.null(rval_beat_choices()) && identical(c(input$sinus, input$ventricular, input$supraventricular, input$artefact), c("0", "1", "2", "3"))) { # the latter happens at the beginning
@@ -166,6 +166,14 @@ data_upload_and_filter <- function(input, output, session) {
     req(rval_current_sample_data())
     rval_current_sample_data()
   }, options = list(dom = 'tr'))
+
+  output$confirm_choices <- renderText({
+    if (isTruthy(rval_data_ready())) {
+      "<h3><font color=\"#228B22\"><b>Choices confirmed</b></font></h3>"
+    } else {
+      "<h3><font color=\"#cc0000\"><b>Confirm choices</b></font></h3>"
+    }
+  })
 
   observeEvent(input$move_type, {
     if (input$move_type == 'time') {
