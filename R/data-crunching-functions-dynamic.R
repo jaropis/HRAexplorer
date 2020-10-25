@@ -525,7 +525,7 @@ sort_out_runs <- function(results) {
     sort_ps(stub = '_prop')
   compars_pvals <- runs_names[grepl('_pVal', runs_names)] %>%
     sort_ps(stub = '_pVal')
-  rest <- runs_names[!(runs_names %in% c(ARs, DRs, Ns, compars_props, compars_pvals))]
+  rest <- runs_names[!(runs_names %in% c(DRs, ARs, Ns, "DR_MAX", "AR_MAX", "N_MAX", compars_props, compars_pvals))]
   results[c(rest, ARs, DRs, Ns,  compars_props, compars_pvals)]
 }
 
