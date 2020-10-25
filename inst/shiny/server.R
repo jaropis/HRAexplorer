@@ -180,7 +180,7 @@ shinyServer(function(input, output, session){
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
 
-  # Handling download files names for single file analysis
+  # Handling download files names for single file analysis and making the overleaf visible
   observeEvent(input$dynamicpp, {
     rval_current_file_pp({
       if(is.null(input$dynamicpp)) {
@@ -194,6 +194,8 @@ shinyServer(function(input, output, session){
   })
 
   observeEvent(input$dynamicruns, {
+    # this line below is necessary to solve the mirror image problem
+    shinyjs::runjs('show_back_card("details-table-runs-flip-container")')
     rval_current_file_runs({
       if(is.null(input$dynamicruns)) {
         "nic.xlsx"
@@ -206,6 +208,9 @@ shinyServer(function(input, output, session){
   })
 
   observeEvent(input$dynamicspectral, {
+    # this line below is necessary to solve the mirror image problem
+    shinyjs::runjs('show_back_card("details-table-spectral-flip-container")')
+
     rval_current_file_spectral({
       if(is.null(input$dynamicspectral)) {
         "nic.xlsx"
@@ -218,6 +223,8 @@ shinyServer(function(input, output, session){
   })
 
   observeEvent(input$dynamicquality, {
+    # this line below is necessary to solve the mirror image problem
+    shinyjs::runjs('show_back_card("details-table-quality-flip-container")')
     rval_current_file_quality({
       if(is.null(input$dynamicquality)) {
         "nic.xlsx"
@@ -228,6 +235,10 @@ shinyServer(function(input, output, session){
       }
     })
   })
+  # adding listeners to the back-buttons
+  shinyjs::runjs("waitForEl('#btn-6-back', add_hide_to_button, ['details-table-runs-flip-container'])")
+  shinyjs::runjs("waitForEl('#btn-7-back', add_hide_to_button, ['details-table-spectral-flip-container'])")
+  shinyjs::runjs("waitForEl('#btn-8-back', add_hide_to_button, ['details-table-quality-flip-container'])")
 
   callModule(plots,
              "plots",

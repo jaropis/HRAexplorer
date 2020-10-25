@@ -3,11 +3,13 @@ main_tableUI <- function(id) {
   ns <- NS(id)
   fluidRow(
     box(width = 12,
-      tagList(
-        textOutput(ns("title")),
-        DT::dataTableOutput(ns("main_table")),
-        downloadButton(ns("downloadResults"), 'Download results as Excel file')
-      )
+        tagList(
+          textOutput(ns("title")),
+          div(id = ns('flip-container'),
+              DT::dataTableOutput(ns("main_table")),
+              downloadButton(ns("downloadResults"), 'Download results as Excel file')
+          )
+        )
     )
   )
 }

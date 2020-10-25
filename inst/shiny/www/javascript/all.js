@@ -18,9 +18,10 @@ function click_more(buttonID) {
 function waitForEl(selector, fun, parameters) {
   // selector = 'div.wrapper', parameters = [timeout, sleep, interval]
   if(document.querySelector(selector)) {
+    console.log(...parameters);
     fun(selector, ...parameters);
   } else {
-    console.log("no div.wrapper yet");
+    console.log(selector);
     setTimeout(function() {
       waitForEl(selector, fun, parameters);
     }, 500);
@@ -48,4 +49,22 @@ function startSpinner(timeout, sleep, interval) {
         }
       }
     }, interval);
+}
+
+/* show and hide back card */
+function show_back_card(card_id) {
+  document.getElementById(card_id).style.visibility = "visible";
+}
+
+function hide_back_card(card_id) {
+  console.log(card_id);
+  document.getElementById(card_id).style.visibility = "hidden";
+}
+
+/* add event listeners to back-buttons so that the back card can be hidden, eg. 'btn-6-back' and "details-table-runs-flip-container"*/
+function add_hide_to_button(button_id, card_id) {
+  var back_button = document.querySelector(button_id);
+  back_button.addEventListener('click', function() {
+    hide_back_card(card_id);
+  });
 }

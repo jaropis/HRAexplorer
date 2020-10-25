@@ -35,6 +35,7 @@ ui <- dashboardPage(
     )
   ),
   dashboardBody(
+    shinyjs::useShinyjs(),
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
       tags$script(src = "javascript/all.js"),
