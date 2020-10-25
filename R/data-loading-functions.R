@@ -116,7 +116,7 @@ raw_read_one_file <- function(file_addresses, file_no = 1, separator) {
 #' @export
 collect_unique_flags <- function(file_addresses, data_columns, separator) {
   unique_flags <- c()
-  flag_column <- as.numeric(strsplit(data_columns, " ")[[1]][2])
+  flag_column <- as.numeric(strsplit(data_columns, "[ ]+")[[1]][2])
   for (idx in seq(nrow(file_addresses))) {
     file_data <- raw_read_one_file(file_addresses[idx, ], separator = separator)
     unique_flags <- c(unique_flags, unique(file_data[[flag_column]]))
