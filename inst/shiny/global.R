@@ -1,6 +1,3 @@
-# options ----
-options(java.parameters = c("-Xss2560k", "-Xmx2g"))
-
 # libraries ----
 library(HRAexplorer)
 library(shinydashboard)
