@@ -14,6 +14,7 @@ Imports:
     DT,
     hrvhra,
     shiny,
+    shinyjs,
     shinydashboard,
     shinydashboardPlus,
     openxlsx,
