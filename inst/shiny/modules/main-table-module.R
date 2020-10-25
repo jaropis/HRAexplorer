@@ -1,10 +1,14 @@
 #' main results table depending on the analysis type
 main_tableUI <- function(id) {
   ns <- NS(id)
-  tagList(
-    textOutput(ns("title")),
-    DT::dataTableOutput(ns("main_table")),
-    downloadButton(ns("downloadResults"), 'Download results as Excel file')
+  fluidRow(
+    box(width = 12,
+      tagList(
+        textOutput(ns("title")),
+        DT::dataTableOutput(ns("main_table")),
+        downloadButton(ns("downloadResults"), 'Download results as Excel file')
+      )
+    )
   )
 }
 
