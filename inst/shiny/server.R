@@ -194,8 +194,6 @@ shinyServer(function(input, output, session){
   })
 
   observeEvent(input$dynamicruns, {
-    # this line below is necessary to solve the mirror image problem
-    shinyjs::runjs('show_back_card("details-table-runs-flip-container")')
     rval_current_file_runs({
       if(is.null(input$dynamicruns)) {
         "nic.xlsx"
@@ -208,9 +206,6 @@ shinyServer(function(input, output, session){
   })
 
   observeEvent(input$dynamicspectral, {
-    # this line below is necessary to solve the mirror image problem
-    shinyjs::runjs('show_back_card("details-table-spectral-flip-container")')
-
     rval_current_file_spectral({
       if(is.null(input$dynamicspectral)) {
         "nic.xlsx"
@@ -223,8 +218,6 @@ shinyServer(function(input, output, session){
   })
 
   observeEvent(input$dynamicquality, {
-    # this line below is necessary to solve the mirror image problem
-    shinyjs::runjs('show_back_card("details-table-quality-flip-container")')
     rval_current_file_quality({
       if(is.null(input$dynamicquality)) {
         "nic.xlsx"
@@ -235,7 +228,12 @@ shinyServer(function(input, output, session){
       }
     })
   })
-  # adding listeners to the back-buttons
+  # adding listeners to the front and back-buttons (related to removing mirror tables from flipbox)
+  shinyjs::runjs("waitForEl('#btn-5-front', add_show_to_button, ['details-table-pp-flip-container'])")
+  shinyjs::runjs("waitForEl('#btn-6-front', add_show_to_button, ['details-table-runs-flip-container'])")
+  shinyjs::runjs("waitForEl('#btn-7-front', add_show_to_button, ['details-table-spectral-flip-container'])")
+  shinyjs::runjs("waitForEl('#btn-8-front', add_show_to_button, ['details-table-quality-flip-container'])")
+  shinyjs::runjs("waitForEl('#btn-5-back', add_hide_to_button, ['details-table-pp-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-6-back', add_hide_to_button, ['details-table-runs-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-7-back', add_hide_to_button, ['details-table-spectral-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-8-back', add_hide_to_button, ['details-table-quality-flip-container'])")
