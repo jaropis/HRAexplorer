@@ -39,3 +39,8 @@
 #table_div {
   overflow-x: auto;
 }
+
+/* solving mirror on tables */
+.flip-container {
+  overflow-x: auto;
+}
