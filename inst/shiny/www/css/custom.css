@@ -44,3 +44,11 @@
 .flip-container {
   overflow-x: auto;
 }
+/* align preview and confirm buttons */
+#preview_confirm  {
+  display: flex;
+  justify-content: flex-end;
+}
+.div_between {
+  width: 10px;
+}

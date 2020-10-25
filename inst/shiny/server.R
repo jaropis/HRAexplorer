@@ -8,7 +8,7 @@ shinyServer(function(input, output, session){
   rval_current_file_quality <- reactiveVal(NULL)
 
   rct_current_pp_values <- reactive({
-    req(data_info$flags_coding())
+    req(data_info$data_ready())
     get_numerical_results(analysis_type = "poincare",
                           data_info$files(),
                           separator = data_info$separator(),
@@ -20,7 +20,7 @@ shinyServer(function(input, output, session){
   })
 
   rct_current_runs_values <- reactive({
-    req(data_info$flags_coding())
+    req(data_info$data_ready())
     get_numerical_results(analysis_type = "runs",
                           data_info$files(),
                           separator = data_info$separator(),
@@ -32,7 +32,7 @@ shinyServer(function(input, output, session){
   })
 
   rct_current_spectral_values <- reactive({
-    req(data_info$flags_coding())
+    req(data_info$data_ready())
     get_numerical_results(analysis_type = "spectral",
                           data_info$files(),
                           separator = data_info$separator(),
@@ -44,7 +44,7 @@ shinyServer(function(input, output, session){
     )
   })
   rct_current_quality_values <- reactive({
-    req(data_info$flags_coding())
+    req(data_info$data_ready())
     get_numerical_results(analysis_type = "quality",
                           data_info$files(),
                           separator = data_info$separator(),
@@ -56,7 +56,7 @@ shinyServer(function(input, output, session){
   })
 
   rct_current_dynamic_pp_results <- reactive({
-    req(data_info$flags_coding())
+    req(data_info$data_ready())
     get_dynamic_numerical_results(analysis_type = "poincare_dynamic",
                                   data_info$files(),
                                   separator = data_info$separator(),
@@ -70,7 +70,7 @@ shinyServer(function(input, output, session){
                                   flags_coding = data_info$flags_coding())
   })
   rct_current_single_dynamic_pp <- reactive({
-    req(data_info$flags_coding())
+    req(data_info$data_ready())
     req(isTruthy(input$dynamicpp))
     get_dynamic_numerical_results(analysis_type = "poincare_dynamic",
                                   data_info$files(),
@@ -86,7 +86,7 @@ shinyServer(function(input, output, session){
     })
 
   rct_current_dynamic_runs_results <- reactive({
-    req(data_info$flags_coding())
+    req(data_info$data_ready())
     get_dynamic_numerical_results(analysis_type = "runs_dynamic",
                                   data_info$files(),
                                   separator = data_info$separator(),
@@ -101,7 +101,7 @@ shinyServer(function(input, output, session){
   })
 
   rct_current_single_dynamic_runs_results <- reactive({
-    req(data_info$flags_coding())
+    req(data_info$data_ready())
     req(isTruthy(input$dynamicruns))
     get_dynamic_numerical_results(analysis_type = "runs_dynamic",
                                   data_info$files(),
@@ -117,7 +117,7 @@ shinyServer(function(input, output, session){
   })
 
   rct_current_dynamic_spectral_results <- reactive({
-    req(data_info$flags_coding())
+    req(data_info$data_ready())
     get_dynamic_numerical_results(analysis_type = "spectral_dynamic",
                                   data_info$files(),
                                   separator = data_info$separator(),
@@ -132,7 +132,7 @@ shinyServer(function(input, output, session){
   })
 
   rct_current_single_dynamic_spectral_results <- reactive({
-    req(data_info$flags_coding())
+    req(data_info$data_ready())
     req(input$dynamicspectral)
     get_dynamic_numerical_results(analysis_type = "spectral_dynamic",
                                   data_info$files(),
@@ -148,7 +148,7 @@ shinyServer(function(input, output, session){
   })
 
   rct_current_dynamic_quality_results <- reactive({
-    req(data_info$flags_coding())
+    req(data_info$data_ready())
     get_dynamic_numerical_results(analysis_type = "quality_dynamic",
                                   data_info$files(),
                                   separator = data_info$separator(),
@@ -163,7 +163,7 @@ shinyServer(function(input, output, session){
 
   rct_current_single_dynamic_quality_results <- reactive({
     req(input$dynamicquality)
-    req(data_info$flags_coding())
+    req(data_info$data_ready())
     get_dynamic_numerical_results(analysis_type = "quality_dynamic",
                                   data_info$files(),
                                   separator = data_info$separator(),
