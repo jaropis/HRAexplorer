@@ -197,12 +197,13 @@ data_upload_and_filter <- function(input, output, session) {
         length(columns) >= 1 &
         all(columns %in% seq(ncol(rval_current_sample_data()))) &
         length(minmax) == 2 &
-        as.numeric(minmax[1]) < as.numeric(minmax[2])) {
+        as.numeric(minmax[1]) < as.numeric(minmax[2]) &
+        !is.na(as.numeric(input$window_length))) {
       rval_data_ready(TRUE)
     }
   })
 
-  observeEvent(c(rval_flags_coding(), input$minmax, input$data_columns, input$files), {
+  observeEvent(c(rval_flags_coding(), input$minmax, input$data_columns, input$files, input$window_length), {
     rval_data_ready(FALSE)
   })
   list(
