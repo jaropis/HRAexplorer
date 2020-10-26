@@ -101,7 +101,7 @@ raw_read_one_file <- function(file_addresses, file_no = 1, separator) {
   if (file_format == 'matlab') {
     # this is our internal formad used for a specific study - don't expect the app to work with your matlab
     return_data <- R.matlab::readMat(file_addresses[file_no, c("datapath")])
-    return_data <- data.frame(RR = diff(as.vector(return_data[["beatpos"]]) * 100),
+    return_data <- data.frame(RR = diff(as.vector(return_data[["beatpos"]]) * 1000),
                               beats = return_data[["beats"]][2:length(return_data[["beats"]])])
   }
   return_data
@@ -116,7 +116,7 @@ raw_read_one_file <- function(file_addresses, file_no = 1, separator) {
 #' @export
 collect_unique_flags <- function(file_addresses, data_columns, separator) {
   unique_flags <- c()
-  flag_column <- as.numeric(strsplit(data_columns, " ")[[1]][2])
+  flag_column <- as.numeric(strsplit(data_columns, "[ ]+")[[1]][2])
   for (idx in seq(nrow(file_addresses))) {
     file_data <- raw_read_one_file(file_addresses[idx, ], separator = separator)
     unique_flags <- c(unique_flags, unique(file_data[[flag_column]]))

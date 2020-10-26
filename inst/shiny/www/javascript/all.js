@@ -62,6 +62,14 @@ function hide_back_card(card_id) {
 }
 
 /* add event listeners to back-buttons so that the back card can be hidden, eg. 'btn-6-back' and "details-table-runs-flip-container"*/
+function add_show_to_button(button_id, card_id) {
+  var front_button = document.querySelector(button_id);
+  front_button.addEventListener('click', function() {
+    show_back_card(card_id);
+  });
+}
+
+
 function add_hide_to_button(button_id, card_id) {
   var back_button = document.querySelector(button_id);
   back_button.addEventListener('click', function() {

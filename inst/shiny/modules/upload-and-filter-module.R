@@ -2,6 +2,8 @@ data_upload_and_filterUI <- function(id) {
   ns <- NS(id)
   fluidRow(id = "first_row",
            fluidRow(
+             box(width = 12, id = "choices_box",
+                 htmlOutput(ns("confirm_choices"))),
              box(width = 4,
                     h3("Files to upload"),
                     fileInput(ns("files"),
@@ -11,7 +13,11 @@ data_upload_and_filterUI <- function(id) {
                                 list(glob_init_separator, ",", ";", "space", "\t")),
                     textInput(ns("data_columns"), "enter the column for RR intervals and flags - see explanations",
                               glob_init_columns),
-                 actionButton(inputId = ns('preview'), label = "Preview")
+                 div(id = "preview_confirm",
+                 actionButton(inputId = ns('preview'), label = "Preview"),
+                 div(class = 'div_between'),
+                 actionButton(inputId = ns('confirm'), label = "Confirm", class = 'btn-primary')
+                 )
              ),
              box(width = 4,
                     h3("Filters"),
@@ -90,12 +96,9 @@ data_upload_and_filter <- function(input, output, session) {
   rval_beat_choices <- reactiveVal(NULL)
   rval_flags_coding <- reactiveVal(NULL)
   rval_data_cols_reset <- reactiveVal(FALSE)
+  rval_data_ready <- reactiveVal(FALSE)
 
   dataModal <- function() {
-    raw_read_one_file(input$files %||% calculate_data_addresses(), file_no = 1, glob_separators[[input$separator]]) %>%
-      sample_table() %>%
-      rval_current_sample_data()
-
     modalDialog(size = "l",
       tags$div(id = "table_div",
         DT::dataTableOutput(ns('sample_data'))
@@ -109,6 +112,12 @@ data_upload_and_filter <- function(input, output, session) {
   observeEvent(input$preview, {
    showModal(dataModal())
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
+
+  observeEvent(input$files, {
+    raw_read_one_file(input$files %||% calculate_data_addresses(), file_no = 1, glob_separators[[input$separator]]) %>%
+      sample_table() %>%
+      rval_current_sample_data()
+  }, ignoreInit = FALSE, ignoreNULL = FALSE)
 
   observeEvent(input$files, {
     updateTextInput(session,inputId = "data_columns", value = "")
@@ -126,22 +135,25 @@ data_upload_and_filter <- function(input, output, session) {
   observeEvent(c(input$files, input$data_columns), {
     req(rval_data_cols_reset())
     req(input$data_columns)
-    if (length(strsplit(input$data_columns, " ")[[1]]) == 1) {
-      c(0)
+    data_columns <- as.numeric(strsplit(input$data_columns, "[ ]+")[[1]])
+    req(all(data_columns %in% seq(ncol(rval_current_sample_data()))))
+    if (length(data_columns) == 1) {
+      rval_beat_choices("no choices")
     } else {
-      collect_unique_flags(input$files, input$data_columns, input$separator)
-    } %>%
-      rval_beat_choices()
-    updateSelectizeInput(session, "sinus", choices = rval_beat_choices())
-    updateSelectizeInput(session, "ventricular", choices = rval_beat_choices())
-    updateSelectizeInput(session, "supraventricular", choices = rval_beat_choices())
-    updateSelectizeInput(session, "artefact", choices = rval_beat_choices())
+      rval_beat_choices(collect_unique_flags(input$files, input$data_columns, input$separator))
+    }
+    rval_flags_coding(NULL)
+    updateSelectizeInput(session, "sinus", choices = 'if' (length(data_columns) == 1, "no choices", rval_beat_choices()), selected = "no choices")
+    updateSelectizeInput(session, "ventricular", choices ='if' (length(data_columns) == 1, "no choices", rval_beat_choices()), selected = "no choices")
+    updateSelectizeInput(session, "supraventricular", choices = 'if' (length(data_columns) == 1, "no choices", rval_beat_choices()), selected = "no choices")
+    updateSelectizeInput(session, "artefact", choices = 'if' (length(data_columns) == 1, "no choices", rval_beat_choices()), selected = "no choices")
     updateTextInput(session, "data_columns", value = NULL)
   })
 
   observeEvent(c(input$sinus, input$ventricular, input$supraventricular, input$artefact), {
     req(input$data_columns)
-    if (!is.null(rval_beat_choices()) && all(rval_beat_choices() %in% c(input$sinus, input$ventricular, input$supraventricular, input$artefact)) ||
+    if (!is.null(rval_beat_choices()) &&
+        (all(rval_beat_choices() %in% c(input$sinus, input$ventricular, input$supraventricular, input$artefact)) || rval_beat_choices() == "no choices")  ||
         is.null(rval_beat_choices()) && identical(c(input$sinus, input$ventricular, input$supraventricular, input$artefact), c("0", "1", "2", "3"))) { # the latter happens at the beginning
       rval_flags_coding(list(sinus = as.numeric(input$sinus),
                         ventricular = as.numeric(input$ventricular),
@@ -154,6 +166,14 @@ data_upload_and_filter <- function(input, output, session) {
     req(rval_current_sample_data())
     rval_current_sample_data()
   }, options = list(dom = 'tr'))
+
+  output$confirm_choices <- renderText({
+    if (isTruthy(rval_data_ready())) {
+      "<h3><font color=\"#228B22\"><b>Choices confirmed</b></font></h3>"
+    } else {
+      "<h3><font color=\"#cc0000\"><b>Confirm choices</b></font></h3>"
+    }
+  })
 
   observeEvent(input$move_type, {
     if (input$move_type == 'time') {
@@ -168,6 +188,23 @@ data_upload_and_filter <- function(input, output, session) {
                         value = 300)
     }
   }, ignoreInit = TRUE)
+
+  # checking if what is enetered makes sense
+  observeEvent(input$confirm, {
+    columns <- strsplit(input$data_columns, "[ ]+")[[1]]
+    minmax <- strsplit(input$minmax, "[ ]+")[[1]]
+    if (isTruthy(rval_flags_coding()) &
+        length(columns) >= 1 &
+        all(columns %in% seq(ncol(rval_current_sample_data()))) &
+        length(minmax) == 2 &
+        as.numeric(minmax[1]) < as.numeric(minmax[2])) {
+      rval_data_ready(TRUE)
+    }
+  })
+
+  observeEvent(c(rval_flags_coding(), input$minmax, input$data_columns, input$files), {
+    rval_data_ready(FALSE)
+  })
   list(
     variable_name = reactive(input$variable_name),
     using_excel = reactive(check_for_excel(input$files %||% calculate_data_addresses())),
@@ -181,6 +218,7 @@ data_upload_and_filter <- function(input, output, session) {
     move_type = reactive(input$move_type),
     window_length = reactive(input$window_length),
     dynamic_asym = reactive(input$dynamic_asym),
-    flags_coding = rval_flags_coding # this is reactive itself
+    flags_coding = rval_flags_coding, # this is reactive itself
+    data_ready = rval_data_ready
   )
 }
