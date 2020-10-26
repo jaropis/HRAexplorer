@@ -3,6 +3,7 @@ library(HRAexplorer)
 library(shinydashboard)
 library(shinydashboardPlus)
 library(dplyr)
+library(slider)
 
 # modules ----
 source(file.path("modules", "upload-and-filter-module.R"))
