@@ -3,6 +3,7 @@ FROM rocker/r-ver:4.0.0-ubuntu18.04
 RUN apt-get update \
     && apt-get -y install libcurl4-openssl-dev \
     libssl-dev \
+    libxt6 \
     libxml2-dev \
     libz-dev\
     tar
