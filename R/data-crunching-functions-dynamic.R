@@ -346,9 +346,14 @@ get_single_pp_windowed_results <- function(RR,
                time_function(RR, window = window_length)
         ),
          function(window_table) {
-           if (nrow(window_table) == window_length) {
-              hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]])
+           ret_val <- NULL
+           if (move_type == 'index' && nrow(window_table) == window_length) {
+              ret_val <- hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]])
            }
+           if (move_type == 'time') {
+             ret_val <- hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]])
+           }
+           ret_val
          }) %>%
     dplyr::bind_rows() %>%
     cut_incomplete_rows(cut_end, return_all)
@@ -375,10 +380,16 @@ get_single_runs_windowed_results <- function(RR,
                             time_function(RR, window = window_length, cut_end = cut_end),
                             time_function(RR, window = window_length)),
                       function(window_table) {
-                        if (nrow(window_table) == window_length) {
-                          hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
+                        ret_val <- NULL
+                        if (move_type == 'index' && nrow(window_table) == window_length) {
+                          ret_val <- hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
                         }
-                      })
+                        if (move_type == 'time') {
+                          ret_val <- hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
+                        }
+                        ret_val
+                      }) %>% Filter(function(elem) !is.null(elem), .)
+
   hrvhra::bind_runs_as_table(runs_list, as.character(seq_along(runs_list))) %>%
     cut_incomplete_rows(cut_end, return_all)
 }
@@ -410,9 +421,14 @@ get_single_spectral_windowed_results <- function(RR,
                time_function(RR, window = window_length, cut_end = cut_end),
                time_function(RR, window = window_length)),
          function(window_table) {
-           if (nrow(window_table) == window_length) {
-              hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[rr_index]], annotations = window_table[[rr_index + 1]]), bands)
+           ret_val <- NULL
+           if (move_type == 'index' && nrow(window_table) == window_length) {
+              ret_val <- hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[rr_index]], annotations = window_table[[rr_index + 1]]), bands)
            }
+           if (move_type == 'time') {
+             ret_val <- hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[rr_index]], annotations = window_table[[rr_index + 1]]), bands)
+           }
+           ret_val
          }) %>%
     dplyr::bind_rows() %>%
     cut_incomplete_rows(cut_end, return_all)
@@ -439,9 +455,14 @@ get_single_quality_windowed_results <- function(RR,
                time_function(RR, window = window_length, cut_end = cut_end),
                time_function(RR, window = window_length)),
          function(window_table) {
-           if (nrow(window_table) == window_length) { # TODO - repair this! cut_end does not seem to work for index_based
-              hrvhra::describerr(window_table[[rr_index + 1]])
+           ret_val <- NULL
+           if (move_type == 'index' && nrow(window_table) == window_length) { # TODO - repair this! cut_end does not seem to work for index_based
+              ret_val <- hrvhra::describerr(window_table[[rr_index + 1]])
            }
+           if (move_type == 'time') {
+             ret_val <- hrvhra::describerr(window_table[[rr_index + 1]])
+           }
+           ret_val
          }) %>%
     dplyr::bind_rows() %>%
     cut_incomplete_rows(cut_end, return_all)
