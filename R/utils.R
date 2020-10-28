@@ -30,6 +30,13 @@ calculate_data_addresses <- function() {
   return(dataPaths)
 }
 
+#' Function running loader/spinner
+#' @param path that to the svg loader
+#' @param timeout how long to wait to show spinner after registering shiny-busy
+#' @param interval how check check for shinyBusy
+#' @param sleep the shortest time spinner shows
+#'
+#' @export
 loader <- function(path,
                    timeout = 1000,
                    interval = 1000,
