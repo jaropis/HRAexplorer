@@ -1,9 +1,9 @@
 # libraries ----
-library(HRAexplorer)
 library(shinydashboard)
 library(shinydashboardPlus)
 library(dplyr)
 library(slider)
+library(HRAexplorer)
 
 # modules ----
 source(file.path("modules", "upload-and-filter-module.R"))

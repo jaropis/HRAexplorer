@@ -1,7 +1,7 @@
 #/bin/bash
 case $1 in
     start)
-	[ ! -z $(docker images -q hradev:latest) ] || docker image build -t hrgdev .
+	[ ! -z $(docker images -q hradev:latest) ] || docker image build -t hradev .
 	docker run --rm -e PASSWORD=hra -e ROOT=true -p 8787:8787 -d -v $(pwd):/mnt/vol  --name hradev hradev
 	exitVal=$?
 	if [ $exitVal -eq 0 ]
@@ -28,7 +28,7 @@ case $1 in
 	;;
     rebuild)
 	docker image rm -f hradev
-	docker build --no-cache --build-arg HRA_VER=20160613.2 . -t hradev 
+	docker build --no-cache --build-arg HRA_VER=20160613.2 . -t hradev
 	;;
     *)
 	echo "usage: /runcontainer start/stop/rebuild"
