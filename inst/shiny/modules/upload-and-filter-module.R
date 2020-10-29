@@ -113,7 +113,7 @@ data_upload_and_filter <- function(input, output, session) {
    showModal(dataModal())
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
-  observeEvent(input$files, {
+  observeEvent(c(input$files, input$separator), {
     raw_read_one_file(input$files %||% calculate_data_addresses(), file_no = 1, glob_separators[[input$separator]]) %>%
       sample_table() %>%
       rval_current_sample_data()
