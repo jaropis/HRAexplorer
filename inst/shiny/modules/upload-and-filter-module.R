@@ -208,7 +208,11 @@ data_upload_and_filter <- function(input, output, session) {
                  input$data_columns,
                  input$files,
                  input$window_length,
-                 input$dynamic_asym), {
+                 input$dynamic_asym,
+                 input$window_type,
+                 input$move_type,
+                 input$window_length,
+                 input$use_ULF), {
     rval_data_ready(FALSE)
   })
   list(
