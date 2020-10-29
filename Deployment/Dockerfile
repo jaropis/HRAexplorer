@@ -11,7 +11,7 @@ RUN apt-get update \
 RUN R -e "install.packages('devtools')"
 COPY . /HRAexplorer/
 RUN R -e "devtools::install_github('jaropis/hrvhra', dependencies = TRUE)"
-RUN R -e "install.packages('shinydashboardPlus')"
+RUN R -e "remotes::install_version('shinydashboardPlus', version = '0.7.5', repos = 'http://cran.us.r-project.org')"
 RUN Rscript -e "devtools::install_deps('/HRAexplorer/', upgrade = 'default')"
 RUN R -e "install.packages('/HRAexplorer/', repos = NULL, type = 'source')"
 # RUN cp /HRAexplorer/Deployment/Renviron /HRAexplorer/.Renviron
