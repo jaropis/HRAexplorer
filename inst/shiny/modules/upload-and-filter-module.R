@@ -203,7 +203,12 @@ data_upload_and_filter <- function(input, output, session) {
     }
   })
 
-  observeEvent(c(rval_flags_coding(), input$minmax, input$data_columns, input$files, input$window_length), {
+  observeEvent(c(rval_flags_coding(),
+                 input$minmax,
+                 input$data_columns,
+                 input$files,
+                 input$window_length,
+                 input$dynamic_asym), {
     rval_data_ready(FALSE)
   })
   list(
