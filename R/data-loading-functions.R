@@ -44,15 +44,16 @@ read_and_filter_one_file <- function(file_addresses, line_number, separator, col
   data <- raw_read_one_file(file_addresses, line_number, sep = separator)
   column_idx <- read_numbers_from_field(column_data)
   RR_idx <- column_idx[1]
-  flag_idx <- ifelse(length(column_idx)>1, column_idx[2], 0)
+  flag_idx <- ifelse(length(column_idx) > 1, column_idx[2], 0)
   RR <- as.numeric(data[[RR_idx]])
   if (flag_idx > 0) {
-    flags <- as.numeric(data[[flag_idx]])
+    flags <- as.character(data[[flag_idx]])
     for (flag in names(flags_coding)) {
       if (length(flags_coding[[flag]]) > 0) {
         flags[flags %in% flags_coding[[flag]]] <- flags_and_codes[[flag]]
       }
     }
+    flags <- as.numeric(flags)
   } else {
     flags <- RR*0
   }
@@ -119,17 +120,7 @@ collect_unique_flags <- function(file_addresses, data_columns, separator) {
   flag_column <- as.numeric(strsplit(data_columns, "[ ]+")[[1]][2])
   for (idx in seq(nrow(file_addresses))) {
     file_data <- raw_read_one_file(file_addresses[idx, ], separator = separator)
-    unique_flags <- c(unique_flags, unique(file_data[[flag_column]]))
-  }
-
-  rounding <- tryCatch({
-    unique_flags <- as.numeric(unique_flags)
-    unique_flags <- round(unique_flags)
-  },
-  error = function(cond) return (FALSE),
-  warning = function(cond) return (FALSE))
-
-  if (is.numeric(unique_flags)) {
+    unique_flags <- c(unique_flags, unique(as.character(file_data[[flag_column]])))
   }
   unique_flags
 }
