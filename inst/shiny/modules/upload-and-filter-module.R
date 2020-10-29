@@ -155,10 +155,10 @@ data_upload_and_filter <- function(input, output, session) {
     if (!is.null(rval_beat_choices()) &&
         (all(rval_beat_choices() %in% c(input$sinus, input$ventricular, input$supraventricular, input$artefact)) || rval_beat_choices() == "no choices")  ||
         is.null(rval_beat_choices()) && identical(c(input$sinus, input$ventricular, input$supraventricular, input$artefact), c("0", "1", "2", "3"))) { # the latter happens at the beginning
-      rval_flags_coding(list(sinus = as.numeric(input$sinus),
-                        ventricular = as.numeric(input$ventricular),
-                        supraventricular = as.numeric(input$supraventricular),
-                        artefact = as.numeric(input$artefact)))
+      rval_flags_coding(list(sinus = input$sinus,
+                        ventricular = input$ventricular,
+                        supraventricular = input$supraventricular,
+                        artefact = input$artefact))
     }
   })
 
