@@ -43,6 +43,7 @@
 /* solving mirror on tables */
 .flip-container {
   overflow-x: auto;
+  overflow-y: auto;
 }
 /* align preview and confirm buttons */
 #preview_confirm  {
@@ -57,4 +58,9 @@
   height: 63px;
   margin-top: -20px;
   padding-top: 6px;
+}
+
+/* make it possible to see long tables on small screens */
+.content-wrapper {
+  overflow-y: auto;
 }
