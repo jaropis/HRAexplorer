@@ -125,6 +125,12 @@ data_upload_and_filter <- function(input, output, session) {
     updateSelectizeInput(session, "ventricular", selected = "")
     updateSelectizeInput(session, "supraventricular", selected = "")
     updateSelectizeInput(session, "artefact", selected = "")
+    updateSelectizeInput(session, "separator", selected = "")
+    updateSelectizeInput(session, "dynamic_asym", selected = "")
+    updateSelectizeInput(session, "window_type", selected = "jump")
+    updateSelectizeInput(session, "move_type", selected = "time")
+    updateNumericInput(session, "window_length", value = 5)
+    updateRadioButtons(session, "use_ULF", selected = "No")
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
   observeEvent(input$data_columns, {
