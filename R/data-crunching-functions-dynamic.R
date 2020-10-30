@@ -457,10 +457,12 @@ get_single_quality_windowed_results <- function(RR,
          function(window_table) {
            ret_val <- NULL
            if (move_type == 'index' && nrow(window_table) == window_length) { # TODO - repair this! cut_end does not seem to work for index_based
-              ret_val <- hrvhra::describerr(window_table[[rr_index + 1]])
+              ret_val <- hrvhra::describerr(window_table[[rr_index]],
+                                            window_table[[rr_index + 1]])
            }
            if (move_type == 'time') {
-             ret_val <- hrvhra::describerr(window_table[[rr_index + 1]])
+             ret_val <- hrvhra::describerr(window_table[[rr_index]],
+                                           window_table[[rr_index + 1]])
            }
            ret_val
          }) %>%

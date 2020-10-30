@@ -105,7 +105,7 @@ get_quality_results <- function(fileAddresses,
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding)
-    temp_results <- hrvhra::describerr(rr_and_flags[[2]])
+    temp_results <- hrvhra::describerr(rr_and_flags[[1]], rr_and_flags[[2]])
     results <- rbind(results, temp_results)
   }
   results <- as.data.frame(round(results, 3))
