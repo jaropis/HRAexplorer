@@ -207,7 +207,7 @@ get_dynamic_runs_results <- function(fileAddresses,
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_spectral_results <- function(fileAddresses,
-                                         use_ULF = FALSE,
+                                         use_ULF = "No",
                                          time_functions_list = glb_time_functions,
                                          separator = "\t",
                                          column_data = c(1, 2),
@@ -405,7 +405,7 @@ get_single_spectral_windowed_results <- function(RR,
                                                  time_functions_list = glb_time_functions,
                                                  window_type = "jump",
                                                  move_type = "time",
-                                                 use_ULF = FALSE,
+                                                 use_ULF = "No",
                                                  window_length = 5,
                                                  cut_end = FALSE,
                                                  return_all = FALSE) {
