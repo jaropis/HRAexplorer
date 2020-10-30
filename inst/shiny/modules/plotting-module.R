@@ -60,9 +60,10 @@ plots <- function(input, output, session,
                                                  separator = separator,
                                                  column_data = data_columns,
                                                  minmax = minmax,
-                                                 using_excel = using_excel)
+                                                 using_excel = using_excel,
+                                                 flags_coding = flags_coding)
         png(file, width=1800, height = 1900, res=300)
-        hrvhra::drawpp(rr_and_flags$RR, rr_and_flags$annotations,
+        hrvhra::drawpp(hrvhra::pp(data.frame(rr_and_flags$RR, rr_and_flags$annotations)),
                        vname = variable_name,
                        col = glob_marker_color, bg = color, pch = 21)
         dev.off()} else {
