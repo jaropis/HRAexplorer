@@ -127,7 +127,8 @@ shinyServer(function(input, output, session){
                                   window_type = data_info$window_type(),
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
-                                  flags_coding = data_info$flags_coding())
+                                  flags_coding = data_info$flags_coding(),
+                                  use_ULF = data_info$use_ULF())
 
   })
 
@@ -144,7 +145,8 @@ shinyServer(function(input, output, session){
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
                                   clicked_file = as.numeric(input$dynamicspectral),
-                                  flags_coding = data_info$flags_coding())
+                                  flags_coding = data_info$flags_coding(),
+                                  use_ULF = data_info$use_ULF())
   })
 
   rct_current_dynamic_quality_results <- reactive({
