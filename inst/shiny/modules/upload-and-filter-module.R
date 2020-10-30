@@ -132,6 +132,11 @@ data_upload_and_filter <- function(input, output, session) {
     rval_data_cols_reset(TRUE)
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
+  observeEvent(input$separator, {
+    req(!isTruthy(input$data_columns))
+    rval_data_cols_reset(FALSE)
+  })
+
   observeEvent(c(input$files, input$data_columns), {
     req(rval_data_cols_reset())
     req(input$data_columns)
