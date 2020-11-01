@@ -151,7 +151,7 @@ data_upload_and_filter <- function(input, output, session) {
     if (length(data_columns) == 1) {
       rval_beat_choices("no choices")
     } else {
-      rval_beat_choices(collect_unique_flags(input$files, input$data_columns, input$separator))
+      rval_beat_choices(collect_unique_flags(input$files, input$data_columns, glob_separators[[input$separator]]))
     }
     rval_flags_coding(NULL)
     updateSelectizeInput(session, "sinus", choices = 'if' (length(data_columns) == 1, "no choices", rval_beat_choices()), selected = "no choices")
