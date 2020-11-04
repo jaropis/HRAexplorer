@@ -290,7 +290,8 @@ shinyServer(function(input, output, session){
              rct_current_values = rct_current_dynamic_pp_results,
              button_label = "Detail",
              button_id = "btn_view_dynamicpp_",
-             file_name =reactiveVal("DynamicPP.xlsx")
+             file_name =reactiveVal("DynamicPP.xlsx"),
+             dynamic = TRUE
   )
   callModule(main_table,
              "details-table-pp",
@@ -302,7 +303,8 @@ shinyServer(function(input, output, session){
              rct_current_values = rct_current_dynamic_runs_results,
              button_label = "Detail",
              button_id = "btn_view_dynamicruns_",
-             file_name =reactiveVal("RunsDynamic.xlsx")
+             file_name =reactiveVal("RunsDynamic.xlsx"),
+             dynamic = TRUE
   )
   callModule(main_table,
              "details-table-runs",
@@ -314,7 +316,8 @@ shinyServer(function(input, output, session){
              rct_current_values = rct_current_dynamic_spectral_results,
              button_label = "Detail",
              button_id = "btn_view_dynamicspectral_",
-             file_name =reactiveVal("SpectralDynamic.xlsx")
+             file_name =reactiveVal("SpectralDynamic.xlsx"),
+             dynamic = TRUE
   )
   callModule(main_table,
              'details-table-spectral',
@@ -326,7 +329,8 @@ shinyServer(function(input, output, session){
              rct_current_values = rct_current_dynamic_quality_results,
              button_label = "Detail",
              button_id = "btn_view_dynamicquality_",
-             file_name =reactive("QualityDynamic.xlsx")
+             file_name =reactive("QualityDynamic.xlsx"),
+             dynamic = TRUE
   )
   callModule(main_table,
              'details-table-quality',

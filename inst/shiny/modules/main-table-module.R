@@ -7,7 +7,8 @@ main_tableUI <- function(id) {
           textOutput(ns("title")),
           div(id = ns('flip-container'),
               DT::dataTableOutput(ns("main_table")),
-              downloadButton(ns("downloadResults"), 'Download results as Excel file')
+              downloadButton(ns("downloadResults"), 'Download results as Excel file'),
+              shinyjs::hidden(downloadButton(ns("downloadAllDynamic"), "Download results for each file"))
           )
         )
     )
@@ -22,9 +23,12 @@ main_table <- function(input, output, session,
                        rct_current_values,
                        button_label = "View",
                        button_id = NULL,
-                       file_name) {
-  save_file <- reactiveVal(NULL)
+                       file_name,
+                       dynamic = FALSE) {
   output$title <- renderText(file_name())
+  if (dynamic) {
+    shinyjs::show("downloadAllDynamic")
+  }
   main_DTable <- reactive({
     results_matrix <- HRAexplorer::get_results_matrix(rct_current_values(), button_label, button_id)
     main_table <- DT::datatable(results_matrix,
