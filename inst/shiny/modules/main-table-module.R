@@ -24,7 +24,8 @@ main_table <- function(input, output, session,
                        button_label = "View",
                        button_id = NULL,
                        file_name,
-                       dynamic = FALSE) {
+                       dynamic = FALSE,
+                       rct_individual_results = NULL) {
   output$title <- renderText(file_name())
   if (dynamic) {
     shinyjs::show("downloadAllDynamic")
@@ -49,5 +50,13 @@ main_table <- function(input, output, session,
     },
     content = function(file) {
       openxlsx::write.xlsx(x = rct_current_values(), file = file)
+    })
+
+  output$downloadAllDynamic <- downloadHandler(
+    filename = function() {
+      file_name()
+    },
+    content = function(file) {
+      openxlsx::write.xlsx(x = rct_individual_results(), file = file)
     })
 }

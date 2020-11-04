@@ -179,6 +179,110 @@ shinyServer(function(input, output, session){
                                   flags_coding = data_info$flags_coding())
   })
 
+  # these reactives  are used to download partial results for windows in each file
+  rct_current_dynamic_all_individual_pp_results <- reactive ({
+    req(data_info$data_ready())
+    individual_results <- data.frame()
+    for (idx in seq(nrow(data_info$files()))) {
+      file_result <- get_dynamic_numerical_results(analysis_type = "poincare_dynamic",
+                                                   data_info$files(),
+                                                   separator = data_info$separator(),
+                                                   column_data = data_info$data_columns(),
+                                                   minmax = data_info$minmax(),
+                                                   using_excel = data_info$using_excel(),
+                                                   window_type = data_info$window_type(),
+                                                   move_type = data_info$move_type(),
+                                                   window_length = data_info$window_length(),
+                                                   clicked_file = idx,
+                                                   flags_coding = data_info$flags_coding())
+      file_result <- cbind(file = data_info$files()[idx, 'name'], file_result)
+      if (nrow(individual_results) == 0) {
+        individual_results <- file_result
+      } else {
+        individual_results <- rbind(individual_results, file_result)
+      }
+    }
+    individual_results
+  })
+
+  rct_current_dynamic_all_individual_runs_results <- reactive ({
+    req(data_info$data_ready())
+    individual_results <- data.frame()
+    for (idx in seq(nrow(data_info$files()))) {
+      file_result <- get_dynamic_numerical_results(analysis_type = "runs_dynamic",
+                                                   data_info$files(),
+                                                   separator = data_info$separator(),
+                                                   column_data = data_info$data_columns(),
+                                                   minmax = data_info$minmax(),
+                                                   using_excel = data_info$using_excel(),
+                                                   window_type = data_info$window_type(),
+                                                   move_type = data_info$move_type(),
+                                                   window_length = data_info$window_length(),
+                                                   clicked_file = idx,
+                                                   flags_coding = data_info$flags_coding())
+      file_result$file <- NULL
+      file_result <- cbind(file = data_info$files()[idx, 'name'], file_result)
+      if (nrow(individual_results) == 0) {
+        individual_results <- file_result
+      } else {
+        individual_results <- dplyr::bind_rows(individual_results, file_result)
+      }
+    }
+    individual_results[is.na(individual_results)] <- 0
+    sort_out_runs(individual_results)
+  })
+
+  rct_current_dynamic_all_individual_spectral_results <- reactive ({
+    req(data_info$data_ready())
+    individual_results <- data.frame()
+    for (idx in seq(nrow(data_info$files()))) {
+      file_result <- get_dynamic_numerical_results(analysis_type = "spectral_dynamic",
+                                                   data_info$files(),
+                                                   separator = data_info$separator(),
+                                                   column_data = data_info$data_columns(),
+                                                   minmax = data_info$minmax(),
+                                                   using_excel = data_info$using_excel(),
+                                                   window_type = data_info$window_type(),
+                                                   move_type = data_info$move_type(),
+                                                   window_length = data_info$window_length(),
+                                                   clicked_file = idx,
+                                                   flags_coding = data_info$flags_coding(),
+                                                   use_ULF = data_info$use_ULF())
+      file_result <- cbind(file = data_info$files()[idx, 'name'], file_result)
+      if (nrow(individual_results) == 0) {
+        individual_results <- file_result
+      } else {
+        individual_results <- rbind(individual_results, file_result)
+      }
+    }
+    individual_results
+  })
+
+  rct_current_dynamic_all_individual_quality_results <- reactive ({
+    req(data_info$data_ready())
+    individual_results <- data.frame()
+    for (idx in seq(nrow(data_info$files()))) {
+      file_result <- get_dynamic_numerical_results(analysis_type = "quality_dynamic",
+                                                   data_info$files(),
+                                                   separator = data_info$separator(),
+                                                   column_data = data_info$data_columns(),
+                                                   minmax = data_info$minmax(),
+                                                   using_excel = data_info$using_excel(),
+                                                   window_type = data_info$window_type(),
+                                                   move_type = data_info$move_type(),
+                                                   window_length = data_info$window_length(),
+                                                   clicked_file = idx,
+                                                   flags_coding = data_info$flags_coding())
+      file_result <- cbind(file = data_info$files()[idx, 'name'], window.NO = seq(nrow(file_result)), file_result)
+      if (nrow(individual_results) == 0) {
+        individual_results <- file_result
+      } else {
+        individual_results <- rbind(individual_results, file_result)
+      }
+    }
+    individual_results
+  })
+
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
 
@@ -291,7 +395,8 @@ shinyServer(function(input, output, session){
              button_label = "Detail",
              button_id = "btn_view_dynamicpp_",
              file_name =reactiveVal("DynamicPP.xlsx"),
-             dynamic = TRUE
+             dynamic = TRUE,
+             rct_individual_results = rct_current_dynamic_all_individual_pp_results
   )
   callModule(main_table,
              "details-table-pp",
@@ -304,7 +409,8 @@ shinyServer(function(input, output, session){
              button_label = "Detail",
              button_id = "btn_view_dynamicruns_",
              file_name =reactiveVal("RunsDynamic.xlsx"),
-             dynamic = TRUE
+             dynamic = TRUE,
+             rct_individual_results = rct_current_dynamic_all_individual_runs_results
   )
   callModule(main_table,
              "details-table-runs",
@@ -317,7 +423,8 @@ shinyServer(function(input, output, session){
              button_label = "Detail",
              button_id = "btn_view_dynamicspectral_",
              file_name =reactiveVal("SpectralDynamic.xlsx"),
-             dynamic = TRUE
+             dynamic = TRUE,
+             rct_individual_results = rct_current_dynamic_all_individual_spectral_results
   )
   callModule(main_table,
              'details-table-spectral',
@@ -330,7 +437,8 @@ shinyServer(function(input, output, session){
              button_label = "Detail",
              button_id = "btn_view_dynamicquality_",
              file_name =reactive("QualityDynamic.xlsx"),
-             dynamic = TRUE
+             dynamic = TRUE,
+             rct_individual_results = rct_current_dynamic_all_individual_quality_results
   )
   callModule(main_table,
              'details-table-quality',
