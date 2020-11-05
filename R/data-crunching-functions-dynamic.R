@@ -31,54 +31,54 @@ get_dynamic_numerical_results <- function(analysis_type,
   if (analysis_type == "poincare_dynamic")
     return(get_dynamic_pp_results(fileAddresses,
                                   time_functions_list = glb_time_functions,
-                                  separator,
-                                  column_data,
-                                  minmax,
-                                  using_excel,
-                                  window_type,
-                                  move_type,
-                                  window_length,
-                                  clicked_file,
-                                  asym_comparisons,
-                                  flags_coding))
+                                  separator = separator,
+                                  column_data = column_data,
+                                  minmax = minmax,
+                                  using_excel = using_excel,
+                                  window_type = window_type,
+                                  move_type = move_type,
+                                  window_length = window_length,
+                                  clicked_file = clicked_file,
+                                  asym_comparisons = asym_comparisons,
+                                  flags_coding = flags_coding))
   if (analysis_type == "runs_dynamic")
     return(get_dynamic_runs_results(fileAddresses,
                                     time_functions_list = glb_time_functions,
-                                    separator,
-                                    column_data,
-                                    minmax,
-                                    using_excel,
-                                    window_type,
-                                    move_type,
-                                    window_length,
-                                    clicked_file,
-                                    asym_comparisons,
-                                    flags_coding))
+                                    separator = separator,
+                                    column_data = column_data,
+                                    minmax = minmax,
+                                    using_excel = using_excel,
+                                    window_type = window_type,
+                                    move_type = move_type,
+                                    window_length = window_length,
+                                    clicked_file = clicked_file,
+                                    asym_comparisons = asym_comparisons,
+                                    flags_coding = flags_coding))
   if (analysis_type == "spectral_dynamic")
     return(get_dynamic_spectral_results(fileAddresses,
                                         time_functions_list = glb_time_functions,
-                                        separator,
-                                        column_data,
-                                        minmax,
-                                        using_excel,
+                                        separator = separator,
+                                        column_data = column_data,
+                                        minmax = minmax,
+                                        using_excel = using_excel,
                                         use_ULF = use_ULF,
-                                        window_type,
-                                        move_type,
-                                        window_length,
-                                        clicked_file,
-                                        flags_coding))
+                                        window_type = window_type,
+                                        move_type = move_type,
+                                        window_length = window_length,
+                                        clicked_file = clicked_file,
+                                        flags_coding = flags_coding))
   if (analysis_type == "quality_dynamic")
     return(get_dynamic_quality_results(fileAddresses,
                                        time_functions_list = glb_time_functions,
-                                       separator,
-                                       column_data,
-                                       minmax,
-                                       using_excel,
-                                       window_type,
-                                       move_type,
-                                       window_length,
-                                       clicked_file,
-                                       flags_coding))
+                                       separator = separator,
+                                       column_data = column_data,
+                                       minmax = minmax,
+                                       using_excel = using_excel,
+                                       window_type = window_type,
+                                       move_type = move_type,
+                                       window_length = window_length,
+                                       clicked_file = clicked_file,
+                                       flags_coding = flags_coding))
 }
 
 #' function for getting the results of dynamic Poincare Plot analysis
@@ -337,7 +337,7 @@ get_single_pp_windowed_results <- function(RR,
                                            move_type = "jump",
                                            window_length = 5,
                                            cut_end = FALSE,
-                                           return_all = FALSE) {
+                                           return_all = TRUE) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -348,7 +348,7 @@ get_single_pp_windowed_results <- function(RR,
          function(window_table) {
            ret_val <- NULL
            if (move_type == 'index' && nrow(window_table) == window_length) {
-              ret_val <- hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]])
+             ret_val <- hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]])
            }
            if (move_type == 'time') {
              ret_val <- hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]])
@@ -372,7 +372,7 @@ get_single_runs_windowed_results <- function(RR,
                                              move_type = "time",
                                              window_length = 5,
                                              cut_end = FALSE,
-                                             return_all = FALSE) {
+                                             return_all = TRUE) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -408,7 +408,7 @@ get_single_spectral_windowed_results <- function(RR,
                                                  use_ULF = "No",
                                                  window_length = 5,
                                                  cut_end = FALSE,
-                                                 return_all = FALSE) {
+                                                 return_all = TRUE) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -447,7 +447,7 @@ get_single_quality_windowed_results <- function(RR,
                                                 move_type = "time",
                                                 window_length = 5,
                                                 cut_end = FALSE,
-                                                return_all = FALSE) {
+                                                return_all = TRUE) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
