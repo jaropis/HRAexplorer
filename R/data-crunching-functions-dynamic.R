@@ -120,6 +120,7 @@ get_dynamic_pp_results <- function(fileAddresses,
   } else {
     for (lineNumber in  1:length(fileAddresses[[1]])) {
       rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding)
+      #browser()
       temp_results <- get_single_pp_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
                                                      time_functions_list = time_functions_list,
                                                      window_type = window_type,
@@ -127,7 +128,7 @@ get_dynamic_pp_results <- function(fileAddresses,
                                                      window_length = window_length) %>%
         round_and_summarize_dynamic_asym(round_digits = 3, asym_comparisons = asym_comparisons)
       results <- rbind(results, temp_results)
-    }
+    }# TUTU
     results <- cbind(fileAddresses$name, results)
     colnames(results)[1] <- "file"
     rownames(results) <- NULL
@@ -480,6 +481,18 @@ round_and_summarize_dynamic_asym <- function(windowed_results, round_digits = 3,
   result <- windowed_results[, cols_to_round] %>%
     colMeans(na.rm = TRUE) %>%
     round(digits = round_digits)
+  if (length(result) == 0) {
+
+    to_return <- if (!is.null(asym_comparisons)) {
+      comparisons <- get_comparisons_in_windowed_results(windowed_results, asym_comparisons)
+      partial_data_frame <- data.frame(t(rep(NA, length(comparisons))))
+      names(partial_data_frame) <- comparisons
+      cbind(windowed_results[1, ], partial_data_frame)
+    } else {
+      windowed_results[1, ]
+    }
+  return(to_return)
+  }
   if (!is.data.frame(result)) {
     result <- as.data.frame(t(result))
   }
