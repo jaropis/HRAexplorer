@@ -337,7 +337,7 @@ get_single_pp_windowed_results <- function(RR,
                                            move_type = "jump",
                                            window_length = 5,
                                            cut_end = FALSE,
-                                           return_all = TRUE) {
+                                           return_all = FALSE) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -355,8 +355,8 @@ get_single_pp_windowed_results <- function(RR,
            }
            ret_val
          }) %>%
-    dplyr::bind_rows() %>%
-    cut_incomplete_rows(cut_end, return_all)
+    dplyr::bind_rows() %>% #TODO the list below, after cut_end is fixed in index based
+    cut_incomplete_rows(cut_end, return_all = 'if'(move_type == 'index', TRUE, FALSE))
 }
 
 #' Function calculating windowed runs results for a single RR time series
@@ -372,7 +372,7 @@ get_single_runs_windowed_results <- function(RR,
                                              move_type = "time",
                                              window_length = 5,
                                              cut_end = FALSE,
-                                             return_all = TRUE) {
+                                             return_all = FALSE) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -391,7 +391,7 @@ get_single_runs_windowed_results <- function(RR,
                       }) %>% Filter(function(elem) !is.null(elem), .)
 
   hrvhra::bind_runs_as_table(runs_list, as.character(seq_along(runs_list))) %>%
-    cut_incomplete_rows(cut_end, return_all)
+    cut_incomplete_rows(cut_end, return_all = 'if'(move_type == 'index', TRUE, FALSE))
 }
 
 #' Function calculating windowed spectral results for a single RR time series
@@ -408,7 +408,7 @@ get_single_spectral_windowed_results <- function(RR,
                                                  use_ULF = "No",
                                                  window_length = 5,
                                                  cut_end = FALSE,
-                                                 return_all = TRUE) {
+                                                 return_all = FALSE) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -431,7 +431,7 @@ get_single_spectral_windowed_results <- function(RR,
            ret_val
          }) %>%
     dplyr::bind_rows() %>%
-    cut_incomplete_rows(cut_end, return_all)
+    cut_incomplete_rows(cut_end, return_all = 'if'(move_type == 'index', TRUE, FALSE))
 }
 
 #' Function calculating windowed quality results for a single RR time series
@@ -447,7 +447,7 @@ get_single_quality_windowed_results <- function(RR,
                                                 move_type = "time",
                                                 window_length = 5,
                                                 cut_end = FALSE,
-                                                return_all = TRUE) {
+                                                return_all = FALSE) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -467,7 +467,7 @@ get_single_quality_windowed_results <- function(RR,
            ret_val
          }) %>%
     dplyr::bind_rows() %>%
-    cut_incomplete_rows(cut_end, return_all)
+    cut_incomplete_rows(cut_end, return_all = 'if'(move_type == 'index', TRUE, FALSE))
 }
 
 #' Function adding dynamic asymmetry tests and rounding values
