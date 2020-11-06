@@ -482,7 +482,7 @@ round_and_summarize_dynamic_asym <- function(windowed_results, round_digits = 3,
     colMeans(na.rm = TRUE) %>%
     round(digits = round_digits)
   if (length(result) == 0) {
-
+    result[is.na(result)] <- 0
     to_return <- if (!is.null(asym_comparisons)) {
       comparisons <- get_comparisons_in_windowed_results(windowed_results, asym_comparisons)
       partial_data_frame <- data.frame(t(rep(NA, length(comparisons))))
