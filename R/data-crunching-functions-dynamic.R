@@ -309,22 +309,6 @@ glb_time_functions <- list(time_jump = hrvhra::time_based_jump,
                            index_jump = hrvhra::index_based_jump,
                            index_slide = hrvhra::index_based_slide)
 
-#' Helper function cutting either the first row of the table, or the last row, or returning the whole table
-#' @param resulting_table table with results from a windowing function
-#' @param cut_end where the cut occurs -at the beginning or at the end or not at all (FALSE, TRUE)
-#' @param return_all wheter all rows should be returned
-#' @return table
-cut_incomplete_rows <- function(resulting_table, cut_end, return_all) {
-  if (return_all) {
-    return(resulting_table)
-  }
-  if (cut_end) {
-    resulting_table[1:(nrow(resulting_table) - 1), ]
-  } else {
-    resulting_table[2:(nrow(resulting_table)), ]
-  }
-}
-
 #' Function calculating windowed hrvhra results for a single RR time series
 #' @param RR rr object
 #' @param window_type string, jumping or sliding
@@ -356,8 +340,7 @@ get_single_pp_windowed_results <- function(RR,
            }
            ret_val
          }) %>%
-    dplyr::bind_rows() %>% #TODO the list below, after cut_end is fixed in index based
-    cut_incomplete_rows(cut_end, return_all = 'if'(move_type == 'index', TRUE, FALSE))
+    dplyr::bind_rows()
 }
 
 #' Function calculating windowed runs results for a single RR time series
@@ -391,8 +374,7 @@ get_single_runs_windowed_results <- function(RR,
                         ret_val
                       }) %>% Filter(function(elem) !is.null(elem), .)
 
-  hrvhra::bind_runs_as_table(runs_list, as.character(seq_along(runs_list))) %>%
-    cut_incomplete_rows(cut_end, return_all = 'if'(move_type == 'index', TRUE, FALSE))
+  hrvhra::bind_runs_as_table(runs_list, as.character(seq_along(runs_list)))
 }
 
 #' Function calculating windowed spectral results for a single RR time series
@@ -431,8 +413,7 @@ get_single_spectral_windowed_results <- function(RR,
            }
            ret_val
          }) %>%
-    dplyr::bind_rows() %>%
-    cut_incomplete_rows(cut_end, return_all = 'if'(move_type == 'index', TRUE, FALSE))
+    dplyr::bind_rows()
 }
 
 #' Function calculating windowed quality results for a single RR time series
@@ -457,7 +438,7 @@ get_single_quality_windowed_results <- function(RR,
                time_function(RR, window = window_length)),
          function(window_table) {
            ret_val <- NULL
-           if (move_type == 'index' && nrow(window_table) == window_length) { # TODO - repair this! cut_end does not seem to work for index_based
+           if (move_type == 'index' && nrow(window_table) == window_length) {
               ret_val <- hrvhra::describerr(window_table[[rr_index]],
                                             window_table[[rr_index + 1]])
            }
@@ -467,8 +448,7 @@ get_single_quality_windowed_results <- function(RR,
            }
            ret_val
          }) %>%
-    dplyr::bind_rows() %>%
-    cut_incomplete_rows(cut_end, return_all = 'if'(move_type == 'index', TRUE, FALSE))
+    dplyr::bind_rows()
 }
 
 #' Function adding dynamic asymmetry tests and rounding values
