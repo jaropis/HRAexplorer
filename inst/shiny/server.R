@@ -71,7 +71,8 @@ shinyServer(function(input, output, session){
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
                                   asym_comparisons = data_info$dynamic_asym(),
-                                  flags_coding = data_info$flags_coding())
+                                  flags_coding = data_info$flags_coding(),
+                                  shuffle = data_info$shuffle())
   })
   rct_current_single_dynamic_pp <- reactive({
     req(data_info$data_ready())
@@ -86,7 +87,8 @@ shinyServer(function(input, output, session){
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
                                   clicked_file = as.numeric(input$dynamicpp),
-                                  flags_coding = data_info$flags_coding())
+                                  flags_coding = data_info$flags_coding(),
+                                  shuffle = data_info$shuffle())
     })
 
   rct_current_dynamic_runs_results <- reactive({
@@ -101,7 +103,8 @@ shinyServer(function(input, output, session){
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
                                   asym_comparisons = data_info$dynamic_asym(),
-                                  flags_coding = data_info$flags_coding())
+                                  flags_coding = data_info$flags_coding(),
+                                  shuffle = data_info$shuffle())
   })
 
   rct_current_single_dynamic_runs_results <- reactive({
@@ -117,7 +120,8 @@ shinyServer(function(input, output, session){
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
                                   clicked_file = as.numeric(input$dynamicruns),
-                                  flags_coding = data_info$flags_coding())
+                                  flags_coding = data_info$flags_coding(),
+                                  shuffle = data_info$shuffle())
   })
 
   rct_current_dynamic_spectral_results <- reactive({
@@ -132,7 +136,8 @@ shinyServer(function(input, output, session){
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
                                   flags_coding = data_info$flags_coding(),
-                                  use_ULF = data_info$use_ULF())
+                                  use_ULF = data_info$use_ULF(),
+                                  shuffle = data_info$shuffle())
 
   })
 
@@ -150,7 +155,8 @@ shinyServer(function(input, output, session){
                                   window_length = data_info$window_length(),
                                   clicked_file = as.numeric(input$dynamicspectral),
                                   flags_coding = data_info$flags_coding(),
-                                  use_ULF = data_info$use_ULF())
+                                  use_ULF = data_info$use_ULF(),
+                                  shuffle = data_info$shuffle())
   })
 
   rct_current_dynamic_quality_results <- reactive({
@@ -164,7 +170,8 @@ shinyServer(function(input, output, session){
                                   window_type = data_info$window_type(),
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
-                                  flags_coding = data_info$flags_coding())
+                                  flags_coding = data_info$flags_coding(),
+                                  shuffle = data_info$shuffle())
   })
 
   rct_current_single_dynamic_quality_results <- reactive({
@@ -180,7 +187,8 @@ shinyServer(function(input, output, session){
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
                                   clicked_file = as.numeric(input$dynamicquality),
-                                  flags_coding = data_info$flags_coding())
+                                  flags_coding = data_info$flags_coding(),
+                                  shuffle = data_info$shuffle())
   })
 
   # these reactives  are used to download partial results for windows in each file
@@ -198,7 +206,8 @@ shinyServer(function(input, output, session){
                                                    move_type = data_info$move_type(),
                                                    window_length = data_info$window_length(),
                                                    clicked_file = idx,
-                                                   flags_coding = data_info$flags_coding())
+                                                   flags_coding = data_info$flags_coding(),
+                                                   shuffle = data_info$shuffle())
       file_result <- cbind(file = data_info$files()[idx, 'name'], file_result)
       if (nrow(individual_results) == 0) {
         individual_results <- file_result
@@ -223,7 +232,8 @@ shinyServer(function(input, output, session){
                                                    move_type = data_info$move_type(),
                                                    window_length = data_info$window_length(),
                                                    clicked_file = idx,
-                                                   flags_coding = data_info$flags_coding())
+                                                   flags_coding = data_info$flags_coding(),
+                                                   shuffle = data_info$shuffle())
       file_result$file <- NULL
       file_result <- cbind(file = data_info$files()[idx, 'name'], file_result)
       if (nrow(individual_results) == 0) {
@@ -251,7 +261,8 @@ shinyServer(function(input, output, session){
                                                    window_length = data_info$window_length(),
                                                    clicked_file = idx,
                                                    flags_coding = data_info$flags_coding(),
-                                                   use_ULF = data_info$use_ULF())
+                                                   use_ULF = data_info$use_ULF(),
+                                                   shuffle = data_info$shuffle())
       file_result <- cbind(file = data_info$files()[idx, 'name'], file_result)
       if (nrow(individual_results) == 0) {
         individual_results <- file_result
@@ -276,7 +287,8 @@ shinyServer(function(input, output, session){
                                                    move_type = data_info$move_type(),
                                                    window_length = data_info$window_length(),
                                                    clicked_file = idx,
-                                                   flags_coding = data_info$flags_coding())
+                                                   flags_coding = data_info$flags_coding(),
+                                                   shuffle = data_info$shuffle())
       file_result <- cbind(file = data_info$files()[idx, 'name'], window.NO = seq(nrow(file_result)), file_result)
       if (nrow(individual_results) == 0) {
         individual_results <- file_result
