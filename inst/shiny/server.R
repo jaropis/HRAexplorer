@@ -15,7 +15,8 @@ shinyServer(function(input, output, session){
                           column_data = data_info$data_columns(),
                           minmax = data_info$minmax(),
                           using_excel = data_info$using_excel(),
-                          flags_coding = data_info$flags_coding()
+                          flags_coding = data_info$flags_coding(),
+                          shuffle = data_info$shuffle()
     )
   })
 
@@ -27,7 +28,8 @@ shinyServer(function(input, output, session){
                           column_data = data_info$data_columns(),
                           minmax = data_info$minmax(),
                           using_excel = data_info$using_excel(),
-                          flags_coding = data_info$flags_coding()
+                          flags_coding = data_info$flags_coding(),
+                          shuffle = data_info$shuffle()
     )
   })
 
@@ -40,7 +42,8 @@ shinyServer(function(input, output, session){
                           minmax = data_info$minmax(),
                           using_excel = data_info$using_excel(),
                           use_ULF = data_info$use_ULF(),
-                          flags_coding = data_info$flags_coding()
+                          flags_coding = data_info$flags_coding(),
+                          shuffle = data_info$shuffle()
     )
   })
   rct_current_quality_values <- reactive({
@@ -51,7 +54,8 @@ shinyServer(function(input, output, session){
                           column_data = data_info$data_columns(),
                           minmax = data_info$minmax(),
                           using_excel = data_info$using_excel(),
-                          flags_coding = data_info$flags_coding()
+                          flags_coding = data_info$flags_coding(),
+                          shuffle = data_info$shuffle()
     )
   })
 
@@ -355,7 +359,8 @@ shinyServer(function(input, output, session){
              using_excel = data_info$using_excel(),
              variable_name = data_info$variable_name(),
              color = data_info$color(),
-             flags_coding = data_info$flags_coding()
+             flags_coding = data_info$flags_coding(),
+             shuffle = data_info$shuffle()
   )
 
   # call results for a single file on the plot page
