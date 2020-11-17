@@ -31,7 +31,8 @@ plots <- function(input, output, session,
                   using_excel,
                   variable_name,
                   color,
-                  flags_coding) {
+                  flags_coding,
+                  shuffle) {
 
   output$current_plot <- renderPlot({
     req(rct_line_number())
@@ -42,7 +43,8 @@ plots <- function(input, output, session,
                                column_data = data_columns,
                                minmax = minmax,
                                using_excel = using_excel,
-                               flags_coding = flags_coding
+                               flags_coding = flags_coding,
+                               shuffle = shuffle
       ) %>% # TODO - what about errors??
         as.data.frame() %>%
         hrvhra::pp() %>%

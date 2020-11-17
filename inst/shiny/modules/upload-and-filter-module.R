@@ -82,7 +82,17 @@ data_upload_and_filterUI <- function(id) {
                                    choices = glob_dynamic_asymmetry_vars,
                                    selected = "",
                                    multiple = TRUE))
-           ))
+           ),
+           fluidRow(box(width = 4,
+                        h3("Advanced topics"),
+                        radioButtons(ns("shuffle"),
+                                     "Shuffle the recordings?",
+                                     choices = c("Yes", "No"),
+                                     selected = "No",
+                                     inline = TRUE),
+                        shiny::numericInput(ns("tolerance"), "Window length tolerance", 0.1))
+                    )
+      )
 }
 
 #' module with data upload and filtering
@@ -131,6 +141,8 @@ data_upload_and_filter <- function(input, output, session) {
     updateSelectizeInput(session, "move_type", selected = "time")
     updateNumericInput(session, "window_length", value = 5)
     updateRadioButtons(session, "use_ULF", selected = "No")
+    updateRadioButtons(session, "shuffle", selected = "No")
+    updateNumericInput(session, "tolerance", value = 0.1)
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
   observeEvent(input$data_columns, {
@@ -209,7 +221,8 @@ data_upload_and_filter <- function(input, output, session) {
         all(columns %in% seq(ncol(rval_current_sample_data()))) &
         length(minmax) == 2 &
         as.numeric(minmax[1]) < as.numeric(minmax[2]) &
-        !is.na(as.numeric(input$window_length))) {
+        !is.na(as.numeric(input$window_length)) &
+        !is.na(as.numeric(input$tolerance))) {
       rval_data_ready(TRUE)
     }
   })
@@ -223,7 +236,9 @@ data_upload_and_filter <- function(input, output, session) {
                  input$window_type,
                  input$move_type,
                  input$window_length,
-                 input$use_ULF), {
+                 input$use_ULF,
+                 input$shuffle,
+                 input$tolerance), {
     rval_data_ready(FALSE)
   })
   list(
@@ -240,6 +255,8 @@ data_upload_and_filter <- function(input, output, session) {
     window_length = reactive(input$window_length),
     dynamic_asym = reactive(input$dynamic_asym),
     flags_coding = rval_flags_coding, # this is reactive itself
-    data_ready = rval_data_ready
+    data_ready = rval_data_ready,
+    shuffle = reactive(input$shuffle),
+    tolerance = reactive(input$tolerance)
   )
 }

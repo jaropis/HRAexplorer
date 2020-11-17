@@ -40,7 +40,7 @@ flags_and_codes = list(
 #'
 #' @return list with two elements, RR intervals column and annotations column
 #' @export
-read_and_filter_one_file <- function(file_addresses, line_number, separator, column_data, minmax, using_excel, flags_coding) {
+read_and_filter_one_file <- function(file_addresses, line_number, separator, column_data, minmax, using_excel, flags_coding, shuffle = "No") {
   data <- raw_read_one_file(file_addresses, line_number, sep = separator)
   column_idx <- read_numbers_from_field(column_data)
   RR_idx <- column_idx[1]
@@ -64,6 +64,11 @@ read_and_filter_one_file <- function(file_addresses, line_number, separator, col
   which_max <- RR >= minmax[2]
   flags[which_min] <- 2
   flags[which_max] <- 3
+  if (shuffle == "Yes") {
+    sampling_order <- sample(seq_along(RR), length(RR))
+    RR <- RR[sampling_order]
+    flags <- flags[sampling_order]
+  }
   return(list(RR=RR, annotations=flags))
 }
 
