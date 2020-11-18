@@ -90,7 +90,7 @@ data_upload_and_filterUI <- function(id) {
                                      choices = c("Yes", "No"),
                                      selected = "No",
                                      inline = TRUE),
-                        shiny::numericInput(ns("tolerance"), "Window length tolerance", 0.1))
+                        shiny::numericInput(ns("tolerance"), "Window length tolerance", glob_tolerance))
                     )
       )
 }
@@ -142,7 +142,7 @@ data_upload_and_filter <- function(input, output, session) {
     updateNumericInput(session, "window_length", value = 5)
     updateRadioButtons(session, "use_ULF", selected = "No")
     updateRadioButtons(session, "shuffle", selected = "No")
-    updateNumericInput(session, "tolerance", value = 0.1)
+    updateNumericInput(session, "tolerance", value = glob_tolerance)
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
   observeEvent(input$data_columns, {
