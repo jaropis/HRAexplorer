@@ -55,3 +55,5 @@ runs_d <- paste0("DR", 1:50)
 runs_choices <- c(paste0(runs_a, '>', runs_d),
                   paste0(runs_d, '>', runs_a))
 glob_dynamic_asymmetry_vars <- c(glob_dynamic_asymmetry_vars, runs_choices)
+
+glob_tolerance = 0.05
