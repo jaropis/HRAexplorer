@@ -11,7 +11,8 @@ read_and_filter_one_file(
   column_data,
   minmax,
   using_excel,
-  flags_coding
+  flags_coding,
+  shuffle = "No"
 )
 }
 \arguments{

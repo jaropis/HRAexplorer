@@ -12,6 +12,8 @@
 #' @param clicked_file number of clicked file or NULL
 #' @param asym_comparisons comparisons for dynamic asymmetry analysis
 #' @param flags_coding list with flags_coding
+#' @param shuffle whether the data should be shuffled
+#' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
 #'
 #' @return the results of Poincare plot analysis
 #' @export
@@ -103,6 +105,8 @@ get_dynamic_numerical_results <- function(analysis_type,
 #' @param window_length numeric, window length
 #' @param clicked_file number of clicked file or NULL
 #' @param flags_coding list with flags_coding
+#' @param shuffle whether the data should be shuffled
+#' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_pp_results <- function(fileAddresses,
@@ -161,6 +165,8 @@ get_dynamic_pp_results <- function(fileAddresses,
 #' @param window_length numeric, window length
 #' @param clicked_file number of clicked file or NULL
 #' @param flags_coding list with flags_coding
+#' @param shuffle whether the data should be shuffled
+#' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_runs_results <- function(fileAddresses,
@@ -222,6 +228,8 @@ get_dynamic_runs_results <- function(fileAddresses,
 #' @param window_length numeric, window length
 #' @param clicked_file number of clicked file or NULL
 #' @param flags_coding list with flags_coding
+#' @param shuffle whether the data should be shuffled
+#' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_spectral_results <- function(fileAddresses,
@@ -283,6 +291,8 @@ get_dynamic_spectral_results <- function(fileAddresses,
 #' @param window_length numeric, window length
 #' @param clicked_file number of clicked file or NULL
 #' @param flags_coding list with flags_coding
+#' @param shuffle whether the data should be shuffled
+#' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_quality_results <- function(fileAddresses,
@@ -339,6 +349,7 @@ glb_time_functions <- list(time_jump = hrvhra::time_based_jump,
 #' @param window_type string, jumping or sliding
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
+#' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
 #' @return data.frame with results for windows as rows
 #' @export
 get_single_pp_windowed_results <- function(RR,
@@ -367,6 +378,7 @@ get_single_pp_windowed_results <- function(RR,
 #' @param window_type string, jumping or sliding
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
+#' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
 #' @return data.frame with results for windows as rows
 #' @export
 get_single_runs_windowed_results <- function(RR,
@@ -395,6 +407,7 @@ get_single_runs_windowed_results <- function(RR,
 #' @param window_type string, jumping or sliding
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
+#' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
 #' @return data.frame with results for windows as rows
 #' @export
 get_single_spectral_windowed_results <- function(RR,
@@ -428,6 +441,7 @@ get_single_spectral_windowed_results <- function(RR,
 #' @param window_type string, jumping or sliding
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
+#' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
 #' @return data.frame with results for windows as rows
 #' @export
 get_single_quality_windowed_results <- function(RR,

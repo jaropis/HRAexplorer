@@ -10,7 +10,8 @@ get_pp_results(
   column_data = c(1, 2),
   minmax = c(0, 3000),
   using_excel = FALSE,
-  flags_coding
+  flags_coding,
+  shuffle
 )
 }
 \arguments{

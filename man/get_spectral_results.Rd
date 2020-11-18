@@ -11,7 +11,8 @@ get_spectral_results(
   minmax = c(0, 3000),
   using_excel = FALSE,
   use_ULF = "No",
-  flags_coding
+  flags_coding,
+  shuffle
 )
 }
 \arguments{
