@@ -28,7 +28,8 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   clicked_file = NULL,
                                   asym_comparisons = NULL,
                                   flags_coding,
-                                  shuffle = shuffle) {
+                                  shuffle = shuffle,
+                                  tolerance = tolerance) {
   if (analysis_type == "poincare_dynamic")
     return(get_dynamic_pp_results(fileAddresses,
                                   time_functions_list = glb_time_functions,
@@ -42,7 +43,8 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   clicked_file = clicked_file,
                                   asym_comparisons = asym_comparisons,
                                   flags_coding = flags_coding,
-                                  shuffle = shuffle))
+                                  shuffle = shuffle,
+                                  tolerance = tolerance))
   if (analysis_type == "runs_dynamic")
     return(get_dynamic_runs_results(fileAddresses,
                                     time_functions_list = glb_time_functions,
@@ -56,7 +58,8 @@ get_dynamic_numerical_results <- function(analysis_type,
                                     clicked_file = clicked_file,
                                     asym_comparisons = asym_comparisons,
                                     flags_coding = flags_coding,
-                                    shuffle = shuffle))
+                                    shuffle = shuffle,
+                                    tolerance = tolerance))
   if (analysis_type == "spectral_dynamic")
     return(get_dynamic_spectral_results(fileAddresses,
                                         time_functions_list = glb_time_functions,
@@ -70,7 +73,8 @@ get_dynamic_numerical_results <- function(analysis_type,
                                         window_length = window_length,
                                         clicked_file = clicked_file,
                                         flags_coding = flags_coding,
-                                        shuffle = shuffle))
+                                        shuffle = shuffle,
+                                        tolerance = tolerance))
   if (analysis_type == "quality_dynamic")
     return(get_dynamic_quality_results(fileAddresses,
                                        time_functions_list = glb_time_functions,
@@ -83,7 +87,8 @@ get_dynamic_numerical_results <- function(analysis_type,
                                        window_length = window_length,
                                        clicked_file = clicked_file,
                                        flags_coding = flags_coding,
-                                       shuffle = shuffle))
+                                       shuffle = shuffle,
+                                       tolerance = tolerance))
 }
 
 #' function for getting the results of dynamic Poincare Plot analysis
@@ -112,7 +117,8 @@ get_dynamic_pp_results <- function(fileAddresses,
                                    clicked_file = NULL,
                                    asym_comparisons = NULL,
                                    flags_coding,
-                                   shuffle) {
+                                   shuffle,
+                                   tolerance) {
   results <- c()
   if (!is.null(clicked_file)) {
     rr_and_flags <- read_and_filter_one_file(fileAddresses, clicked_file, separator, column_data, minmax, using_excel, flags_coding, shuffle)
@@ -120,21 +126,22 @@ get_dynamic_pp_results <- function(fileAddresses,
                                                          time_functions_list = time_functions_list,
                                                          window_type = window_type,
                                                          move_type = move_type,
-                                                         window_length = window_length) %>%
+                                                         window_length = window_length,
+                                                         tolerance = tolerance) %>%
       round(digits = 3)
     return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
   } else {
     for (lineNumber in  1:length(fileAddresses[[1]])) {
       rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding, shuffle)
-      #browser()
       temp_results <- get_single_pp_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
                                                      time_functions_list = time_functions_list,
                                                      window_type = window_type,
                                                      move_type = move_type,
-                                                     window_length = window_length) %>%
+                                                     window_length = window_length,
+                                                     tolerance = tolerance) %>%
         round_and_summarize_dynamic_asym(round_digits = 3, asym_comparisons = asym_comparisons)
       results <- rbind(results, temp_results)
-    }# TUTU
+    }
     results <- cbind(fileAddresses$name, results)
     colnames(results)[1] <- "file"
     rownames(results) <- NULL
@@ -168,7 +175,8 @@ get_dynamic_runs_results <- function(fileAddresses,
                                      clicked_file = NULL,
                                      asym_comparisons = NULL,
                                      flags_coding,
-                                     shuffle) {
+                                     shuffle,
+                                     tolerance) {
   results <- c()
   if (!is.null(clicked_file)) {
     rr_and_flags <- read_and_filter_one_file(fileAddresses, clicked_file, separator, column_data, minmax, using_excel, flags_coding, shuffle)
@@ -176,7 +184,8 @@ get_dynamic_runs_results <- function(fileAddresses,
                                                            time_functions_list = time_functions_list,
                                                            window_type = window_type,
                                                            move_type = move_type,
-                                                           window_length = window_length)
+                                                           window_length = window_length,
+                                                           tolerance = tolerance)
     # single_file_result[, -1] <- round(single_file_result[, -1], digits = 3)
     return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
   } else {
@@ -186,7 +195,8 @@ get_dynamic_runs_results <- function(fileAddresses,
                                                        time_functions_list = time_functions_list,
                                                        window_type = window_type,
                                                        move_type = move_type,
-                                                       window_length = window_length) %>%
+                                                       window_length = window_length,
+                                                       tolerance = tolerance) %>%
         dplyr::select(-c("file")) %>%
         round_and_summarize_dynamic_asym(round_digits = 3, asym_comparisons = asym_comparisons) %>%
         as.data.frame()
@@ -226,7 +236,8 @@ get_dynamic_spectral_results <- function(fileAddresses,
                                          window_length,
                                          clicked_file,
                                          flags_coding,
-                                         shuffle) {
+                                         shuffle,
+                                         tolerance) {
   results <- c()
   if (!is.null(clicked_file)) {
     rr_and_flags <- read_and_filter_one_file(fileAddresses, clicked_file, separator, column_data, minmax, using_excel, flags_coding, shuffle)
@@ -235,7 +246,8 @@ get_dynamic_spectral_results <- function(fileAddresses,
                                                          time_functions_list = time_functions_list,
                                                          window_type = window_type,
                                                          move_type = move_type,
-                                                         window_length = window_length) %>%
+                                                         window_length = window_length,
+                                                         tolerance = tolerance) %>%
       round(digits = 3)
     return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
   } else {
@@ -246,7 +258,8 @@ get_dynamic_spectral_results <- function(fileAddresses,
                                                            time_functions_list = time_functions_list,
                                                            window_type = window_type,
                                                            move_type = move_type,
-                                                           window_length = window_length) %>%
+                                                           window_length = window_length,
+                                                           tolerance = tolerance) %>%
         colMeans(na.rm = TRUE)
       results <- rbind(results, temp_results)
     }
@@ -283,7 +296,8 @@ get_dynamic_quality_results <- function(fileAddresses,
                                         window_length,
                                         clicked_file,
                                         flags_coding,
-                                        shuffle) {
+                                        shuffle,
+                                        tolerance) {
   results <- c()
   if (!is.null(clicked_file)) {
     rr_and_flags <- read_and_filter_one_file(fileAddresses, clicked_file, separator, column_data, minmax, using_excel, flags_coding, shuffle)
@@ -291,7 +305,8 @@ get_dynamic_quality_results <- function(fileAddresses,
                                                         time_functions_list = time_functions_list,
                                                         window_type = window_type,
                                                         move_type = move_type,
-                                                        window_length = window_length)
+                                                        window_length = window_length,
+                                                        tolerance = tolerance)
   } else {
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding, shuffle)
@@ -299,7 +314,8 @@ get_dynamic_quality_results <- function(fileAddresses,
                                                         time_functions_list = time_functions_list,
                                                         window_type = window_type,
                                                         move_type = move_type,
-                                                        window_length = window_length) %>%
+                                                        window_length = window_length,
+                                                        tolerance = tolerance) %>%
       colMeans(na.rm = TRUE)
     results <- rbind(results, temp_results)
   }
@@ -331,23 +347,17 @@ get_single_pp_windowed_results <- function(RR,
                                            move_type = "jump",
                                            window_length = 5,
                                            cut_end = FALSE,
-                                           return_all = FALSE) {
+                                           return_all = FALSE,
+                                           tolerance = 0.05) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
   lapply('if' (window_type == 'jump', # cut end is only applicable to the jump window type
-               time_function(RR, window = window_length, cut_end = cut_end),
+               time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance),
                time_function(RR, window = window_length)
         ),
          function(window_table) {
-           ret_val <- NULL
-           if (move_type == 'index' && nrow(window_table) == window_length) {
-             ret_val <- hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]])
-           }
-           if (move_type == 'time') {
-             ret_val <- hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]])
-           }
-           ret_val
+           hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]])
          }) %>%
     dplyr::bind_rows()
 }
@@ -365,22 +375,16 @@ get_single_runs_windowed_results <- function(RR,
                                              move_type = "time",
                                              window_length = 5,
                                              cut_end = FALSE,
-                                             return_all = FALSE) {
+                                             return_all = FALSE,
+                                             tolerance = 0.05) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
   runs_list <- lapply('if' (window_type == 'jump', # cut end is only applicable to the jump window type
-                            time_function(RR, window = window_length, cut_end = cut_end),
+                            time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance),
                             time_function(RR, window = window_length)),
                       function(window_table) {
-                        ret_val <- NULL
-                        if (move_type == 'index' && nrow(window_table) == window_length) {
-                          ret_val <- hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
-                        }
-                        if (move_type == 'time') {
-                          ret_val <- hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
-                        }
-                        ret_val
+                        ret_val <- hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
                       }) %>% Filter(function(elem) !is.null(elem), .)
 
   hrvhra::bind_runs_as_table(runs_list, as.character(seq_along(runs_list)))
@@ -400,7 +404,8 @@ get_single_spectral_windowed_results <- function(RR,
                                                  use_ULF = "No",
                                                  window_length = 5,
                                                  cut_end = FALSE,
-                                                 return_all = FALSE) {
+                                                 return_all = FALSE,
+                                                 tolerance) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -410,17 +415,10 @@ get_single_spectral_windowed_results <- function(RR,
     hrvhra::frequency_bands
   }
   lapply('if' (window_type == 'jump', # cut end is only applicable to the jump window type
-               time_function(RR, window = window_length, cut_end = cut_end),
+               time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance),
                time_function(RR, window = window_length)),
          function(window_table) {
-           ret_val <- NULL
-           if (move_type == 'index' && nrow(window_table) == window_length) {
-              ret_val <- hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[rr_index]], annotations = window_table[[rr_index + 1]]), bands)
-           }
-           if (move_type == 'time') {
-             ret_val <- hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[rr_index]], annotations = window_table[[rr_index + 1]]), bands)
-           }
-           ret_val
+           ret_val <- hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[rr_index]], annotations = window_table[[rr_index + 1]]), bands)
          }) %>%
     dplyr::bind_rows()
 }
@@ -438,24 +436,16 @@ get_single_quality_windowed_results <- function(RR,
                                                 move_type = "time",
                                                 window_length = 5,
                                                 cut_end = FALSE,
-                                                return_all = FALSE) {
+                                                return_all = FALSE,
+                                                tolerance = tolerance) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
   lapply('if' (window_type == 'jump', # cut end is only applicable to the jump window type
-               time_function(RR, window = window_length, cut_end = cut_end),
+               time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance),
                time_function(RR, window = window_length)),
          function(window_table) {
-           ret_val <- NULL
-           if (move_type == 'index' && nrow(window_table) == window_length) {
-              ret_val <- hrvhra::describerr(window_table[[rr_index]],
-                                            window_table[[rr_index + 1]])
-           }
-           if (move_type == 'time') {
-             ret_val <- hrvhra::describerr(window_table[[rr_index]],
-                                           window_table[[rr_index + 1]])
-           }
-           ret_val
+           ret_val <- hrvhra::describerr(window_table[[rr_index]], window_table[[rr_index + 1]])
          }) %>%
     dplyr::bind_rows()
 }
