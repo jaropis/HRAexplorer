@@ -9,10 +9,11 @@ get_single_spectral_windowed_results(
   time_functions_list = glb_time_functions,
   window_type = "jump",
   move_type = "time",
-  use_ULF = FALSE,
+  use_ULF = "No",
   window_length = 5,
   cut_end = FALSE,
-  return_all = FALSE
+  return_all = FALSE,
+  tolerance
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ get_single_spectral_windowed_results(
 \item{move_type}{string, time based or index based}
 
 \item{window_length}{numeric, window length}
+
+\item{tolerance}{what is the maximum data loss in a single window in dynamic analysis that should be tolerated}
 }
 \value{
 data.frame with results for windows as rows

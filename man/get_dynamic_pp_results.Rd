@@ -16,7 +16,9 @@ get_dynamic_pp_results(
   window_length,
   clicked_file = NULL,
   asym_comparisons = NULL,
-  flags_coding
+  flags_coding,
+  shuffle,
+  tolerance
 )
 }
 \arguments{
@@ -35,6 +37,10 @@ get_dynamic_pp_results(
 \item{clicked_file}{number of clicked file or NULL}
 
 \item{flags_coding}{list with flags_coding}
+
+\item{shuffle}{whether the data should be shuffled}
+
+\item{tolerance}{what is the maximum data loss in a single window in dynamic analysis that should be tolerated}
 
 \item{file_addresses}{the addresses of the uploaded file(s)}
 
