@@ -6,6 +6,7 @@
 #' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
+#' @param shuffle whether the data should be shuffled
 #' @param flags_coding list with flags_coding
 #'
 #' @return the results of Poincare plot analysis
@@ -37,6 +38,7 @@ get_numerical_results <- function(analysis_type,
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
 #' @param flags_coding list with flags_coding
+#' @param shuffle whether the data should be shuffled
 #'
 #' @return the results of Poincare plot analysis
 #' @export
@@ -68,6 +70,7 @@ get_pp_results <- function(fileAddresses,
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
 #' @param flags_coding list with flags_coding
+#' @param shuffle whether the data should be shuffled
 #'
 #' @return the results of Poincare plot analysis
 #' @export
@@ -96,6 +99,7 @@ get_runs_results <- function(fileAddresses,
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
 #' @param flags_coding list with flags_coding
+#' @param shuffle whether the data should be shuffled
 #'
 #' @return the results of Poincare plot analysis
 #' @export
@@ -127,6 +131,7 @@ get_quality_results <- function(fileAddresses,
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
 #' @param flags_coding list with flags_coding
+#' @param shuffle whether the data should be shuffled
 #'
 #' @return the results of Poincare plot analysis
 #' @export
