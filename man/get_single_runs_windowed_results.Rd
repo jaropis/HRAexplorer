@@ -11,7 +11,8 @@ get_single_runs_windowed_results(
   move_type = "time",
   window_length = 5,
   cut_end = FALSE,
-  return_all = FALSE
+  return_all = FALSE,
+  tolerance = 0.05
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ get_single_runs_windowed_results(
 \item{move_type}{string, time based or index based}
 
 \item{window_length}{numeric, window length}
+
+\item{tolerance}{what is the maximum data loss in a single window in dynamic analysis that should be tolerated}
 }
 \value{
 data.frame with results for windows as rows
