@@ -24,6 +24,8 @@ get_spectral_results(
 
 \item{flags_coding}{list with flags_coding}
 
+\item{shuffle}{whether the data should be shuffled}
+
 \item{file_addresses}{the addresses of the uploaded file(s)}
 
 \item{using_Excel}{boolean, whether Excel files are used}
