@@ -131,7 +131,8 @@ get_dynamic_pp_results <- function(fileAddresses,
                                                          window_type = window_type,
                                                          move_type = move_type,
                                                          window_length = window_length,
-                                                         tolerance = tolerance) %>%
+                                                         tolerance = tolerance,
+                                                         shuffle = shuffle) %>%
       round(digits = 3)
     return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
   } else {
@@ -142,7 +143,8 @@ get_dynamic_pp_results <- function(fileAddresses,
                                                      window_type = window_type,
                                                      move_type = move_type,
                                                      window_length = window_length,
-                                                     tolerance = tolerance) %>%
+                                                     tolerance = tolerance,
+                                                     shuffle = shuffle) %>%
         round_and_summarize_dynamic_asym(round_digits = 3, asym_comparisons = asym_comparisons)
       results <- rbind(results, temp_results)
     }
@@ -191,7 +193,8 @@ get_dynamic_runs_results <- function(fileAddresses,
                                                            window_type = window_type,
                                                            move_type = move_type,
                                                            window_length = window_length,
-                                                           tolerance = tolerance)
+                                                           tolerance = tolerance,
+                                                           shuffle = shuffle)
     # single_file_result[, -1] <- round(single_file_result[, -1], digits = 3)
     return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
   } else {
@@ -202,7 +205,8 @@ get_dynamic_runs_results <- function(fileAddresses,
                                                        window_type = window_type,
                                                        move_type = move_type,
                                                        window_length = window_length,
-                                                       tolerance = tolerance) %>%
+                                                       tolerance = tolerance,
+                                                       shuffle = shuffle) %>%
         dplyr::select(-c("file")) %>%
         round_and_summarize_dynamic_asym(round_digits = 3, asym_comparisons = asym_comparisons) %>%
         as.data.frame()
@@ -255,7 +259,8 @@ get_dynamic_spectral_results <- function(fileAddresses,
                                                          window_type = window_type,
                                                          move_type = move_type,
                                                          window_length = window_length,
-                                                         tolerance = tolerance) %>%
+                                                         tolerance = tolerance,
+                                                         shuffle = shuffle) %>%
       round(digits = 3)
     return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
   } else {
@@ -267,7 +272,8 @@ get_dynamic_spectral_results <- function(fileAddresses,
                                                            window_type = window_type,
                                                            move_type = move_type,
                                                            window_length = window_length,
-                                                           tolerance = tolerance) %>%
+                                                           tolerance = tolerance,
+                                                           shuffle = shuffle) %>%
         colMeans(na.rm = TRUE)
       results <- rbind(results, temp_results)
     }
@@ -316,7 +322,8 @@ get_dynamic_quality_results <- function(fileAddresses,
                                                         window_type = window_type,
                                                         move_type = move_type,
                                                         window_length = window_length,
-                                                        tolerance = tolerance)
+                                                        tolerance = tolerance,
+                                                        shuffle = shuffle)
   } else {
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding, shuffle)
@@ -325,7 +332,8 @@ get_dynamic_quality_results <- function(fileAddresses,
                                                         window_type = window_type,
                                                         move_type = move_type,
                                                         window_length = window_length,
-                                                        tolerance = tolerance) %>%
+                                                        tolerance = tolerance,
+                                                        shuffle = shuffle) %>%
       colMeans(na.rm = TRUE)
     results <- rbind(results, temp_results)
   }
@@ -350,6 +358,7 @@ glb_time_functions <- list(time_jump = hrvhra::time_based_jump,
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
+#' @param shuffle whether the data should be shuffled
 #' @return data.frame with results for windows as rows
 #' @export
 get_single_pp_windowed_results <- function(RR,
@@ -359,7 +368,8 @@ get_single_pp_windowed_results <- function(RR,
                                            window_length = 5,
                                            cut_end = FALSE,
                                            return_all = FALSE,
-                                           tolerance = 0.05) {
+                                           tolerance = 0.05,
+                                           shuffle = "No") {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -368,6 +378,7 @@ get_single_pp_windowed_results <- function(RR,
                time_function(RR, window = window_length)
         ),
          function(window_table) {
+           window_table <- shuffle_in_windows(window_table, shuffle, rr_index) # shuffle if necessary
            hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]])
          }) %>%
     dplyr::bind_rows()
@@ -379,6 +390,7 @@ get_single_pp_windowed_results <- function(RR,
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
+#' @param shuffle whether the data should be shuffled
 #' @return data.frame with results for windows as rows
 #' @export
 get_single_runs_windowed_results <- function(RR,
@@ -388,7 +400,8 @@ get_single_runs_windowed_results <- function(RR,
                                              window_length = 5,
                                              cut_end = FALSE,
                                              return_all = FALSE,
-                                             tolerance = 0.05) {
+                                             tolerance = 0.05,
+                                             shuffle = "No") {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -396,7 +409,8 @@ get_single_runs_windowed_results <- function(RR,
                             time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance),
                             time_function(RR, window = window_length)),
                       function(window_table) {
-                        ret_val <- hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
+                        window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
+                        hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
                       }) %>% Filter(function(elem) !is.null(elem), .)
 
   hrvhra::bind_runs_as_table(runs_list, as.character(seq_along(runs_list)))
@@ -408,6 +422,7 @@ get_single_runs_windowed_results <- function(RR,
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
+#' @param shuffle whether the data should be shuffled
 #' @return data.frame with results for windows as rows
 #' @export
 get_single_spectral_windowed_results <- function(RR,
@@ -418,7 +433,8 @@ get_single_spectral_windowed_results <- function(RR,
                                                  window_length = 5,
                                                  cut_end = FALSE,
                                                  return_all = FALSE,
-                                                 tolerance) {
+                                                 tolerance = 0.05,
+                                                 shuffle = "No") {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -431,7 +447,8 @@ get_single_spectral_windowed_results <- function(RR,
                time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance),
                time_function(RR, window = window_length)),
          function(window_table) {
-           ret_val <- hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[rr_index]], annotations = window_table[[rr_index + 1]]), bands)
+           window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
+           hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[rr_index]], annotations = window_table[[rr_index + 1]]), bands)
          }) %>%
     dplyr::bind_rows()
 }
@@ -442,6 +459,7 @@ get_single_spectral_windowed_results <- function(RR,
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
+#' @param shuffle whether the data should be shuffled
 #' @return data.frame with results for windows as rows
 #' @export
 get_single_quality_windowed_results <- function(RR,
@@ -451,7 +469,8 @@ get_single_quality_windowed_results <- function(RR,
                                                 window_length = 5,
                                                 cut_end = FALSE,
                                                 return_all = FALSE,
-                                                tolerance = tolerance) {
+                                                tolerance = 0.05,
+                                                shuffle = "No") {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -459,7 +478,8 @@ get_single_quality_windowed_results <- function(RR,
                time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance),
                time_function(RR, window = window_length)),
          function(window_table) {
-           ret_val <- hrvhra::describerr(window_table[[rr_index]], window_table[[rr_index + 1]])
+           window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
+           hrvhra::describerr(window_table[[rr_index]], window_table[[rr_index + 1]])
          }) %>%
     dplyr::bind_rows()
 }
@@ -590,4 +610,16 @@ sort_ps <- function(ardr_p, stub = "_prop") {
     sort()
   names(names_to_sort) <- ardr_p
   names(sort(names_to_sort))
+}
+
+#' Function shuffling data in windows if necessary
+#' @param window_table table with windowed signal (single window)
+#' @param shuffle whether the table should be shuffled (shuffled if value == "window")
+#' @param rr_index which column contains RR intervals
+shuffle_in_windows <- function(window_table, shuffle, rr_index) {
+  if (shuffle == "window") {
+    sampling_order <- sample(seq_along(window_table[[rr_index]]), length(window_table[[rr_index]]))
+    window_table <- window_table[sampling_order, ]
+  }
+  window_table
 }
