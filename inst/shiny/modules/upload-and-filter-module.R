@@ -85,11 +85,10 @@ data_upload_and_filterUI <- function(id) {
            ),
            fluidRow(box(width = 4,
                         h3("Advanced topics"),
-                        radioButtons(ns("shuffle"),
+                        selectInput(ns("shuffle"),
                                      "Shuffle the recordings?",
-                                     choices = c("Yes", "No"),
-                                     selected = "No",
-                                     inline = TRUE),
+                                     choices = list("Globally" = "Yes", "In Windows" = "window", "No" = "No"),
+                                     selected = "No"),
                         shiny::numericInput(ns("tolerance"), "Window length tolerance", glob_tolerance))
                     )
       )
@@ -141,7 +140,7 @@ data_upload_and_filter <- function(input, output, session) {
     updateSelectizeInput(session, "move_type", selected = "time")
     updateNumericInput(session, "window_length", value = 5)
     updateRadioButtons(session, "use_ULF", selected = "No")
-    updateRadioButtons(session, "shuffle", selected = "No")
+    updateSelectInput(session, "shuffle", selected = "No")
     updateNumericInput(session, "tolerance", value = glob_tolerance)
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
