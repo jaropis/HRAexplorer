@@ -16,8 +16,9 @@ plotsUI <- function(id) {
 #' @param inp_separator separator used in file
 #' @param inp_minmax minimum and maximum values of RR intervals of sinus origin
 #' @param inp_using_excel whether or not use Excel format
-#' @param inp_variable_name name of the variable for display
-#' @param inp_color color for plotting
+#' @param inp_variable_name name of the variable for display - reactive
+#' @param inp_color color for plotting  - reactive
+#' @param shuffle whether the plot should be shuffled - reactive
 #' @param flags_coding list with flags_coding
 #'
 #' @return plot (also causes side effect of saving the plot to disc)
@@ -30,10 +31,9 @@ plots <- function(input, output, session,
                   minmax,
                   using_excel,
                   variable_name,
-                  color,
+                  color, # reactive
                   flags_coding,
-                  shuffle) {
-
+                  shuffle) { # reactive
   output$current_plot <- renderPlot({
     req(rct_line_number())
     if (type_of_plot == "poincare") {
@@ -44,12 +44,12 @@ plots <- function(input, output, session,
                                minmax = minmax,
                                using_excel = using_excel,
                                flags_coding = flags_coding,
-                               shuffle = shuffle
+                               shuffle = shuffle()
       ) %>% # TODO - what about errors??
         as.data.frame() %>%
         hrvhra::pp() %>%
-        hrvhra::drawpp(vname = variable_name,
-                       col = glob_marker_color, bg = color, pch = 21)
+        hrvhra::drawpp(vname = variable_name(),
+                       col = glob_marker_color, bg = color(), pch = 21)
     }})
 
   output$downloadPlot <- downloadHandler(
@@ -63,11 +63,12 @@ plots <- function(input, output, session,
                                                  column_data = data_columns,
                                                  minmax = minmax,
                                                  using_excel = using_excel,
-                                                 flags_coding = flags_coding)
+                                                 flags_coding = flags_coding,
+                                                 shuffle = shuffle())
         png(file, width=1800, height = 1900, res=300)
         hrvhra::drawpp(hrvhra::pp(data.frame(rr_and_flags$RR, rr_and_flags$annotations)),
-                       vname = variable_name,
-                       col = glob_marker_color, bg = color, pch = 21)
+                       vname = variable_name(),
+                       col = glob_marker_color, bg = color(), pch = 21)
         dev.off()} else {
           NULL
         }
