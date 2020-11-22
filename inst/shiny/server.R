@@ -381,10 +381,10 @@ shinyServer(function(input, output, session){
              data_columns = data_info$data_columns(),
              minmax = data_info$minmax(),
              using_excel = data_info$using_excel(),
-             variable_name = data_info$variable_name(),
-             color = data_info$color(),
+             variable_name = data_info$variable_name,
+             color = data_info$color,
              flags_coding = data_info$flags_coding(),
-             shuffle = data_info$shuffle()
+             shuffle = data_info$shuffle
   )
 
   # call results for a single file on the plot page
