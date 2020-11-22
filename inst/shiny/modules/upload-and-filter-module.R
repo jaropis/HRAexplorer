@@ -237,7 +237,9 @@ data_upload_and_filter <- function(input, output, session) {
                  input$window_length,
                  input$use_ULF,
                  input$shuffle,
-                 input$tolerance), {
+                 input$tolerance,
+                 input$color,
+                 input$variable_name), {
     rval_data_ready(FALSE)
   })
   list(
