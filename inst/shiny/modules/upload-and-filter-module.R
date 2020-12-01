@@ -155,6 +155,7 @@ data_upload_and_filter <- function(input, output, session) {
   })
 
   observeEvent(c(input$files, input$data_columns), {
+    #browser()
     req(rval_data_cols_reset())
     req(input$data_columns)
     data_columns <- as.numeric(strsplit(input$data_columns, "[ ]+")[[1]])
