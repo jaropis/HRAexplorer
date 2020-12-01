@@ -448,7 +448,7 @@ get_single_spectral_windowed_results <- function(RR,
                time_function(RR, window = window_length)),
          function(window_table) {
            window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
-           hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[rr_index]], annotations = window_table[[rr_index + 1]]), bands)
+           hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[rr_index]], flags = window_table[[rr_index + 1]]), bands)
          }) %>%
     dplyr::bind_rows()
 }
