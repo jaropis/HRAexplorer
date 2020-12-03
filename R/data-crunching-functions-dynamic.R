@@ -570,6 +570,7 @@ not_na <- function(x) !is.na(x)
 
 #' Function to sort out the coluns of the runs results table
 #' @param results windowed results
+#' @export
 sort_out_runs <- function(results) {
   runs_names <- names(results)
   ARs <- runs_names[grepl('AR', runs_names) & !grepl('_', runs_names)] %>%
