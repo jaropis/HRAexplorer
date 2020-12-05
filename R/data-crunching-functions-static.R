@@ -146,7 +146,7 @@ get_spectral_results <- function(fileAddresses,
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])) {
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding, shuffle)
-    temp_results <- hrvhra::calculate_RR_spectrum(rr_and_flags,
+    temp_results <- hrvhra::calculate_RR_spectrum(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
                                                   bands = 'if'(use_ULF == "No", hrvhra::frequency_bands, hrvhra::frequency_bands_24))
     results <- rbind(results, temp_results)
   }
