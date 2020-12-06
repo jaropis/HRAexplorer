@@ -412,7 +412,6 @@ get_single_runs_windowed_results <- function(RR,
                         window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
                         hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
                       }) %>% Filter(function(elem) !is.null(elem), .)
-
   hrvhra::bind_runs_as_table(runs_list, as.character(seq_along(runs_list)))
 }
 
@@ -584,7 +583,7 @@ sort_out_runs <- function(results) {
   compars_pvals <- runs_names[grepl('_pVal', runs_names)] %>%
     sort_ps(stub = '_pVal')
   rest <- runs_names[!(runs_names %in% c(DRs, ARs, Ns, "DR_MAX", "AR_MAX", "N_MAX", compars_props, compars_pvals))]
-  results[c(rest, ARs, DRs, Ns,  compars_props, compars_pvals)]
+  results[c(rest, ARs, DRs, Ns, "DR_MAX", "AR_MAX", "N_MAX", compars_props, compars_pvals)]
 }
 
 #' Sorting function for runs
