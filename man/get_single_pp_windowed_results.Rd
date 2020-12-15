@@ -8,6 +8,7 @@ get_single_pp_windowed_results(
   RR,
   time_functions_list = glb_time_functions,
   window_type = "time",
+  time_unit = "minute",
   move_type = "jump",
   window_length = 5,
   cut_end = FALSE,
@@ -20,6 +21,8 @@ get_single_pp_windowed_results(
 \item{RR}{rr object}
 
 \item{window_type}{string, jumping or sliding}
+
+\item{time_unit}{unit of time (minutes or seconds)}
 
 \item{move_type}{string, time based or index based}
 

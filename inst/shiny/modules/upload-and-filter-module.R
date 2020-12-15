@@ -66,9 +66,9 @@ data_upload_and_filterUI <- function(id) {
                                 choices = list(jumping = "jump",
                                                sliding = "slide"),
                                 selected = "jump"),
-                    selectInput(inputId = ns("time_units"),
+                    selectInput(inputId = ns("time_unit"),
                                 label = "Select time unit",
-                                choices = c("minutes", "seconds")
+                                choices = c("minute", "second")
                     ),
                     selectInput(inputId = ns("move_type"),
                                 label = "Window time basis",
@@ -142,7 +142,7 @@ data_upload_and_filter <- function(input, output, session) {
     updateSelectizeInput(session, "dynamic_asym", selected = "")
     updateSelectizeInput(session, "window_type", selected = "jump")
     updateSelectizeInput(session, "move_type", selected = "time")
-    updateSelectizeInput(session, "time_units", selected = "minutes")
+    updateSelectizeInput(session, "time_unit", selected = "minute")
     updateNumericInput(session, "window_length", value = 5)
     updateRadioButtons(session, "use_ULF", selected = "No")
     updateSelectInput(session, "shuffle", selected = "No")
@@ -203,12 +203,12 @@ data_upload_and_filter <- function(input, output, session) {
     }
   })
 
-  observeEvent(c(input$move_type, input$time_units), {
+  observeEvent(c(input$move_type, input$time_unit), {
     if (input$move_type == 'time') {
       updateNumericInput(session,
                         "window_length",
-                        label = 'if'(input$time_units == "minutes", "Window length in minutes", "Window length in seconds"),
-                        value = 'if'(input$time_units == "minutes", 5, 300))
+                        label = 'if'(input$time_unit == "minute", "Window length in minutes", "Window length in seconds"),
+                        value = 'if'(input$time_unit == "minute", 5, 300))
     } else {
       updateNumericInput(session,
                         "window_length",

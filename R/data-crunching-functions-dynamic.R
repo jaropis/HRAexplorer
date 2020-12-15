@@ -7,6 +7,7 @@
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
 #' @param window_type string, jumping or sliding
+#' @param time_unit unit of time (minutes or seconds)
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param clicked_file number of clicked file or NULL
@@ -25,6 +26,7 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   using_excel = FALSE,
                                   use_ULF = "No",
                                   window_type,
+                                  time_unit,
                                   move_type,
                                   window_length,
                                   clicked_file = NULL,
@@ -40,6 +42,7 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   minmax = minmax,
                                   using_excel = using_excel,
                                   window_type = window_type,
+                                  time_unit = time_unit,
                                   move_type = move_type,
                                   window_length = window_length,
                                   clicked_file = clicked_file,
@@ -55,6 +58,7 @@ get_dynamic_numerical_results <- function(analysis_type,
                                     minmax = minmax,
                                     using_excel = using_excel,
                                     window_type = window_type,
+                                    time_unit = time_unit,
                                     move_type = move_type,
                                     window_length = window_length,
                                     clicked_file = clicked_file,
@@ -71,6 +75,7 @@ get_dynamic_numerical_results <- function(analysis_type,
                                         using_excel = using_excel,
                                         use_ULF = use_ULF,
                                         window_type = window_type,
+                                        time_unit = time_unit,
                                         move_type = move_type,
                                         window_length = window_length,
                                         clicked_file = clicked_file,
@@ -85,6 +90,7 @@ get_dynamic_numerical_results <- function(analysis_type,
                                        minmax = minmax,
                                        using_excel = using_excel,
                                        window_type = window_type,
+                                       time_unit = time_unit,
                                        move_type = move_type,
                                        window_length = window_length,
                                        clicked_file = clicked_file,
@@ -101,6 +107,7 @@ get_dynamic_numerical_results <- function(analysis_type,
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
 #' @param window_type string, jumping or sliding
+#' @param time_unit unit of time (minutes or seconds)
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param clicked_file number of clicked file or NULL
@@ -116,6 +123,7 @@ get_dynamic_pp_results <- function(fileAddresses,
                                    minmax = c(0, 3000),
                                    using_excel = FALSE,
                                    window_type,
+                                   time_unit,
                                    move_type,
                                    window_length,
                                    clicked_file = NULL,
@@ -129,6 +137,7 @@ get_dynamic_pp_results <- function(fileAddresses,
     single_file_result <- get_single_pp_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
                                                          time_functions_list = time_functions_list,
                                                          window_type = window_type,
+                                                         time_unit = time_unit,
                                                          move_type = move_type,
                                                          window_length = window_length,
                                                          tolerance = tolerance,
@@ -141,6 +150,7 @@ get_dynamic_pp_results <- function(fileAddresses,
       temp_results <- get_single_pp_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
                                                      time_functions_list = time_functions_list,
                                                      window_type = window_type,
+                                                     time_unit = time_unit,
                                                      move_type = move_type,
                                                      window_length = window_length,
                                                      tolerance = tolerance,
@@ -163,6 +173,7 @@ get_dynamic_pp_results <- function(fileAddresses,
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
 #' @param window_type string, jumping or sliding
+#' @param time_unit unit of time (minutes or seconds)
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param clicked_file number of clicked file or NULL
@@ -178,6 +189,7 @@ get_dynamic_runs_results <- function(fileAddresses,
                                      minmax = c(0, 3000),
                                      using_excel = FALSE,
                                      window_type,
+                                     time_unit,
                                      move_type,
                                      window_length,
                                      clicked_file = NULL,
@@ -191,6 +203,7 @@ get_dynamic_runs_results <- function(fileAddresses,
     single_file_result <- get_single_runs_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
                                                            time_functions_list = time_functions_list,
                                                            window_type = window_type,
+                                                           time_unit = time_unit,
                                                            move_type = move_type,
                                                            window_length = window_length,
                                                            tolerance = tolerance,
@@ -203,6 +216,7 @@ get_dynamic_runs_results <- function(fileAddresses,
       temp_results <- get_single_runs_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
                                                        time_functions_list = time_functions_list,
                                                        window_type = window_type,
+                                                       time_unit = time_unit,
                                                        move_type = move_type,
                                                        window_length = window_length,
                                                        tolerance = tolerance,
@@ -228,6 +242,7 @@ get_dynamic_runs_results <- function(fileAddresses,
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
 #' @param window_type string, jumping or sliding
+#' @param time_unit unit of time (minutes or seconds)
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param clicked_file number of clicked file or NULL
@@ -244,6 +259,7 @@ get_dynamic_spectral_results <- function(fileAddresses,
                                          minmax = c(0, 3000),
                                          using_excel = FALSE,
                                          window_type,
+                                         time_unit,
                                          move_type,
                                          window_length,
                                          clicked_file,
@@ -257,6 +273,7 @@ get_dynamic_spectral_results <- function(fileAddresses,
                                                          use_ULF = use_ULF,
                                                          time_functions_list = time_functions_list,
                                                          window_type = window_type,
+                                                         time_unit = time_unit,
                                                          move_type = move_type,
                                                          window_length = window_length,
                                                          tolerance = tolerance,
@@ -270,6 +287,7 @@ get_dynamic_spectral_results <- function(fileAddresses,
                                                            use_ULF = use_ULF,
                                                            time_functions_list = time_functions_list,
                                                            window_type = window_type,
+                                                           time_unit = time_unit,
                                                            move_type = move_type,
                                                            window_length = window_length,
                                                            tolerance = tolerance,
@@ -293,6 +311,7 @@ get_dynamic_spectral_results <- function(fileAddresses,
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
 #' @param using_Excel boolean, whether Excel files are used
 #' @param window_type string, jumping or sliding
+#' @param time_unit unit of time (minutes or seconds)
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param clicked_file number of clicked file or NULL
@@ -308,6 +327,7 @@ get_dynamic_quality_results <- function(fileAddresses,
                                         minmax = c(0, 3000),
                                         using_excel = FALSE,
                                         window_type,
+                                        time_unit,
                                         move_type,
                                         window_length,
                                         clicked_file,
@@ -320,6 +340,7 @@ get_dynamic_quality_results <- function(fileAddresses,
     temp_results <- get_single_quality_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
                                                         time_functions_list = time_functions_list,
                                                         window_type = window_type,
+                                                        time_unit = time_unit,
                                                         move_type = move_type,
                                                         window_length = window_length,
                                                         tolerance = tolerance,
@@ -330,6 +351,7 @@ get_dynamic_quality_results <- function(fileAddresses,
     temp_results <- get_single_quality_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
                                                         time_functions_list = time_functions_list,
                                                         window_type = window_type,
+                                                        time_unit = time_unit,
                                                         move_type = move_type,
                                                         window_length = window_length,
                                                         tolerance = tolerance,
@@ -355,6 +377,7 @@ glb_time_functions <- list(time_jump = hrvhra::time_based_jump,
 #' Function calculating windowed hrvhra results for a single RR time series
 #' @param RR rr object
 #' @param window_type string, jumping or sliding
+#' @param time_unit unit of time (minutes or seconds)
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
@@ -364,6 +387,7 @@ glb_time_functions <- list(time_jump = hrvhra::time_based_jump,
 get_single_pp_windowed_results <- function(RR,
                                            time_functions_list = glb_time_functions,
                                            window_type = "time",
+                                           time_unit = "minute",
                                            move_type = "jump",
                                            window_length = 5,
                                            cut_end = FALSE,
@@ -374,8 +398,8 @@ get_single_pp_windowed_results <- function(RR,
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
   lapply('if' (window_type == 'jump', # cut end is only applicable to the jump window type
-               time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance),
-               time_function(RR, window = window_length)
+               time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance, time_unit = time_unit),
+               time_function(RR, window = window_length, time_unit = time_unit)
         ),
          function(window_table) {
            window_table <- shuffle_in_windows(window_table, shuffle, rr_index) # shuffle if necessary
@@ -387,6 +411,7 @@ get_single_pp_windowed_results <- function(RR,
 #' Function calculating windowed runs results for a single RR time series
 #' @param RR rr object
 #' @param window_type string, jumping or sliding
+#' @param time_unit unit of time (minutes or seconds)
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
@@ -396,6 +421,7 @@ get_single_pp_windowed_results <- function(RR,
 get_single_runs_windowed_results <- function(RR,
                                              time_functions_list = glb_time_functions,
                                              window_type = "jump",
+                                             time_unit = "minute",
                                              move_type = "time",
                                              window_length = 5,
                                              cut_end = FALSE,
@@ -406,8 +432,8 @@ get_single_runs_windowed_results <- function(RR,
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
   runs_list <- lapply('if' (window_type == 'jump', # cut end is only applicable to the jump window type
-                            time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance),
-                            time_function(RR, window = window_length)),
+                            time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance, time_unit = time_unit),
+                            time_function(RR, window = window_length, time_unit = time_unit)),
                       function(window_table) {
                         window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
                         hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
@@ -418,6 +444,7 @@ get_single_runs_windowed_results <- function(RR,
 #' Function calculating windowed spectral results for a single RR time series
 #' @param RR rr object
 #' @param window_type string, jumping or sliding
+#' @param time_unit unit of time (minutes or seconds)
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
@@ -427,6 +454,7 @@ get_single_runs_windowed_results <- function(RR,
 get_single_spectral_windowed_results <- function(RR,
                                                  time_functions_list = glb_time_functions,
                                                  window_type = "jump",
+                                                 time_unit = "minute",
                                                  move_type = "time",
                                                  use_ULF = "No",
                                                  window_length = 5,
@@ -443,8 +471,8 @@ get_single_spectral_windowed_results <- function(RR,
     hrvhra::frequency_bands
   }
   lapply('if' (window_type == 'jump', # cut end is only applicable to the jump window type
-               time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance),
-               time_function(RR, window = window_length)),
+               time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance, time_unit = time_unit),
+               time_function(RR, window = window_length, time_unit = time_unit)),
          function(window_table) {
            window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
            hrvhra::calculate_RR_spectrum(data.frame(RR = window_table[[rr_index]], flags = window_table[[rr_index + 1]]), bands)
@@ -455,6 +483,7 @@ get_single_spectral_windowed_results <- function(RR,
 #' Function calculating windowed quality results for a single RR time series
 #' @param RR rr object
 #' @param window_type string, jumping or sliding
+#' @param time_unit unit of time (minutes or seconds)
 #' @param move_type string, time based or index based
 #' @param window_length numeric, window length
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
@@ -464,6 +493,7 @@ get_single_spectral_windowed_results <- function(RR,
 get_single_quality_windowed_results <- function(RR,
                                                 time_functions_list = glb_time_functions,
                                                 window_type = "jump",
+                                                time_unit = "minute",
                                                 move_type = "time",
                                                 window_length = 5,
                                                 cut_end = FALSE,
@@ -474,8 +504,8 @@ get_single_quality_windowed_results <- function(RR,
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
   lapply('if' (window_type == 'jump', # cut end is only applicable to the jump window type
-               time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance),
-               time_function(RR, window = window_length)),
+               time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance, time_unit = time_unit),
+               time_function(RR, window = window_length, time_unit = time_unit)),
          function(window_table) {
            window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
            hrvhra::describerr(window_table[[rr_index]], window_table[[rr_index + 1]])
