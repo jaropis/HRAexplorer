@@ -160,7 +160,6 @@ data_upload_and_filter <- function(input, output, session) {
   })
 
   observeEvent(c(input$files, input$data_columns), {
-    #browser()
     req(rval_data_cols_reset())
     req(input$data_columns)
     data_columns <- as.numeric(strsplit(input$data_columns, "[ ]+")[[1]])
@@ -209,11 +208,13 @@ data_upload_and_filter <- function(input, output, session) {
                         "window_length",
                         label = 'if'(input$time_unit == "minute", "Window length in minutes", "Window length in seconds"),
                         value = 'if'(input$time_unit == "minute", 5, 300))
+      shinyjs::enable('time_unit')
     } else {
       updateNumericInput(session,
                         "window_length",
                         label = "Window length in heart beats",
                         value = 300)
+      shinyjs::disable('time_unit')
     }
   }, ignoreInit = TRUE)
 
