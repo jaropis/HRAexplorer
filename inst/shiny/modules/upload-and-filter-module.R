@@ -258,6 +258,7 @@ data_upload_and_filter <- function(input, output, session) {
     color = reactive(input$color),
     use_ULF = reactive(input$use_ULF),
     window_type = reactive(input$window_type),
+    time_unit = reactive(input$time_unit),
     move_type = reactive(input$move_type),
     window_length = reactive(input$window_length),
     dynamic_asym = reactive(input$dynamic_asym),
