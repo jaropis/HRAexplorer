@@ -12,6 +12,7 @@ get_dynamic_pp_results(
   minmax = c(0, 3000),
   using_excel = FALSE,
   window_type,
+  time_unit,
   move_type,
   window_length,
   clicked_file = NULL,
@@ -29,6 +30,8 @@ get_dynamic_pp_results(
 \item{minmax}{1x2 vector with the maximum and minimum acceptable RR intervals values}
 
 \item{window_type}{string, jumping or sliding}
+
+\item{time_unit}{unit of time (minutes or seconds)}
 
 \item{move_type}{string, time based or index based}
 
