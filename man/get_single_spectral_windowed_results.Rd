@@ -8,6 +8,7 @@ get_single_spectral_windowed_results(
   RR,
   time_functions_list = glb_time_functions,
   window_type = "jump",
+  time_unit = "minute",
   move_type = "time",
   use_ULF = "No",
   window_length = 5,
@@ -21,6 +22,8 @@ get_single_spectral_windowed_results(
 \item{RR}{rr object}
 
 \item{window_type}{string, jumping or sliding}
+
+\item{time_unit}{unit of time (minutes or seconds)}
 
 \item{move_type}{string, time based or index based}
 
