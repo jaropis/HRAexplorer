@@ -66,6 +66,10 @@ data_upload_and_filterUI <- function(id) {
                                 choices = list(jumping = "jump",
                                                sliding = "slide"),
                                 selected = "jump"),
+                    selectInput(inputId = ns("time_units"),
+                                label = "Select time unit",
+                                choices = c("minutes", "seconds")
+                    ),
                     selectInput(inputId = ns("move_type"),
                                 label = "Window time basis",
                                 choices = list("time based" = "time",
@@ -138,6 +142,7 @@ data_upload_and_filter <- function(input, output, session) {
     updateSelectizeInput(session, "dynamic_asym", selected = "")
     updateSelectizeInput(session, "window_type", selected = "jump")
     updateSelectizeInput(session, "move_type", selected = "time")
+    updateSelectizeInput(session, "time_units", selected = "minutes")
     updateNumericInput(session, "window_length", value = 5)
     updateRadioButtons(session, "use_ULF", selected = "No")
     updateSelectInput(session, "shuffle", selected = "No")
@@ -198,12 +203,12 @@ data_upload_and_filter <- function(input, output, session) {
     }
   })
 
-  observeEvent(input$move_type, {
+  observeEvent(c(input$move_type, input$time_units), {
     if (input$move_type == 'time') {
       updateNumericInput(session,
                         "window_length",
-                        label = "Window length in minutes",
-                        value = 5)
+                        label = 'if'(input$time_units == "minutes", "Window length in minutes", "Window length in seconds"),
+                        value = 'if'(input$time_units == "minutes", 5, 300))
     } else {
       updateNumericInput(session,
                         "window_length",
