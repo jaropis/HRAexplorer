@@ -141,8 +141,7 @@ get_dynamic_pp_results <- function(fileAddresses,
                                                          move_type = move_type,
                                                          window_length = window_length,
                                                          tolerance = tolerance,
-                                                         shuffle = shuffle) %>%
-      round(digits = 3)
+                                                         shuffle = shuffle)
     return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
   } else {
     for (lineNumber in  1:length(fileAddresses[[1]])) {
@@ -278,8 +277,7 @@ get_dynamic_spectral_results <- function(fileAddresses,
                                                          move_type = move_type,
                                                          window_length = window_length,
                                                          tolerance = tolerance,
-                                                         shuffle = shuffle) %>%
-      round(digits = 3)
+                                                         shuffle = shuffle)
     return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
   } else {
     for (lineNumber in  1:length(fileAddresses[[1]])) {
@@ -296,7 +294,7 @@ get_dynamic_spectral_results <- function(fileAddresses,
         colMeans(na.rm = TRUE)
       results <- rbind(results, temp_results)
     }
-    results <- as.data.frame(round(results, 3))
+    results <- as.data.frame(results)
     results <- cbind(fileAddresses$name, results)
     colnames(results)[1] <- "file"
     rownames(results) <- NULL
@@ -360,7 +358,7 @@ get_dynamic_quality_results <- function(fileAddresses,
       colMeans(na.rm = TRUE)
     results <- rbind(results, temp_results)
   }
-  results <- as.data.frame(round(results,3))
+  results <- as.data.frame(results)
   results <- cbind(fileAddresses$name, results)
   colnames(results)[1] <- "file"
   rownames(results) <- NULL
@@ -522,8 +520,7 @@ get_single_quality_windowed_results <- function(RR,
 round_and_summarize_dynamic_asym <- function(windowed_results, round_digits = 3, p_digits = 4, asym_comparisons = NULL) {
   cols_to_round <- sapply(windowed_results[1, ], is.numeric)
   result <- windowed_results[, cols_to_round] %>%
-    colMeans(na.rm = TRUE) %>%
-    round(digits = round_digits)
+    colMeans(na.rm = TRUE)
   if (length(result) == 0) {
     result[is.na(result)] <- 0
     to_return <- if (!is.null(asym_comparisons)) {
@@ -553,7 +550,7 @@ round_and_summarize_dynamic_asym <- function(windowed_results, round_digits = 3,
       props <- c(props, prop_test$estimate)
       p_s <- c(p_s, puj(prop_test$p.value, rmarkdown = FALSE, digits = p_digits))
     }
-    prop_frame <- as.data.frame(t(round(props, round_digits)))
+    prop_frame <- as.data.frame(props)
     names(prop_frame) <- paste0(comparisons_in_windowed_results, "_prop")
     pval_frame <- as.data.frame(t(p_s))
     names(pval_frame) <- paste0(comparisons_in_windowed_results, "_pVal")
