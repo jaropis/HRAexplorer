@@ -55,7 +55,7 @@ get_pp_results <- function(fileAddresses,
       temp_results <- hrvhra::hrvhra(rr_and_flags[[1]], rr_and_flags[[2]])
       results <- rbind(results, temp_results)
     }
-  results <- as.data.frame(round(results,3))
+  results <- as.data.frame(results,3)
   results <- cbind(fileAddresses$name, results)
   colnames(results)[1] <- "file"
   rownames(results) <- NULL
@@ -116,7 +116,7 @@ get_quality_results <- function(fileAddresses,
     temp_results <- hrvhra::describerr(rr_and_flags[[1]], rr_and_flags[[2]])
     results <- rbind(results, temp_results)
   }
-  results <- as.data.frame(round(results, 3))
+  results <- as.data.frame(results, 3)
   results <- cbind(fileAddresses$name, results)
   colnames(results)[1] <- "file"
   rownames(results) <- NULL
@@ -150,7 +150,7 @@ get_spectral_results <- function(fileAddresses,
                                                   bands = 'if'(use_ULF == "No", hrvhra::frequency_bands, hrvhra::frequency_bands_24))
     results <- rbind(results, temp_results)
   }
-  results <- as.data.frame(round(results, 3))
+  results <- as.data.frame(results)
   results <- cbind(fileAddresses$name, results)
   colnames(results)[1] <- "file"
   rownames(results) <- NULL
