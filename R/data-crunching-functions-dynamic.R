@@ -226,7 +226,8 @@ get_dynamic_runs_results <- function(fileAddresses,
         as.data.frame()
       results <- plyr::rbind.fill(results, temp_results) # rbinding columns with potentially different cols
     }
-    results[is.na(results)] <- 0
+    results %<>% sort_out_NAs()
+    results[results == -1] <- NA # turning the -1 to NA'a
     results <- cbind(fileAddresses$name, results)
     colnames(results)[1] <- "file"
     rownames(results) <- NULL
@@ -438,7 +439,7 @@ get_single_runs_windowed_results <- function(RR,
                         window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
                         hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
                       }) %>% Filter(function(elem) !is.null(elem), .)
-  hrvhra::bind_runs_as_table(runs_list, as.character(seq_along(runs_list)))
+  hrvhra::bind_runs_as_table(runs_list, 'if' (length(runs_list) == 0, 1, as.character(seq_along(runs_list))))
 }
 
 #' Function calculating windowed spectral results for a single RR time series
@@ -652,4 +653,15 @@ shuffle_in_windows <- function(window_table, shuffle, rr_index) {
     window_table <- window_table[sampling_order, ]
   }
   window_table
+}
+
+#' Function checking wheter a NA should be replaced with 0 or not
+#' @param results_table table of results which has NAs - they will be replaced with 0s if the whole line contains NAs
+sort_out_NAs <- function(results_table) {
+  for (idx in seq(nrow(results_table))) {
+    if (sum(is.na(results_table[idx, 2:(ncol(results_table))])) != ncol(results_table) -1 ) {
+      results_table[idx, is.na(results_table[idx, ])] <- 0
+    }
+  }
+  results_table
 }
