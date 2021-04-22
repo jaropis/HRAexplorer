@@ -1,5 +1,5 @@
 # HRAexplorer
-## How to install locally on Windows:
+## How to install locally:
 - download R from https://cloud.r-project.org/ and install
 - download and install free RStudio from https://www.rstudio.com/products/rstudio/download/
 - in the R console (the one with the `>` prompt) enter: `install.packages("devtools", dependencies = TRUE)`
