@@ -16,7 +16,7 @@ Imports:
     shiny,
     shinyjs,
     shinydashboard,
-    shinydashboardPlus (>= 0.7.5),
+    shinydashboardPlus (== 0.7.5),
     openxlsx,
     R.matlab,
     plyr
