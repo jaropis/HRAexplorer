@@ -1,6 +1,5 @@
 #' Function running the application from package
 #' @export
-
 runHRAexplorer <- function() {
   appDir <- system.file("shiny", package = "HRAexplorer")
   if (appDir == "") {
