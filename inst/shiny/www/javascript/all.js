@@ -76,3 +76,10 @@ function add_hide_to_button(button_id, card_id) {
     hide_back_card(card_id);
   });
 }
+
+
+function remove_autocomplete() {
+  text_inputs = document.querySelectorAll('input[type=text]');
+  text_inputs.forEach(inpt => inpt.setAttribute('autocomplete', 'off'));
+
+}

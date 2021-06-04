@@ -383,6 +383,7 @@ shinyServer(function(input, output, session){
   shinyjs::runjs("waitForEl('#btn-6-back', add_hide_to_button, ['details-table-runs-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-7-back', add_hide_to_button, ['details-table-spectral-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-8-back', add_hide_to_button, ['details-table-quality-flip-container'])")
+  shinyjs::runjs("waitForEl('#btn-8-back', remove_autocomplete, '')") # this removes the autocomplete property from text inputs - they are annoying
 
   callModule(plots,
              "plots",
