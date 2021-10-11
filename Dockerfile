@@ -12,7 +12,6 @@ RUN install2.r shiny \
                DT \
                shiny \
                shinydashboard \
-               shinydashboardPlus \
                XLConnect \
                devtools \
                remotes \
@@ -22,3 +21,4 @@ RUN install2.r shiny \
 # ARG not to use cache at this point
 ARG HRA_VER=unknown
 RUN installGithub.r   jaropis/hrvhra
+RUN installGithub.r jaropis/shinydashboardplus0.7.5
