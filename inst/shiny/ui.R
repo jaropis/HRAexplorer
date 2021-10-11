@@ -37,6 +37,17 @@ ui <- dashboardPage(
   dashboardBody(
     shinyjs::useShinyjs(),
     tags$head(
+      HTML(
+        "<!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src='https://www.googletagmanager.com/gtag/js?id=UA-21860092-4'></script>
+      <script>
+      window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-21860092-4');
+    </script>"
+      ),
       tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
       tags$script(src = "javascript/all.js"),
       # now loader
