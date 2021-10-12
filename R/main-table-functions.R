@@ -15,14 +15,8 @@ get_results_matrix <- function(current_values, button_label = "View", button_id 
       sprintf(')">%s</button>', button_label))
     return_tibble <- tibble::tibble(file = results_matrix[, 1, drop = FALSE],
                                     "view" = buttons_col,
-                                    results_matrix[, 2:ncol(results_matrix)])
-    tibble_names <- names(return_tibble)
-    prop_names <- which(grepl("_prop", tibble_names))
-    pVal_names <- which(grepl("_pVal", tibble_names))
-    for (idx in c(prop_names, pVal_names)) {
-      tibble_names[idx] <- sub("_", " ", tibble_names[idx])
-    }
-    names(return_tibble) <- tibble_names
+                                    results_matrix[, 2:ncol(results_matrix)]) %>% 
+      correct_dashes()
     return(return_tibble)
   }
   data.frame(file = results_matrix[, 1, drop = FALSE],
@@ -78,4 +72,19 @@ poincare_description_string <- function(data_line) {
 #' @export
 runs_description_string <- function(data_line) {
   # TODO
+}
+
+#' Function correcting dashes in col names so that it looks nicer
+#' @param data_tibble tibble with data
+#' @return tibble with fixed names
+#' @export
+correct_dashes <- function(data_tibble) {
+  tibble_names <- names(data_tibble)
+  prop_names <- which(grepl("_prop", tibble_names))
+  pVal_names <- which(grepl("_pVal", tibble_names))
+  for (idx in c(prop_names, pVal_names)) {
+    tibble_names[idx] <- sub("_", " ", tibble_names[idx])
+  }
+  names(data_tibble) <- tibble_names
+  data_tibble
 }
