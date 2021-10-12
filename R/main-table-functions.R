@@ -13,7 +13,7 @@ get_results_matrix <- function(current_values, button_label = "View", button_id 
       sprintf('" onclick = "click_more(%s', button_id),
       1:nrow(results_matrix),
       sprintf(')">%s</button>', button_label))
-    return(data.frame(file = results_matrix[, 1, drop = FALSE],
+    return(tibble::tibble(file = results_matrix[, 1, drop = FALSE],
                       "view" = buttons_col,
                       results_matrix[, 2:ncol(results_matrix)]))
   }
