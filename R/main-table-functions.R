@@ -13,9 +13,17 @@ get_results_matrix <- function(current_values, button_label = "View", button_id 
       sprintf('" onclick = "click_more(%s', button_id),
       1:nrow(results_matrix),
       sprintf(')">%s</button>', button_label))
-    return(tibble::tibble(file = results_matrix[, 1, drop = FALSE],
-                      "view" = buttons_col,
-                      results_matrix[, 2:ncol(results_matrix)]))
+    return_tibble <- tibble::tibble(file = results_matrix[, 1, drop = FALSE],
+                                    "view" = buttons_col,
+                                    results_matrix[, 2:ncol(results_matrix)])
+    tibble_names <- names(return_tibble)
+    prop_names <- which(grepl("_prop", tibble_names))
+    pVal_names <- which(grepl("_pVal", tibble_names))
+    for (idx in c(prop_names, pVal_names)) {
+      tibble_names[idx] <- sub("_", " ", tibble_names[idx])
+    }
+    names(return_tibble) <- tibble_names
+    return(return_tibble)
   }
   data.frame(file = results_matrix[, 1, drop = FALSE],
              results_matrix[, 2:ncol(results_matrix)])

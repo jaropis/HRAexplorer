@@ -550,10 +550,10 @@ round_and_summarize_dynamic_asym <- function(windowed_results, round_digits = 3,
       props <- c(props, prop_test$estimate)
       p_s <- c(p_s, puj(prop_test$p.value, rmarkdown = FALSE, digits = p_digits))
     }
-    prop_frame <- as.data.frame(props)
-    names(prop_frame) <- paste0(comparisons_in_windowed_results, "_prop")
+    prop_frame <- as.data.frame(t(props))
+    names(prop_frame) <- sapply(comparisons_in_windowed_results, function(name) paste0(name, "_prop"))
     pval_frame <- as.data.frame(t(p_s))
-    names(pval_frame) <- paste0(comparisons_in_windowed_results, "_pVal")
+    names(pval_frame) <- sapply(comparisons_in_windowed_results, function(name) paste0(name, "_pVal"))
     result <- cbind(result, prop_frame, pval_frame)
   }
   result
