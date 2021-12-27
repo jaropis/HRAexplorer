@@ -99,7 +99,7 @@ get_sep <- function(separator){
 raw_read_one_file <- function(file_addresses, file_no = 1, separator) {
   file_format <- check_for_format(file_addresses)
   if (file_format == 'csv') {
-    return_data <- read.csv(file_addresses[file_no, c("datapath")], sep = separator)
+    return_data <- read.csv(file_addresses[file_no, c("datapath")], sep = separator, skipNul = TRUE)
   }
   if (file_format == 'excel') {
     return_data <- openxlsx::read.xlsx(file_addresses[file_no, c("datapath")])
