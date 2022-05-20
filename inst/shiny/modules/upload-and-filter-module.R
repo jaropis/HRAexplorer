@@ -196,9 +196,9 @@ data_upload_and_filter <- function(input, output, session) {
 
   output$confirm_choices <- renderText({
     if (isTruthy(rval_data_ready())) {
-      "<h3><font color=\"#228B22\"><b>Choices confirmed</b></font></h3>"
+      "<div style=\"display: flex;\"><h3><font color=\"#228B22\"><b>Choices confirmed</b></font></h3><div style=\"width:100px\"></div><img src = \"img/course_icon.png\"></div>"
     } else {
-      "<h3><font color=\"#cc0000\"><b>Confirm choices</b></font></h3>"
+      "<div style=\"display: flex;\"><h3><font color=\"#cc0000\"><b>Confirm choices</b></font></h3><div style=\"width:100px\"></div><img src = \"img/course_icon.png\"></div>"
     }
   })
 
