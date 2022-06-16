@@ -143,9 +143,9 @@ data_upload_and_filter <- function(input, output, session) {
                      nrow()
       )}
     if(any(lengths > 6000)) {
-      shinyjs::runjs("document.querySelectorAll(\"a[href='#shiny-tab-spectral']\")[0].classList.add('disabled')")
+      shinyjs::runjs("document.querySelectorAll(\"a[href='#shiny-tab-spectral']\")[0].style.pointerEvents = 'none'")
     } else {
-      shinyjs::runjs("document.querySelectorAll(\"a[href='#shiny-tab-spectral']\")[0].classList.remove('disabled')")
+      shinyjs::runjs("document.querySelectorAll(\"a[href='#shiny-tab-spectral']\")[0].style.pointerEvents = 'auto'")
     }
   }, ignoreInit = FALSE, ignoreNULL = FALSE)
 
