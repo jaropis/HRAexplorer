@@ -64,3 +64,8 @@
 .content-wrapper {
   overflow-y: auto;
 }
+
+/* class disabling menu items */
+a.disabled {
+    pointer-events: none;
+}

@@ -132,6 +132,23 @@ data_upload_and_filter <- function(input, output, session) {
       rval_current_sample_data()
   }, ignoreInit = FALSE, ignoreNULL = FALSE)
 
+
+  observeEvent(c(input$files, input$separator), {
+    # disabling spectral analysis for long recordings
+    req(input$files)
+    lengths <- c()
+    for (file_idx in seq_along(input$files[[1]])) {
+      lengths <- c(lengths,
+                   raw_read_one_file(input$files %||% calculate_data_addresses(), file_no = file_idx, glob_separators[[input$separator]]) %>%
+                     nrow()
+      )}
+    if(any(lengths > 6000)) {
+      shinyjs::runjs("document.querySelectorAll(\"a[href='#shiny-tab-spectral']\")[0].classList.add('disabled')")
+    } else {
+      shinyjs::runjs("document.querySelectorAll(\"a[href='#shiny-tab-spectral']\")[0].classList.remove('disabled')")
+    }
+  }, ignoreInit = FALSE, ignoreNULL = FALSE)
+
   observeEvent(input$files, {
     updateTextInput(session,inputId = "data_columns", value = "")
     updateSelectizeInput(session, "sinus", selected = "")
