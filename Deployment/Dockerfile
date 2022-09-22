@@ -20,5 +20,5 @@ RUN cp /HRAexplorer/Rprofile.site /usr/local/lib/R/etc
 RUN mkdir -p /usr/lib/R/etc # this folder is required by shinyProxy
 RUN cp -p /usr/local/lib/R/etc/* /usr/lib/R/etc
 EXPOSE 3838
+CMD ["R", "-e", "shiny::runApp('/HRAexplorer/inst/shiny', port = 3838, host = '0.0.0.0')]"
 
-CMD ["R", "-e", "shiny::runApp('/HRAexplorer/inst/shiny')"]

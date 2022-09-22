@@ -132,6 +132,23 @@ data_upload_and_filter <- function(input, output, session) {
       rval_current_sample_data()
   }, ignoreInit = FALSE, ignoreNULL = FALSE)
 
+
+  observeEvent(c(input$files, input$separator), {
+    # disabling spectral analysis for long recordings
+    req(input$files)
+    lengths <- c()
+    for (file_idx in seq_along(input$files[[1]])) {
+      lengths <- c(lengths,
+                   raw_read_one_file(input$files %||% calculate_data_addresses(), file_no = file_idx, glob_separators[[input$separator]]) %>%
+                     nrow()
+      )}
+    if(any(lengths > 6000)) {
+      shinyjs::runjs("document.querySelectorAll(\"a[href='#shiny-tab-spectral']\")[0].style.pointerEvents = 'none'")
+    } else {
+      shinyjs::runjs("document.querySelectorAll(\"a[href='#shiny-tab-spectral']\")[0].style.pointerEvents = 'auto'")
+    }
+  }, ignoreInit = FALSE, ignoreNULL = FALSE)
+
   observeEvent(input$files, {
     updateTextInput(session,inputId = "data_columns", value = "")
     updateSelectizeInput(session, "sinus", selected = "")
@@ -196,9 +213,9 @@ data_upload_and_filter <- function(input, output, session) {
 
   output$confirm_choices <- renderText({
     if (isTruthy(rval_data_ready())) {
-      "<div style=\"display: flex;\"><h3><font color=\"#228B22\"><b>Choices confirmed</b></font></h3><div style=\"width:100px\"></div><img src = \"img/course_icon.png\"></div>"
+      "<div style=\"display: flex;\"><h3><font color=\"#228B22\"><b>Choices confirmed</b></font></h3><div style=\"width:100px\"></div><a href=\"https://www.youtube.com/watch?v=P8r2nqKeq2I/\" style=\"height: 100%;\" target=\"_blank\"><img src = \"img/course_icon2_small.png\" style=\"height: 100%;margin-top: 17px;\"></a></div>"
     } else {
-      "<div style=\"display: flex;\"><h3><font color=\"#cc0000\"><b>Confirm choices</b></font></h3><div style=\"width:100px\"></div><img src = \"img/course_icon.png\"></div>"
+      "<div style=\"display: flex;\"><h3><font color=\"#cc0000\"><b>Confirm choices</b></font></h3><div style=\"width:100px\"></div><a href=\"https://www.youtube.com/watch?v=P8r2nqKeq2I/\" style=\"height: 100%;\" target=\"_blank\"><img src = \"img/course_icon2_small.png\" style=\"height: 100%;margin-top: 17px;\"></a></div>"
     }
   })
 
