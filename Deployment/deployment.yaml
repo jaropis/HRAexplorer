@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hraexplorer
+spec:
+  replicas: 3
+  selector: 
+    matchLabels:
+      app: hra-app
+  revisionHistoryLimit: 5
+  progressDeadlineSeconds: 300
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: hra-app
+    spec:
+      containers:
+      - name: hra-pod
+        image: jaropis2/hraexplorer:153
+        ports:
+          - containerPort: 3838
