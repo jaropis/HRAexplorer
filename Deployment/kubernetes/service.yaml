@@ -5,10 +5,9 @@ metadata:
   labels:
     app: hra-app
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
   - port: 3838
-    nodePort: 30001
     protocol: TCP
   selector:
     app: hra-app
