@@ -86,12 +86,17 @@ get_runs_results <- function(fileAddresses,
                              flags_coding,
                              shuffle) {
   results <- list()
+  results_entropies <-data.frame(HDR = c(), HAR = c(), HNO = c(), HDR2 = c(), HAR2 = c(), HNO2 = c())
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding, shuffle)
     temp_results <- list(hrvhra::countruns(rr_and_flags[[1]], rr_and_flags[[2]]))
     results <- c(results, temp_results)
+    results_entropies = rbind(results_entropies,
+                              hrvhra::entropies(temp_results[[1]]$direction_down, temp_results[[1]]$direction_up, temp_results[[1]]$no_change))
   }
   results <- hrvhra::bind_runs_as_table(results, fileAddresses$name)
+  names(results_entropies) = c("HDR", "HAR", "HNO", "HDR2", "HAR2", "HNO2")
+  results <- cbind(results, results_entropies)
   results
 }
 
