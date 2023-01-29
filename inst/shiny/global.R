@@ -57,3 +57,4 @@ runs_choices <- c(paste0(runs_a, '>', runs_d),
 glob_dynamic_asymmetry_vars <- c(glob_dynamic_asymmetry_vars, runs_choices)
 
 glob_tolerance = 0.05
+glob_pnnX = "30 50"

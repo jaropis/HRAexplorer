@@ -15,6 +15,7 @@
 #' @param flags_coding list with flags_coding
 #' @param shuffle whether the data should be shuffled
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
+#' @param pnnX_th pnnX thresholds vector
 #'
 #' @return the results of Poincare plot analysis
 #' @export
@@ -33,7 +34,9 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   asym_comparisons = NULL,
                                   flags_coding,
                                   shuffle = shuffle,
-                                  tolerance = tolerance) {
+                                  tolerance = tolerance,
+                                  pnnX_th = pnnX_th
+                                  ) {
   if (analysis_type == "poincare_dynamic")
     return(get_dynamic_pp_results(fileAddresses,
                                   time_functions_list = glb_time_functions,
@@ -49,7 +52,8 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   asym_comparisons = asym_comparisons,
                                   flags_coding = flags_coding,
                                   shuffle = shuffle,
-                                  tolerance = tolerance))
+                                  tolerance = tolerance,
+                                  pnnX_th = pnnX_th))
   if (analysis_type == "runs_dynamic")
     return(get_dynamic_runs_results(fileAddresses,
                                     time_functions_list = glb_time_functions,
@@ -114,6 +118,7 @@ get_dynamic_numerical_results <- function(analysis_type,
 #' @param flags_coding list with flags_coding
 #' @param shuffle whether the data should be shuffled
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
+#' @param pnnX_th pnnX thresholds vector
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_pp_results <- function(fileAddresses,
@@ -130,7 +135,9 @@ get_dynamic_pp_results <- function(fileAddresses,
                                    asym_comparisons = NULL,
                                    flags_coding,
                                    shuffle,
-                                   tolerance) {
+                                   tolerance,
+                                   pnnX_th
+                                   ) {
   results <- c()
   if (!is.null(clicked_file)) {
     rr_and_flags <- read_and_filter_one_file(fileAddresses, clicked_file, separator, column_data, minmax, using_excel, flags_coding, shuffle)
@@ -141,7 +148,8 @@ get_dynamic_pp_results <- function(fileAddresses,
                                                          move_type = move_type,
                                                          window_length = window_length,
                                                          tolerance = tolerance,
-                                                         shuffle = shuffle)
+                                                         shuffle = shuffle,
+                                                         pnnX_th = pnnX_th)
     return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
   } else {
     for (lineNumber in  1:length(fileAddresses[[1]])) {
@@ -153,7 +161,8 @@ get_dynamic_pp_results <- function(fileAddresses,
                                                      move_type = move_type,
                                                      window_length = window_length,
                                                      tolerance = tolerance,
-                                                     shuffle = shuffle) %>%
+                                                     shuffle = shuffle,
+                                                     pnnX_th = pnnX_th) %>%
         round_and_summarize_dynamic_asym(round_digits = 3, asym_comparisons = asym_comparisons)
       results <- rbind(results, temp_results)
     }
@@ -381,6 +390,7 @@ glb_time_functions <- list(time_jump = hrvhra::time_based_jump,
 #' @param window_length numeric, window length
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
 #' @param shuffle whether the data should be shuffled
+#' @param pnnX_th pnnX thresholds vector
 #' @return data.frame with results for windows as rows
 #' @export
 get_single_pp_windowed_results <- function(RR,
@@ -392,7 +402,8 @@ get_single_pp_windowed_results <- function(RR,
                                            cut_end = FALSE,
                                            return_all = FALSE,
                                            tolerance = 0.05,
-                                           shuffle = "No") {
+                                           shuffle = "No",
+                                           pnnX_th) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -402,7 +413,7 @@ get_single_pp_windowed_results <- function(RR,
         ),
          function(window_table) {
            window_table <- shuffle_in_windows(window_table, shuffle, rr_index) # shuffle if necessary
-           hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]])
+           hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]], pnnX_th)
          }) %>%
     dplyr::bind_rows()
 }

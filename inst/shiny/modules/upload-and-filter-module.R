@@ -87,13 +87,17 @@ data_upload_and_filterUI <- function(id) {
                                    selected = "",
                                    multiple = TRUE))
            ),
-           fluidRow(box(width = 4,
-                        h3("Advanced topics"),
-                        selectInput(ns("shuffle"),
-                                     "Shuffle the recordings?",
-                                     choices = list("Globally" = "Yes", "In Windows" = "window", "No" = "No"),
-                                     selected = "No"),
-                        shiny::numericInput(ns("tolerance"), "Window length tolerance", glob_tolerance))
+           fluidRow(
+             box(width = 4,
+                        h3("pnnX"),
+                        shiny::textInput(ns("pnnX_th"), "Thresholds for pnnX", glob_pnnX)),
+             box(width = 4,
+                 h3("Advanced topics"),
+                 selectInput(ns("shuffle"),
+                             "Shuffle the recordings?",
+                             choices = list("Globally" = "Yes", "In Windows" = "window", "No" = "No"),
+                             selected = "No"),
+                 shiny::numericInput(ns("tolerance"), "Window length tolerance", glob_tolerance))
                     )
       )
 }
@@ -110,7 +114,7 @@ data_upload_and_filter <- function(input, output, session) {
   rval_flags_coding <- reactiveVal(NULL)
   rval_data_cols_reset <- reactiveVal(FALSE)
   rval_data_ready <- reactiveVal(FALSE)
-
+  rval_pnnX_th <- reactiveVal(c(30, 50))
   dataModal <- function() {
     modalDialog(size = "l",
       tags$div(id = "table_div",
@@ -235,7 +239,7 @@ data_upload_and_filter <- function(input, output, session) {
     }
   }, ignoreInit = TRUE)
 
-  # checking if what is enetered makes sense
+  # checking if what is entered makes sense
   observeEvent(input$confirm, {
     columns <- strsplit(input$data_columns, "[ ]+")[[1]]
     minmax <- strsplit(input$minmax, "[ ]+")[[1]]
@@ -250,6 +254,14 @@ data_upload_and_filter <- function(input, output, session) {
     }
   })
 
+
+  observeEvent(input$pnnX_th, {
+    input_string <- input$pnnX_th %>%
+      sub(",", "", .)
+    sapply(strsplit(input_string, split = "\\s+")[[1]], function(x) as.numeric(x)) %>%
+      unname %>%
+      rval_pnnX_th()
+  })
   observeEvent(c(rval_flags_coding(),
                  input$minmax,
                  input$data_columns,
@@ -263,9 +275,11 @@ data_upload_and_filter <- function(input, output, session) {
                  input$shuffle,
                  input$tolerance,
                  input$color,
-                 input$variable_name), {
+                 input$variable_name,
+                 input$pnnX_th), {
     rval_data_ready(FALSE)
   })
+
   list(
     variable_name = reactive(input$variable_name),
     using_excel = reactive(check_for_excel(input$files %||% calculate_data_addresses())),
@@ -283,6 +297,7 @@ data_upload_and_filter <- function(input, output, session) {
     flags_coding = rval_flags_coding, # this is reactive itself
     data_ready = rval_data_ready,
     shuffle = reactive(input$shuffle),
-    tolerance = reactive(input$tolerance)
+    tolerance = reactive(input$tolerance),
+    pnnX_th = rval_pnnX_th
   )
 }

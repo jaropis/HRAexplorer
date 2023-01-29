@@ -8,6 +8,7 @@
 #' @param using_Excel boolean, whether Excel files are used
 #' @param shuffle whether the data should be shuffled
 #' @param flags_coding list with flags_coding
+#' @param pnnX_th thresholds vector for pnnX calculations
 #'
 #' @return the results of Poincare plot analysis
 #' @export
@@ -19,9 +20,10 @@ get_numerical_results <- function(analysis_type,
                                   using_excel = FALSE,
                                   use_ULF = "No",
                                   flags_coding,
-                                  shuffle) {
+                                  shuffle,
+                                  pnnX_th = c()) {
   if (analysis_type == "poincare")
-    return(get_pp_results(fileAddresses, separator, column_data, minmax, using_excel,flags_coding, shuffle))
+    return(get_pp_results(fileAddresses, separator, column_data, minmax, using_excel,flags_coding, shuffle, pnnX_th))
   if (analysis_type == "runs")
     return(get_runs_results(fileAddresses, separator, column_data, minmax, using_excel, flags_coding, shuffle))
   if (analysis_type == "spectral")
@@ -39,6 +41,7 @@ get_numerical_results <- function(analysis_type,
 #' @param using_Excel boolean, whether Excel files are used
 #' @param flags_coding list with flags_coding
 #' @param shuffle whether the data should be shuffled
+#' @param pnnX_th pnnX thresholds vector
 #'
 #' @return the results of Poincare plot analysis
 #' @export
@@ -48,11 +51,12 @@ get_pp_results <- function(fileAddresses,
                          minmax = c(0, 3000),
                          using_excel = FALSE,
                          flags_coding,
-                         shuffle) {
+                         shuffle,
+                         pnnX_th) {
   results <- c()
     for (lineNumber in  1:length(fileAddresses[[1]])){
       rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding, shuffle)
-      temp_results <- hrvhra::hrvhra(rr_and_flags[[1]], rr_and_flags[[2]])
+      temp_results <- hrvhra::hrvhra(rr_and_flags[[1]], rr_and_flags[[2]], pnnX_th)
       results <- rbind(results, temp_results)
     }
   results <- as.data.frame(results,3)
