@@ -448,7 +448,23 @@ get_single_runs_windowed_results <- function(RR,
                         window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
                         hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
                       }) %>% Filter(function(elem) !is.null(elem), .)
-  hrvhra::bind_runs_as_table(runs_list, 'if' (length(runs_list) == 0, 1, as.character(seq_along(runs_list))))
+  runs_results <- hrvhra::bind_runs_as_table(runs_list, 'if' (length(runs_list) == 0, 1, as.character(seq_along(runs_list))))
+  entropies_results <- lapply('if' (window_type == 'jump', # cut end is only applicable to the jump window type
+                                    time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance, time_unit = time_unit),
+                                    time_function(RR, window = window_length, time_unit = time_unit)),
+                              function(window_table) {
+                                window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
+                                runs_list_local <- hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
+                                hrvhra::entropies(runs_list_local$direction_down,
+                                                  runs_list_local$direction_up,
+                                                  runs_list_local$no_change)
+                              }) %>% Filter(function(elem) !is.null(elem), .)
+  entropies_df <- data.frame()
+  for (line in entropies_results) {
+    entropies_df <- rbind(entropies_df, line)
+  }
+  colnames(entropies_df) <-c("HDR", "HAR", "HNO", "HDR2", "HAR2", "HNO2")
+  cbind(runs_results, entropies_df)
 }
 
 #' Function calculating windowed spectral results for a single RR time series
@@ -617,12 +633,14 @@ sort_out_runs <- function(results) {
     sort_ardrn(type = "DR")
   Ns <- runs_names[grepl('N', runs_names) & !grepl('_', runs_names)] %>%
     sort_ardrn(type = 'N')
+  Hs <- runs_names[grepl('H', runs_names) & !grepl('_', runs_names)] %>%
+    sort_ardrn(type = 'H')
   compars_props <- runs_names[grepl('_prop', runs_names)] %>%
     sort_ps(stub = '_prop')
   compars_pvals <- runs_names[grepl('_pVal', runs_names)] %>%
     sort_ps(stub = '_pVal')
-  rest <- runs_names[!(runs_names %in% c(DRs, ARs, Ns, "DR_MAX", "AR_MAX", "N_MAX", compars_props, compars_pvals))]
-  results[c(rest, ARs, DRs, Ns, "DR_MAX", "AR_MAX", "N_MAX", compars_props, compars_pvals)]
+  rest <- runs_names[!(runs_names %in% c(DRs, ARs, Ns, "DR_MAX", "AR_MAX", "N_MAX", "HDR", "HAR", "HNO", "HDR2", "HAR2", "HNO2", compars_props, compars_pvals))]
+  results[c(rest, ARs, DRs, Ns, "DR_MAX", "AR_MAX", "N_MAX", "HDR", "HAR", "HNO", "HDR2", "HAR2", "HNO2", compars_props, compars_pvals)]
 }
 
 #' Sorting function for runs
@@ -650,6 +668,7 @@ sort_ps <- function(ardr_p, stub = "_prop") {
   names(names_to_sort) <- ardr_p
   names(sort(names_to_sort))
 }
+
 
 #' Function shuffling data in windows if necessary
 #' @param window_table table with windowed signal (single window)
