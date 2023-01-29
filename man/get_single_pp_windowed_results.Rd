@@ -14,7 +14,8 @@ get_single_pp_windowed_results(
   cut_end = FALSE,
   return_all = FALSE,
   tolerance = 0.05,
-  shuffle = "No"
+  shuffle = "No",
+  pnnX_th
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ get_single_pp_windowed_results(
 \item{tolerance}{what is the maximum data loss in a single window in dynamic analysis that should be tolerated}
 
 \item{shuffle}{whether the data should be shuffled}
+
+\item{pnnX_th}{pnnX thresholds vector}
 }
 \value{
 data.frame with results for windows as rows

@@ -19,7 +19,8 @@ get_dynamic_pp_results(
   asym_comparisons = NULL,
   flags_coding,
   shuffle,
-  tolerance
+  tolerance,
+  pnnX_th
 )
 }
 \arguments{
@@ -44,6 +45,8 @@ get_dynamic_pp_results(
 \item{shuffle}{whether the data should be shuffled}
 
 \item{tolerance}{what is the maximum data loss in a single window in dynamic analysis that should be tolerated}
+
+\item{pnnX_th}{pnnX thresholds vector}
 
 \item{file_addresses}{the addresses of the uploaded file(s)}
 

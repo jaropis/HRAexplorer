@@ -13,7 +13,8 @@ get_numerical_results(
   using_excel = FALSE,
   use_ULF = "No",
   flags_coding,
-  shuffle
+  shuffle,
+  pnnX_th = c()
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ get_numerical_results(
 \item{flags_coding}{list with flags_coding}
 
 \item{shuffle}{whether the data should be shuffled}
+
+\item{pnnX_th}{thresholds vector for pnnX calculations}
 
 \item{file_addresses}{the addresses of the uploaded file(s)}
 

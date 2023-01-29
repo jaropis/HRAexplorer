@@ -11,7 +11,8 @@ get_pp_results(
   minmax = c(0, 3000),
   using_excel = FALSE,
   flags_coding,
-  shuffle
+  shuffle,
+  pnnX_th
 )
 }
 \arguments{
@@ -24,6 +25,8 @@ get_pp_results(
 \item{flags_coding}{list with flags_coding}
 
 \item{shuffle}{whether the data should be shuffled}
+
+\item{pnnX_th}{pnnX thresholds vector}
 
 \item{file_addresses}{the addresses of the uploaded file(s)}
 
