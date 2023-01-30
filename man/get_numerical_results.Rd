@@ -14,7 +14,8 @@ get_numerical_results(
   use_ULF = "No",
   flags_coding,
   shuffle,
-  pnnX_th = c()
+  pnnX_th = c(),
+  pnn_perc_th
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ get_numerical_results(
 \item{shuffle}{whether the data should be shuffled}
 
 \item{pnnX_th}{thresholds vector for pnnX calculations}
+
+\item{pnn_perc_th}{thresholds vector for pnnX calculations}
 
 \item{file_addresses}{the addresses of the uploaded file(s)}
 

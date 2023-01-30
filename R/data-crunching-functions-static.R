@@ -10,10 +10,6 @@
 #' @param flags_coding list with flags_coding
 #' @param pnnX_th thresholds vector for pnnX calculations
 #' @param pnn_perc_th thresholds vector for pnnX calculations
-#' @param pnnX_asym whether to use the asymmetric case
-#' @param pnn_perc_asym whether to use the asymmetric case
-#' @param pnnX_asym_dec should the calculations be decelerations oriented
-#' @param pnn_perc_asym_dec should the calculations be decelerations oriented
 #'
 #' @return the results of Poincare plot analysis
 #' @export
@@ -27,11 +23,7 @@ get_numerical_results <- function(analysis_type,
                                   flags_coding,
                                   shuffle,
                                   pnnX_th = c(),
-                                  pnn_perc_th,
-                                  pnnX_asym,
-                                  pnn_perc_asym,
-                                  pnnX_asym_dec,
-                                  pnn_perc_asym_dec) {
+                                  pnn_perc_th) {
   if (analysis_type == "poincare")
     return(get_pp_results(fileAddresses,
                           separator,
@@ -41,11 +33,7 @@ get_numerical_results <- function(analysis_type,
                           flags_coding,
                           shuffle,
                           pnnX_th,
-                          pnn_perc_th,
-                          pnnX_asym,
-                          pnn_perc_asym,
-                          pnnX_asym_dec,
-                          pnn_perc_asym_dec))
+                          pnn_perc_th))
   if (analysis_type == "runs")
     return(get_runs_results(fileAddresses, separator, column_data, minmax, using_excel, flags_coding, shuffle))
   if (analysis_type == "spectral")
@@ -65,10 +53,6 @@ get_numerical_results <- function(analysis_type,
 #' @param shuffle whether the data should be shuffled
 #' @param pnnX_th pnnX thresholds vector
 #' @param pnn_perc_th pnn_perc_th thresholds vector
-#' @param pnnX_asym whether to use the asymmetric case
-#' @param pnn_perc_asym whether to use the asymmetric case
-#' @param pnnX_asym_dec should the calculations be decelerations oriented
-#' @param pnn_perc_asym_dec should the calculations be decelerations oriented
 #'
 #' @return the results of Poincare plot analysis
 #' @export
@@ -80,22 +64,14 @@ get_pp_results <- function(fileAddresses,
                          flags_coding,
                          shuffle,
                          pnnX_th,
-                         pnn_perc_th,
-                         pnnX_asym,
-                         pnn_perc_asym,
-                         pnnX_asym_dec,
-                         pnn_perc_asym_dec) {
+                         pnn_perc_th) {
   results <- c()
     for (lineNumber in  1:length(fileAddresses[[1]])){
       rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding, shuffle)
       temp_results <- hrvhra::hrvhra(rr_and_flags[[1]],
                                      rr_and_flags[[2]],
                                      pnnX_th,
-                                     pnn_perc_th,
-                                     pnnX_asym,
-                                     pnn_perc_asym,
-                                     pnnX_asym_dec,
-                                     pnn_perc_asym_dec)
+                                     pnn_perc_th)
       results <- rbind(results, temp_results)
     }
   results <- as.data.frame(results,3)

@@ -12,7 +12,8 @@ get_pp_results(
   using_excel = FALSE,
   flags_coding,
   shuffle,
-  pnnX_th
+  pnnX_th,
+  pnn_perc_th
 )
 }
 \arguments{
@@ -27,6 +28,8 @@ get_pp_results(
 \item{shuffle}{whether the data should be shuffled}
 
 \item{pnnX_th}{pnnX thresholds vector}
+
+\item{pnn_perc_th}{pnn_perc_th thresholds vector}
 
 \item{file_addresses}{the addresses of the uploaded file(s)}
 

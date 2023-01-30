@@ -15,7 +15,8 @@ get_single_pp_windowed_results(
   return_all = FALSE,
   tolerance = 0.05,
   shuffle = "No",
-  pnnX_th
+  pnnX_th,
+  pnn_perc_th
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ get_single_pp_windowed_results(
 \item{shuffle}{whether the data should be shuffled}
 
 \item{pnnX_th}{pnnX thresholds vector}
+
+\item{pnn_perc_th}{pnn_perc_th thresholds vector}
 }
 \value{
 data.frame with results for windows as rows
