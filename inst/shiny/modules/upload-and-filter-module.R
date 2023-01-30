@@ -89,8 +89,15 @@ data_upload_and_filterUI <- function(id) {
            ),
            fluidRow(
              box(width = 4,
-                        h3("pnnX"),
-                        shiny::textInput(ns("pnnX_th"), "Thresholds for pnnX", glob_pnnX)),
+                 h3("pnnX"),
+                 shiny::textInput(ns("pnnX_th"), "Thresholds for pnnX - the unit is [ms]", glob_pnnX),
+                 shiny::checkboxInput(ns("pnnX_asym"), "Use asymmetric case", value = FALSE),
+                 shiny::checkboxInput(ns("pnnX_asym_dec"), "Decelerations oriented", value = TRUE)),
+             box(width = 4,
+                 h3("pnn%"),
+                 shiny::textInput(ns("pnn_perc_th"), "Thresholds for pnn% - the unit is %", glob_pnn_perc),
+                 shiny::checkboxInput(ns("pnn_perc_asym"), "Use asymmetric case", value = FALSE),
+                 shiny::checkboxInput(ns("pnn_perc_asym_dec"), "Decelerations oriented", value = TRUE)),
              box(width = 4,
                  h3("Advanced topics"),
                  selectInput(ns("shuffle"),
@@ -98,7 +105,7 @@ data_upload_and_filterUI <- function(id) {
                              choices = list("Globally" = "Yes", "In Windows" = "window", "No" = "No"),
                              selected = "No"),
                  shiny::numericInput(ns("tolerance"), "Window length tolerance", glob_tolerance))
-                    )
+           )
       )
 }
 
@@ -115,6 +122,7 @@ data_upload_and_filter <- function(input, output, session) {
   rval_data_cols_reset <- reactiveVal(FALSE)
   rval_data_ready <- reactiveVal(FALSE)
   rval_pnnX_th <- reactiveVal(c(30, 50))
+  rval_pnn_perc_th <- reactiveVal(c(5, 10))
   dataModal <- function() {
     modalDialog(size = "l",
       tags$div(id = "table_div",
@@ -262,6 +270,15 @@ data_upload_and_filter <- function(input, output, session) {
       unname %>%
       rval_pnnX_th()
   })
+
+  observeEvent(input$pnn_perc_th, {
+    input_string <- input$pnn_perc_th %>%
+      sub(",", "", .)
+    sapply(strsplit(input_string, split = "\\s+")[[1]], function(x) as.numeric(x)) %>%
+      unname %>%
+      rval_pnn_perc_th()
+  })
+
   observeEvent(c(rval_flags_coding(),
                  input$minmax,
                  input$data_columns,
@@ -276,7 +293,12 @@ data_upload_and_filter <- function(input, output, session) {
                  input$tolerance,
                  input$color,
                  input$variable_name,
-                 input$pnnX_th), {
+                 input$pnnX_th,
+                 input$pnn_perc_th,
+                 input$pnnX_asym,
+                 input$pnn_perc_asym,
+                 input$pnnX_asym_dec,
+                 input$pnn_perc_asym_dec), {
     rval_data_ready(FALSE)
   })
 
@@ -298,6 +320,11 @@ data_upload_and_filter <- function(input, output, session) {
     data_ready = rval_data_ready,
     shuffle = reactive(input$shuffle),
     tolerance = reactive(input$tolerance),
-    pnnX_th = rval_pnnX_th
+    pnnX_th = rval_pnnX_th,
+    pnn_perc_th = rval_pnn_perc_th,
+    pnnX_asym = reactive(input$pnnX_asym),
+    pnn_perc_asym = reactive(input$pnn_perc_asym),
+    pnnX_asym_dec = reactive(input$pnnX_asym_dec),
+    pnn_perc_asym_dec = reactive(input$pnn_perc_asym_dec)
   )
 }

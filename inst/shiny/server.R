@@ -17,7 +17,12 @@ shinyServer(function(input, output, session){
                           using_excel = data_info$using_excel(),
                           flags_coding = data_info$flags_coding(),
                           shuffle = data_info$shuffle(),
-                          pnnX_th = data_info$pnnX_th()
+                          pnnX_th = data_info$pnnX_th(),
+                          pnn_perc_th = data_info$pnn_perc_th(),
+                          pnnX_asym = data_info$pnnX_asym(),
+                          pnn_perc_asym = data_info$pnn_perc_asym(),
+                          pnnX_asym_dec = data_info$pnnX_asym_dec(),
+                          pnn_perc_asym_dec = data_info$pnn_perc_asym_dec()
     )
   })
 
@@ -76,7 +81,12 @@ shinyServer(function(input, output, session){
                                   flags_coding = data_info$flags_coding(),
                                   shuffle = data_info$shuffle(),
                                   tolerance = data_info$tolerance(),
-                                  pnnX_th = data_info$pnnX_th())
+                                  pnnX_th = data_info$pnnX_th(),
+                                  pnn_perc_th = data_info$pnn_perc_th(),
+                                  pnnX_asym = data_info$pnnX_asym(),
+                                  pnn_perc_asym = data_info$pnn_perc_asym(),
+                                  pnnX_asym_dec = data_info$pnnX_asym_dec(),
+                                  pnn_perc_asym_dec = data_info$pnn_perc_asym_dec())
   })
   rct_current_single_dynamic_pp <- reactive({
     req(data_info$data_ready())
@@ -95,7 +105,12 @@ shinyServer(function(input, output, session){
                                   flags_coding = data_info$flags_coding(),
                                   shuffle = data_info$shuffle(),
                                   tolerance = data_info$tolerance(),
-                                  pnnX_th = data_info$pnnX_th())
+                                  pnnX_th = data_info$pnnX_th(),
+                                  pnn_perc_th = data_info$pnn_perc_th(),
+                                  pnnX_asym = data_info$pnnX_asym(),
+                                  pnn_perc_asym = data_info$pnn_perc_asym(),
+                                  pnnX_asym_dec = data_info$pnnX_asym_dec(),
+                                  pnn_perc_asym_dec = data_info$pnn_perc_asym_dec())
     })
 
   rct_current_dynamic_runs_results <- reactive({
@@ -229,7 +244,12 @@ shinyServer(function(input, output, session){
                                                    flags_coding = data_info$flags_coding(),
                                                    shuffle = data_info$shuffle(),
                                                    tolerance = data_info$tolerance(),
-                                                   pnnX_th = data_info$pnnX_th())
+                                                   pnnX_th = data_info$pnnX_th(),
+                                                   pnn_perc_th = data_info$pnn_perc_th(),
+                                                   pnnX_asym = data_info$pnnX_asym(),
+                                                   pnn_perc_asym = data_info$pnn_perc_asym(),
+                                                   pnnX_asym_dec = data_info$pnnX_asym_dec(),
+                                                   pnn_perc_asym_dec = data_info$pnn_perc_asym_dec())
       file_result <- cbind(file = data_info$files()[idx, 'name'], file_result)
       if (nrow(individual_results) == 0) {
         individual_results <- file_result

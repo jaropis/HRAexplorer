@@ -16,6 +16,12 @@
 #' @param shuffle whether the data should be shuffled
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
 #' @param pnnX_th pnnX thresholds vector
+#' @param pnn_perc_th pnn_perc_th thresholds vector
+#' @param pnnX_asym whether to use the asymmetric case
+#' @param pnn_perc_asym whether to use the asymmetric case
+#' @param pnnX_asym_dec should the calculations be decelerations oriented
+#' @param pnn_perc_asym_dec should the calculations be decelerations oriented
+
 #'
 #' @return the results of Poincare plot analysis
 #' @export
@@ -35,7 +41,12 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   flags_coding,
                                   shuffle = shuffle,
                                   tolerance = tolerance,
-                                  pnnX_th = pnnX_th
+                                  pnnX_th = pnnX_th,
+                                  pnn_perc_th = pnn_perc_th,
+                                  pnnX_asym = pnnX_asym,
+                                  pnn_perc_asym = pnn_perc_asym,
+                                  pnnX_asym_dec = pnnX_asym_dec,
+                                  pnn_perc_asym_dec = pnn_perc_asym_dec
                                   ) {
   if (analysis_type == "poincare_dynamic")
     return(get_dynamic_pp_results(fileAddresses,
@@ -53,7 +64,12 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   flags_coding = flags_coding,
                                   shuffle = shuffle,
                                   tolerance = tolerance,
-                                  pnnX_th = pnnX_th))
+                                  pnnX_th = pnnX_th,
+                                  pnn_perc_th = pnn_perc_th,
+                                  pnnX_asym = pnnX_asym,
+                                  pnn_perc_asym = pnn_perc_asym,
+                                  pnnX_asym_dec = pnnX_asym_dec,
+                                  pnn_perc_asym_dec = pnn_perc_asym_dec))
   if (analysis_type == "runs_dynamic")
     return(get_dynamic_runs_results(fileAddresses,
                                     time_functions_list = glb_time_functions,
@@ -119,6 +135,11 @@ get_dynamic_numerical_results <- function(analysis_type,
 #' @param shuffle whether the data should be shuffled
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
 #' @param pnnX_th pnnX thresholds vector
+#' @param pnn_perc_th pnn_perc_th thresholds vector
+#' @param pnnX_asym whether to use the asymmetric case
+#' @param pnn_perc_asym whether to use the asymmetric case
+#' @param pnnX_asym_dec should the calculations be decelerations oriented
+#' @param pnn_perc_asym_dec should the calculations be decelerations oriented
 #'
 #' @return the results of Poincare plot analysis
 get_dynamic_pp_results <- function(fileAddresses,
@@ -136,7 +157,12 @@ get_dynamic_pp_results <- function(fileAddresses,
                                    flags_coding,
                                    shuffle,
                                    tolerance,
-                                   pnnX_th
+                                   pnnX_th,
+                                   pnn_perc_th,
+                                   pnnX_asym,
+                                   pnn_perc_asym,
+                                   pnnX_asym_dec,
+                                   pnn_perc_asym_dec
                                    ) {
   results <- c()
   if (!is.null(clicked_file)) {
@@ -149,7 +175,12 @@ get_dynamic_pp_results <- function(fileAddresses,
                                                          window_length = window_length,
                                                          tolerance = tolerance,
                                                          shuffle = shuffle,
-                                                         pnnX_th = pnnX_th)
+                                                         pnnX_th = pnnX_th,
+                                                         pnn_perc_th = pnn_perc_th,
+                                                         pnnX_asym = pnnX_asym,
+                                                         pnn_perc_asym = pnn_perc_asym,
+                                                         pnnX_asym_dec = pnnX_asym_dec,
+                                                         pnn_perc_asym_dec = pnn_perc_asym_dec)
     return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
   } else {
     for (lineNumber in  1:length(fileAddresses[[1]])) {
@@ -162,7 +193,12 @@ get_dynamic_pp_results <- function(fileAddresses,
                                                      window_length = window_length,
                                                      tolerance = tolerance,
                                                      shuffle = shuffle,
-                                                     pnnX_th = pnnX_th) %>%
+                                                     pnnX_th = pnnX_th,
+                                                     pnn_perc_th = pnn_perc_th,
+                                                     pnnX_asym = pnnX_asym,
+                                                     pnn_perc_asym = pnn_perc_asym,
+                                                     pnnX_asym_dec = pnnX_asym_dec,
+                                                     pnn_perc_asym_dec = pnn_perc_asym_dec) %>%
         round_and_summarize_dynamic_asym(round_digits = 3, asym_comparisons = asym_comparisons)
       results <- rbind(results, temp_results)
     }
@@ -391,6 +427,11 @@ glb_time_functions <- list(time_jump = hrvhra::time_based_jump,
 #' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
 #' @param shuffle whether the data should be shuffled
 #' @param pnnX_th pnnX thresholds vector
+#' @param pnn_perc_th pnn_perc_th thresholds vector
+#' @param pnnX_asym whether to use the asymmetric case
+#' @param pnn_perc_asym whether to use the asymmetric case
+#' @param pnnX_asym_dec should the calculations be decelerations oriented
+#' @param pnn_perc_asym_dec should the calculations be decelerations oriented
 #' @return data.frame with results for windows as rows
 #' @export
 get_single_pp_windowed_results <- function(RR,
@@ -403,7 +444,12 @@ get_single_pp_windowed_results <- function(RR,
                                            return_all = FALSE,
                                            tolerance = 0.05,
                                            shuffle = "No",
-                                           pnnX_th) {
+                                           pnnX_th,
+                                           pnn_perc_th,
+                                           pnnX_asym = pnnX_asym,
+                                           pnn_perc_asym = pnn_perc_asym,
+                                           pnnX_asym_dec = pnnX_asym_dec,
+                                           pnn_perc_asym_dec = pnn_perc_asym_dec) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -413,7 +459,14 @@ get_single_pp_windowed_results <- function(RR,
         ),
          function(window_table) {
            window_table <- shuffle_in_windows(window_table, shuffle, rr_index) # shuffle if necessary
-           hrvhra::hrvhra(window_table[[rr_index]], window_table[[rr_index + 1]], pnnX_th)
+           hrvhra::hrvhra(window_table[[rr_index]],
+                          window_table[[rr_index + 1]],
+                          pnnX_th,
+                          pnn_perc_th,
+                          pnnX_asym = pnnX_asym,
+                          pnn_perc_asym = pnn_perc_asym,
+                          pnnX_asym_dec = pnnX_asym_dec,
+                          pnn_perc_asym_dec = pnn_perc_asym_dec)
          }) %>%
     dplyr::bind_rows()
 }
