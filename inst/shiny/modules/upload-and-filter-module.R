@@ -218,6 +218,22 @@ data_upload_and_filter <- function(input, output, session) {
     }
   })
 
+  observeEvent(input$pnnX_asym, {
+    if(input$pnnX_asym) {
+      shinyjs::enable("pnnX_asym_dec")
+    } else {
+      shinyjs::disable("pnnX_asym_dec")
+    }
+  })
+
+  observeEvent(input$pnn_perc_asym, {
+    if(input$pnn_perc_asym) {
+      shinyjs::enable("pnn_perc_asym_dec")
+    } else {
+      shinyjs::disable("pnn_perc_asym_dec")
+    }
+  })
+
   output$sample_data <- DT::renderDT({
     req(rval_current_sample_data())
     rval_current_sample_data()
