@@ -5,6 +5,6 @@
 - in the R console (the one with the `>` prompt) enter: `install.packages("devtools", dependencies = TRUE)`
 - answer Y or the top choice to any questions
 - in the console enter `devtools::install_github("jaropis/hrvhra", dependencies = TRUE)`
-- in the console enter `devtools::install_version('shinydashboardPlus', version = '0.7.5')`
+- in the console enter `devtools::install_github('jaropis/shinydashboardplus0.7.5')`
 - in the console enter  `devtools::install_github("jaropis/HRAexplorer", dependencies = TRUE)`
 - from now on, you will only need the following: run RStudio and enter in the prompt `HRAexplorer::runHRAexplorer()`
