@@ -431,9 +431,8 @@ get_dynamic_chaos_results <- function(fileAddresses,
                                         tolerance) {
   results <- c()
   if (!is.null(clicked_file)) {
-    # tutu
     rr_and_flags <- read_and_filter_one_file(fileAddresses, clicked_file, separator, column_data, minmax, using_excel, flags_coding, shuffle)
-    temp_results <- get_single_chaos_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
+    single_file_result <- get_single_chaos_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
                                                         time_functions_list = time_functions_list,
                                                         window_type = window_type,
                                                         time_unit = time_unit,
@@ -441,6 +440,7 @@ get_dynamic_chaos_results <- function(fileAddresses,
                                                         window_length = window_length,
                                                         tolerance = tolerance,
                                                         shuffle = shuffle)
+    return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
   } else {
     for (lineNumber in  1:length(fileAddresses[[1]])){
       rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding, shuffle)

@@ -245,7 +245,7 @@ shinyServer(function(input, output, session){
   })
 
   rct_current_single_dynamic_chaos_results <- reactive({
-    req(input$dynamicquality)
+    req(input$dynamicchaos)
     req(data_info$data_ready())
     get_dynamic_numerical_results(analysis_type = "chaos_dynamic",
                                   data_info$files(),
@@ -257,7 +257,7 @@ shinyServer(function(input, output, session){
                                   time_unit = data_info$time_unit(),
                                   move_type = data_info$move_type(),
                                   window_length = data_info$window_length(),
-                                  clicked_file = as.numeric(input$dynamicquality),
+                                  clicked_file = as.numeric(input$dynamicchaos),
                                   flags_coding = data_info$flags_coding(),
                                   shuffle = data_info$shuffle(),
                                   tolerance = data_info$tolerance())

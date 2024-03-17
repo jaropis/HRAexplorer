@@ -11,13 +11,10 @@ var tabs_list = {
 
 
 function click_more(buttonID) {
-  console.log("buttonID: ", buttonID)
   clicked_line = buttonID.id.split("_")[3];
-  console.log("clicked line: ", clicked_line)
   input_type = buttonID.id.split("_")[2];
   Shiny.setInputValue(input_type, clicked_line);
   moreButtonId = document.getElementById('btn-' + tabs_list[input_type] + '-front');
-  console.log("moreButtonId: ", 'btn-' + tabs_list[input_type] + '-front', moreButtonId)
   moreButtonId.click();
 }
 
