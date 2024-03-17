@@ -105,6 +105,21 @@ get_dynamic_numerical_results <- function(analysis_type,
                                        flags_coding = flags_coding,
                                        shuffle = shuffle,
                                        tolerance = tolerance))
+  if (analysis_type == "chaos_dynamic")
+    return(get_dynamic_chaos_results(fileAddresses,
+                                       time_functions_list = glb_time_functions,
+                                       separator = separator,
+                                       column_data = column_data,
+                                       minmax = minmax,
+                                       using_excel = using_excel,
+                                       window_type = window_type,
+                                       time_unit = time_unit,
+                                       move_type = move_type,
+                                       window_length = window_length,
+                                       clicked_file = clicked_file,
+                                       flags_coding = flags_coding,
+                                       shuffle = shuffle,
+                                       tolerance = tolerance))
 }
 
 #' function for getting the results of dynamic Poincare Plot analysis
@@ -383,6 +398,71 @@ get_dynamic_quality_results <- function(fileAddresses,
   }
 }
 
+#' function for getting the results of dynamic chos based analysis
+#'
+#' @param file_addresses the addresses of the uploaded file(s)
+#' @param separator the separator chosen by the user
+#' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
+#' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
+#' @param using_Excel boolean, whether Excel files are used
+#' @param window_type string, jumping or sliding
+#' @param time_unit unit of time (minutes or seconds)
+#' @param move_type string, time based or index based
+#' @param window_length numeric, window length
+#' @param clicked_file number of clicked file or NULL
+#' @param flags_coding list with flags_coding
+#' @param shuffle whether the data should be shuffled
+#' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
+#'
+#' @return the results of Poincare plot analysis
+get_dynamic_chaos_results <- function(fileAddresses,
+                                        time_functions_list = glb_time_functions,
+                                        separator = "\t",
+                                        column_data = c(1, 2),
+                                        minmax = c(0, 3000),
+                                        using_excel = FALSE,
+                                        window_type,
+                                        time_unit,
+                                        move_type,
+                                        window_length,
+                                        clicked_file,
+                                        flags_coding,
+                                        shuffle,
+                                        tolerance) {
+  results <- c()
+  if (!is.null(clicked_file)) {
+    # tutu
+    rr_and_flags <- read_and_filter_one_file(fileAddresses, clicked_file, separator, column_data, minmax, using_excel, flags_coding, shuffle)
+    temp_results <- get_single_chaos_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
+                                                        time_functions_list = time_functions_list,
+                                                        window_type = window_type,
+                                                        time_unit = time_unit,
+                                                        move_type = move_type,
+                                                        window_length = window_length,
+                                                        tolerance = tolerance,
+                                                        shuffle = shuffle)
+  } else {
+    for (lineNumber in  1:length(fileAddresses[[1]])){
+      rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding, shuffle)
+      temp_results <- get_single_chaos_windowed_results(data.frame(RR = rr_and_flags[[1]], flags = rr_and_flags[[2]]),
+                                                          time_functions_list = time_functions_list,
+                                                          window_type = window_type,
+                                                          time_unit = time_unit,
+                                                          move_type = move_type,
+                                                          window_length = window_length,
+                                                          tolerance = tolerance,
+                                                          shuffle = shuffle) %>%
+        colMeans(na.rm = TRUE)
+      results <- rbind(results, temp_results)
+    }
+    results <- as.data.frame(results)
+    results <- cbind(fileAddresses$name, results)
+    colnames(results)[1] <- "file"
+    rownames(results) <- NULL
+    return(results)
+  }
+}
+
 #' time window functions as a list
 #' @export
 glb_time_functions <- list(time_jump = hrvhra::time_based_jump,
@@ -552,6 +632,40 @@ get_single_quality_windowed_results <- function(RR,
     dplyr::bind_rows()
 }
 
+#' Function calculating windowed chaos results for a single RR time series
+#' @param RR rr object
+#' @param window_type string, jumping or sliding
+#' @param time_unit unit of time (minutes or seconds)
+#' @param move_type string, time based or index based
+#' @param window_length numeric, window length
+#' @param tolerance what is the maximum data loss in a single window in dynamic analysis that should be tolerated
+#' @param shuffle whether the data should be shuffled
+#' @return data.frame with results for windows as rows
+#' @export
+get_single_chaos_windowed_results <- function(RR,
+                                                time_functions_list = glb_time_functions,
+                                                window_type = "jump",
+                                                time_unit = "minute",
+                                                move_type = "time",
+                                                window_length = 5,
+                                                cut_end = FALSE,
+                                                return_all = FALSE,
+                                                tolerance = 0.05,
+                                                shuffle = "No") {
+  window_slide = paste(move_type, window_type, sep = "_")
+  rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
+  time_function <- time_functions_list[[window_slide]]
+  lapply('if' (window_type == 'jump', # cut end is only applicable to the jump window type
+               time_function(RR, window = window_length, cut_end = cut_end, tolerance = tolerance, time_unit = time_unit),
+               time_function(RR, window = window_length, time_unit = time_unit)),
+         function(window_table) {
+           window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
+           std <- sd(window_table[[rr_index]])
+           hrvhra::ncm_samp_en(window_table[[rr_index]], 2, 0.15 * std)
+         }) %>%
+    unlist() %>%
+    data.frame(SampEn = .)
+}
 #' Function adding dynamic asymmetry tests and rounding values
 #' @param windowed_results result of a numerical function applied to an RR window
 #' @param round_digits how much to round the descirptors

@@ -5,23 +5,27 @@ var tabs_list = {
   "staticruns": "2",
   "dynamicruns": "6",
   "dynamicspectral": "7",
-  "dynamicquality": "8"};
+  "dynamicquality": "8",
+  "dynamicchaos": "14"
+};
+
 
 function click_more(buttonID) {
+  console.log("buttonID: ", buttonID)
   clicked_line = buttonID.id.split("_")[3];
+  console.log("clicked line: ", clicked_line)
   input_type = buttonID.id.split("_")[2];
   Shiny.setInputValue(input_type, clicked_line);
   moreButtonId = document.getElementById('btn-' + tabs_list[input_type] + '-front');
+  console.log("moreButtonId: ", 'btn-' + tabs_list[input_type] + '-front', moreButtonId)
   moreButtonId.click();
 }
 
 function waitForEl(selector, fun, parameters) {
   // selector = 'div.wrapper', parameters = [timeout, sleep, interval]
   if(document.querySelector(selector)) {
-    console.log(...parameters);
     fun(selector, ...parameters);
   } else {
-    console.log(selector);
     setTimeout(function() {
       waitForEl(selector, fun, parameters);
     }, 500);
@@ -57,7 +61,6 @@ function show_back_card(card_id) {
 }
 
 function hide_back_card(card_id) {
-  console.log(card_id);
   document.getElementById(card_id).style.visibility = "hidden";
 }
 

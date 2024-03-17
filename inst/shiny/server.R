@@ -227,7 +227,7 @@ shinyServer(function(input, output, session){
                                   tolerance = data_info$tolerance())
   })
 
-  rct_current_chaos_quality_results <- reactive({
+  rct_current_dynamic_chaos_results <- reactive({
     req(data_info$data_ready())
     get_dynamic_numerical_results(analysis_type = "chaos_dynamic",
                                   data_info$files(),
@@ -244,10 +244,10 @@ shinyServer(function(input, output, session){
                                   tolerance = data_info$tolerance())
   })
 
-  rct_current_single_dynamic_quality_results <- reactive({
+  rct_current_single_dynamic_chaos_results <- reactive({
     req(input$dynamicquality)
     req(data_info$data_ready())
-    get_dynamic_numerical_results(analysis_type = "choos_dynamic",
+    get_dynamic_numerical_results(analysis_type = "chaos_dynamic",
                                   data_info$files(),
                                   separator = data_info$separator(),
                                   column_data = data_info$data_columns(),
@@ -262,6 +262,7 @@ shinyServer(function(input, output, session){
                                   shuffle = data_info$shuffle(),
                                   tolerance = data_info$tolerance())
   })
+
   # these reactives  are used to download partial results for windows in each file
   rct_current_dynamic_all_individual_pp_results <- reactive ({
     req(data_info$data_ready())
@@ -408,7 +409,6 @@ shinyServer(function(input, output, session){
     individual_results
   })
 
-
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
 
@@ -478,11 +478,12 @@ shinyServer(function(input, output, session){
   shinyjs::runjs("waitForEl('#btn-6-front', add_show_to_button, ['details-table-runs-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-7-front', add_show_to_button, ['details-table-spectral-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-8-front', add_show_to_button, ['details-table-quality-flip-container'])")
+  shinyjs::runjs("waitForEl('#btn-14-front', add_show_to_button, ['details-table-chaos-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-5-back', add_hide_to_button, ['details-table-pp-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-6-back', add_hide_to_button, ['details-table-runs-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-7-back', add_hide_to_button, ['details-table-spectral-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-8-back', add_hide_to_button, ['details-table-quality-flip-container'])")
-  shinyjs::runjs("waitForEl('#btn-9-back', add_hide_to_button, ['details-table-chaos-flip-container'])")
+  shinyjs::runjs("waitForEl('#btn-14-back', add_hide_to_button, ['details-table-chaos-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-8-back', remove_autocomplete, '')") # this removes the autocomplete property from text inputs - they are annoying
 
   callModule(plots,
