@@ -25,6 +25,12 @@ ui <- dashboardPage(
                menuSubItem("Dynamic",
                            tabName = "spectral-dynamic")
       ),
+      menuItem("Chaos", icon = icon("tornado"),
+               menuSubItem("Static",
+                           tabName = "spectral"),
+               menuSubItem("Dynamic",
+                           tabName = "spectral-dynamic")
+      ),
       menuItem("Quality", icon = icon("thumbs-up"),
                menuSubItem("Static",
                            tabName = "quality",
@@ -134,6 +140,24 @@ ui <- dashboardPage(
                          })
               )
       ),
+      tabItem(tabName = "chaos",
+              fluidRow(
+                flipBox( id = 13,
+                         front_title = "Numerical results",
+                         solidHeader = FALSE,
+                         width = 12,
+                         main_tableUI("main-table-chaos"),
+                         header_img = NULL,
+                         main_img = NULL,
+                         back_content = {
+                           fluidRow(
+                             box(title = "Recording quality",
+                                 plotsUI("quality-plots")
+                             )
+                           )
+                         })
+              )
+      ),
       tabItem(tabName = "hrv_time_domain-dynamic",
               fluidRow(
                 flipBox( id = 5,
@@ -204,6 +228,24 @@ ui <- dashboardPage(
                                  main_tableUI("details-table-quality")
                              ))
                          })
+              )
+      ),
+      tabItem(tabName = "chaos-dynamic",
+              fluidRow(
+                flipBox(id = 8,
+                        front_title = "Numerical results",
+                        solidHeader = FALSE,
+                        width = 12,
+                        main_tableUI("main-table-chaos-dynamic"),
+                        header_img = NULL,
+                        main_img = NULL,
+                        back_content = {
+                          fluidRow(
+                            box(width = 12,
+                                title = "Single file view",
+                                main_tableUI("details-table-chaos")
+                            ))
+                        })
               )
       )
     )

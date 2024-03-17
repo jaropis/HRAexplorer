@@ -116,7 +116,7 @@ data_upload_and_filter <- function(input, output, session) {
   rval_beat_choices <- reactiveVal(NULL)
   rval_flags_coding <- reactiveVal(NULL)
   rval_data_cols_reset <- reactiveVal(FALSE)
-  rval_data_ready <- reactiveVal(FALSE)
+  rval_data_ready <- reactiveVal(TRUE)
   rval_pnnX_th <- reactiveVal(c(30, 50))
   rval_pnn_perc_th <- reactiveVal(c(5, 10))
   dataModal <- function() {

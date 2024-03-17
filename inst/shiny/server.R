@@ -6,6 +6,7 @@ shinyServer(function(input, output, session){
   rval_current_file_runs <- reactiveVal(NULL)
   rval_current_file_spectral <- reactiveVal(NULL)
   rval_current_file_quality <- reactiveVal(NULL)
+  rval_current_file_chaos <- reactiveVal(NULL)
 
   rct_current_pp_values <- reactive({
     req(data_info$data_ready())
@@ -51,6 +52,18 @@ shinyServer(function(input, output, session){
   rct_current_quality_values <- reactive({
     req(data_info$data_ready())
     get_numerical_results(analysis_type = "quality",
+                          data_info$files(),
+                          separator = data_info$separator(),
+                          column_data = data_info$data_columns(),
+                          minmax = data_info$minmax(),
+                          using_excel = data_info$using_excel(),
+                          flags_coding = data_info$flags_coding(),
+                          shuffle = data_info$shuffle()
+    )
+  })
+  rct_current_quality_values <- reactive({
+    req(data_info$data_ready())
+    get_numerical_results(analysis_type = "chaos",
                           data_info$files(),
                           separator = data_info$separator(),
                           column_data = data_info$data_columns(),
@@ -213,6 +226,41 @@ shinyServer(function(input, output, session){
                                   tolerance = data_info$tolerance())
   })
 
+  rct_current_chaos_quality_results <- reactive({
+    req(data_info$data_ready())
+    get_dynamic_numerical_results(analysis_type = "chaos_dynamic",
+                                  data_info$files(),
+                                  separator = data_info$separator(),
+                                  column_data = data_info$data_columns(),
+                                  minmax = data_info$minmax(),
+                                  using_excel = data_info$using_excel(),
+                                  window_type = data_info$window_type(),
+                                  time_unit = data_info$time_unit(),
+                                  move_type = data_info$move_type(),
+                                  window_length = data_info$window_length(),
+                                  flags_coding = data_info$flags_coding(),
+                                  shuffle = data_info$shuffle(),
+                                  tolerance = data_info$tolerance())
+  })
+
+  rct_current_single_dynamic_quality_results <- reactive({
+    req(input$dynamicquality)
+    req(data_info$data_ready())
+    get_dynamic_numerical_results(analysis_type = "choos_dynamic",
+                                  data_info$files(),
+                                  separator = data_info$separator(),
+                                  column_data = data_info$data_columns(),
+                                  minmax = data_info$minmax(),
+                                  using_excel = data_info$using_excel(),
+                                  window_type = data_info$window_type(),
+                                  time_unit = data_info$time_unit(),
+                                  move_type = data_info$move_type(),
+                                  window_length = data_info$window_length(),
+                                  clicked_file = as.numeric(input$dynamicquality),
+                                  flags_coding = data_info$flags_coding(),
+                                  shuffle = data_info$shuffle(),
+                                  tolerance = data_info$tolerance())
+  })
   # these reactives  are used to download partial results for windows in each file
   rct_current_dynamic_all_individual_pp_results <- reactive ({
     req(data_info$data_ready())
@@ -331,6 +379,35 @@ shinyServer(function(input, output, session){
     individual_results
   })
 
+  rct_current_dynamic_all_individual_chaos_results <- reactive ({
+    req(data_info$data_ready())
+    individual_results <- data.frame()
+    for (idx in seq(nrow(data_info$files()))) {
+      file_result <- get_dynamic_numerical_results(analysis_type = "chaos_dynamic",
+                                                   data_info$files(),
+                                                   separator = data_info$separator(),
+                                                   column_data = data_info$data_columns(),
+                                                   minmax = data_info$minmax(),
+                                                   using_excel = data_info$using_excel(),
+                                                   window_type = data_info$window_type(),
+                                                   time_unit = data_info$time_unit(),
+                                                   move_type = data_info$move_type(),
+                                                   window_length = data_info$window_length(),
+                                                   clicked_file = idx,
+                                                   flags_coding = data_info$flags_coding(),
+                                                   shuffle = data_info$shuffle(),
+                                                   tolerance = data_info$tolerance())
+      file_result <- cbind(file = data_info$files()[idx, 'name'], window.NO = seq(nrow(file_result)), file_result)
+      if (nrow(individual_results) == 0) {
+        individual_results <- file_result
+      } else {
+        individual_results <- rbind(individual_results, file_result)
+      }
+    }
+    individual_results
+  })
+
+
   data_info <- callModule(data_upload_and_filter,
                           "get-filter-data")
 
@@ -382,6 +459,19 @@ shinyServer(function(input, output, session){
       }
     })
   })
+
+  observeEvent(input$dynamicchaos, {
+    rval_current_file_chaos({
+      if(is.null(input$dynamicchaos)) {
+        "nic.xlsx"
+      } else {
+        paste0("SingleFiledynamicchaos",
+               data_info$files()$name[[as.numeric(input$dynamicchaos)]],
+               ".xlsx")
+      }
+    })
+  })
+
   # adding listeners to the front and back-buttons (related to removing mirror tables from flipbox)
   shinyjs::runjs("waitForEl('#btn-5-front', add_show_to_button, ['details-table-pp-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-6-front', add_show_to_button, ['details-table-runs-flip-container'])")
@@ -391,6 +481,7 @@ shinyServer(function(input, output, session){
   shinyjs::runjs("waitForEl('#btn-6-back', add_hide_to_button, ['details-table-runs-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-7-back', add_hide_to_button, ['details-table-spectral-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-8-back', add_hide_to_button, ['details-table-quality-flip-container'])")
+  shinyjs::runjs("waitForEl('#btn-9-back', add_hide_to_button, ['details-table-chaos-flip-container'])")
   shinyjs::runjs("waitForEl('#btn-8-back', remove_autocomplete, '')") # this removes the autocomplete property from text inputs - they are annoying
 
   callModule(plots,
@@ -430,15 +521,21 @@ shinyServer(function(input, output, session){
              file_name =reactiveVal("Runs.xlsx")
   )
   callModule(main_table,
+             "main-table-spectral",
+             rct_current_values = rct_current_spectral_values,
+             file_name =reactiveVal("Spectral.xlsx")
+  )
+  callModule(main_table,
              "main-table-quality",
              rct_current_values = rct_current_quality_values,
              file_name =reactiveVal("Quality.xlsx")
   )
   callModule(main_table,
-             "main-table-spectral",
-             rct_current_values = rct_current_spectral_values,
-             file_name =reactiveVal("Spectral.xlsx")
+             "main-table-chaos",
+             rct_current_values = rct_current_chaos_values,
+             file_name =reactiveVal("Chaos.xlsx")
   )
+
   callModule(main_table,
              "main-table-dynamic",
              rct_current_values = rct_current_dynamic_pp_results,
@@ -494,5 +591,19 @@ shinyServer(function(input, output, session){
              'details-table-quality',
              rct_current_values = rct_current_single_dynamic_quality_results,
              file_name =rval_current_file_quality
+  )
+  callModule(main_table,
+             "main-table-chaos-dynamic",
+             rct_current_values = rct_current_dynamic_chaos_results,
+             button_label = "Detail",
+             button_id = "btn_view_dynamicchaos_",
+             file_name =reactive("ChaosDynamic.xlsx"),
+             dynamic = TRUE,
+             rct_individual_results = rct_current_dynamic_all_individual_chaos_results
+  )
+  callModule(main_table,
+             'details-table-chaos',
+             rct_current_values = rct_current_single_dynamic_chaos_results,
+             file_name =rval_current_file_chaos
   )
 })
