@@ -101,6 +101,12 @@ data_upload_and_filterUI <- function(id) {
                              choices = list("Globally" = "Yes", "In Windows" = "window", "No" = "No"),
                              selected = "No"),
                  shiny::numericInput(ns("tolerance"), "Window length tolerance", glob_tolerance))
+           ),
+           fluidRow(
+             box(width = 4,
+                 h3("SampEn"),
+                 shiny::numericInput(ns("sampen_m"), "Embedding dimension", glob_m),
+                 shiny::numericInput(ns("sampen_r"), "Radius factor", glob_r)),
            )
       )
 }
@@ -290,7 +296,9 @@ data_upload_and_filter <- function(input, output, session) {
                  input$color,
                  input$variable_name,
                  input$pnnX_th,
-                 input$pnn_perc_th), {
+                 input$pnn_perc_th,
+                 input$sampen_m,
+                 input$sampen_r), {
     rval_data_ready(FALSE)
   })
 
@@ -313,6 +321,8 @@ data_upload_and_filter <- function(input, output, session) {
     shuffle = reactive(input$shuffle),
     tolerance = reactive(input$tolerance),
     pnnX_th = rval_pnnX_th,
-    pnn_perc_th = rval_pnn_perc_th
+    pnn_perc_th = rval_pnn_perc_th,
+    sampen_m = reactive(input$sampen_m),
+    sampen_r = reactive(input$sampen_r)
   )
 }

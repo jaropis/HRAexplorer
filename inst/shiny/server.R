@@ -71,7 +71,9 @@ shinyServer(function(input, output, session){
                           minmax = data_info$minmax(),
                           using_excel = data_info$using_excel(),
                           flags_coding = data_info$flags_coding(),
-                          shuffle = data_info$shuffle()
+                          shuffle = data_info$shuffle(),
+                          sampen_m = data_info$sampen_m(),
+                          sampen_r = data_info$sampen_r()
     )
   })
 
@@ -241,7 +243,9 @@ shinyServer(function(input, output, session){
                                   window_length = data_info$window_length(),
                                   flags_coding = data_info$flags_coding(),
                                   shuffle = data_info$shuffle(),
-                                  tolerance = data_info$tolerance())
+                                  tolerance = data_info$tolerance(),
+                                  sampen_m = data_info$sampen_m(),
+                                  sampen_r = data_info$sampen_r())
   })
 
   rct_current_single_dynamic_chaos_results <- reactive({
@@ -260,7 +264,9 @@ shinyServer(function(input, output, session){
                                   clicked_file = as.numeric(input$dynamicchaos),
                                   flags_coding = data_info$flags_coding(),
                                   shuffle = data_info$shuffle(),
-                                  tolerance = data_info$tolerance())
+                                  tolerance = data_info$tolerance(),
+                                  sampen_m = data_info$sampen_m(),
+                                  sampen_r = data_info$sampen_r())
   })
 
   # these reactives  are used to download partial results for windows in each file
@@ -398,7 +404,9 @@ shinyServer(function(input, output, session){
                                                    clicked_file = idx,
                                                    flags_coding = data_info$flags_coding(),
                                                    shuffle = data_info$shuffle(),
-                                                   tolerance = data_info$tolerance())
+                                                   tolerance = data_info$tolerance(),
+                                                   sampen_m = data_info$sampen_m(),
+                                                   sampen_r = data_info$sampen_r())
       file_result <- cbind(file = data_info$files()[idx, 'name'], window.NO = seq(nrow(file_result)), file_result)
       if (nrow(individual_results) == 0) {
         individual_results <- file_result

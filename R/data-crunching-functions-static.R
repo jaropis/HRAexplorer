@@ -23,7 +23,9 @@ get_numerical_results <- function(analysis_type,
                                   flags_coding,
                                   shuffle,
                                   pnnX_th = c(),
-                                  pnn_perc_th) {
+                                  pnn_perc_th,
+                                  sampen_m,
+                                  sampen_r) {
   if (analysis_type == "poincare")
     return(get_pp_results(fileAddresses,
                           separator,
@@ -41,7 +43,7 @@ get_numerical_results <- function(analysis_type,
   if (analysis_type == "quality")
     return(get_quality_results(fileAddresses, separator, column_data, minmax, using_excel, flags_coding, shuffle))
   if (analysis_type == "chaos")
-    return(get_chaos_results(fileAddresses, separator, column_data, minmax, using_excel, flags_coding, shuffle))
+    return(get_chaos_results(fileAddresses, separator, column_data, minmax, using_excel, flags_coding, shuffle, sampen_m, sampen_r))
 }
 
 #' function for getting the results of Poincare Plot analysis
@@ -200,11 +202,14 @@ get_chaos_results <- function(fileAddresses,
                                 minmax = c(0, 3000),
                                 using_excel = FALSE,
                                 flags_coding,
-                                shuffle) {
+                                shuffle,
+                                sampen_m,
+                                sampen_r) {
   results <- c()
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding, shuffle)
-    temp_results <- hrvhra::ncm_samp_en(rr_and_flags[[1]], 2, 0.15)
+    std <- sd(rr_and_flags[[1]])
+    temp_results <- hrvhra::ncm_samp_en(rr_and_flags[[1]], sampen_m, sampen_r * std)
     results <- rbind(results, temp_results)
   }
   results <- as.data.frame(results, 3)

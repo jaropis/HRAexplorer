@@ -38,7 +38,9 @@ get_dynamic_numerical_results <- function(analysis_type,
                                   shuffle = shuffle,
                                   tolerance = tolerance,
                                   pnnX_th = pnnX_th,
-                                  pnn_perc_th = pnn_perc_th
+                                  pnn_perc_th = pnn_perc_th,
+                                  sampen_m,
+                                  sampen_r
                                   ) {
   if (analysis_type == "poincare_dynamic")
     return(get_dynamic_pp_results(fileAddresses,
@@ -119,7 +121,9 @@ get_dynamic_numerical_results <- function(analysis_type,
                                        clicked_file = clicked_file,
                                        flags_coding = flags_coding,
                                        shuffle = shuffle,
-                                       tolerance = tolerance))
+                                       tolerance = tolerance,
+                                       sampen_m = sampen_m,
+                                       sampen_r = sampen_r))
 }
 
 #' function for getting the results of dynamic Poincare Plot analysis
@@ -428,7 +432,9 @@ get_dynamic_chaos_results <- function(fileAddresses,
                                         clicked_file,
                                         flags_coding,
                                         shuffle,
-                                        tolerance) {
+                                        tolerance,
+                                        sampen_m,
+                                        sampen_r) {
   results <- c()
   if (!is.null(clicked_file)) {
     rr_and_flags <- read_and_filter_one_file(fileAddresses, clicked_file, separator, column_data, minmax, using_excel, flags_coding, shuffle)
@@ -439,7 +445,9 @@ get_dynamic_chaos_results <- function(fileAddresses,
                                                         move_type = move_type,
                                                         window_length = window_length,
                                                         tolerance = tolerance,
-                                                        shuffle = shuffle)
+                                                        shuffle = shuffle,
+                                                        sampen_m = sampen_m,
+                                                        sampen_r = sampen_r)
     return(dplyr::bind_cols(tibble(`win NO` = seq(nrow(single_file_result))), single_file_result))
   } else {
     for (lineNumber in  1:length(fileAddresses[[1]])){
@@ -451,7 +459,9 @@ get_dynamic_chaos_results <- function(fileAddresses,
                                                           move_type = move_type,
                                                           window_length = window_length,
                                                           tolerance = tolerance,
-                                                          shuffle = shuffle) %>%
+                                                          shuffle = shuffle,
+                                                          sampen_m = sampen_m,
+                                                          sampen_r = sampen_r) %>%
         colMeans(na.rm = TRUE)
       results <- rbind(results, temp_results)
     }
@@ -651,7 +661,9 @@ get_single_chaos_windowed_results <- function(RR,
                                                 cut_end = FALSE,
                                                 return_all = FALSE,
                                                 tolerance = 0.05,
-                                                shuffle = "No") {
+                                                shuffle = "No",
+                                                sampen_m,
+                                                sampen_r) {
   window_slide = paste(move_type, window_type, sep = "_")
   rr_index <- 'if' (move_type == 'time', 2, 1) # index based windows do not have time track
   time_function <- time_functions_list[[window_slide]]
@@ -661,7 +673,7 @@ get_single_chaos_windowed_results <- function(RR,
          function(window_table) {
            window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
            std <- sd(window_table[[rr_index]])
-           hrvhra::ncm_samp_en(window_table[[rr_index]], 2, 0.15 * std)
+           hrvhra::ncm_samp_en(window_table[[rr_index]], sampen_m, sampen_r * std)
          }) %>%
     unlist() %>%
     data.frame(SampEn = .)
