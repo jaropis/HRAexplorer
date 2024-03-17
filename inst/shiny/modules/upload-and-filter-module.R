@@ -296,7 +296,7 @@ data_upload_and_filter <- function(input, output, session) {
 
   list(
     variable_name = reactive(input$variable_name),
-    using_excel = reactive(check_for_excel(input$files %||% calculate_data_addresses())),
+    using_excel = reactive(check_for_format(input$files %||% calculate_data_addresses())),
     files = reactive(input$files %||% calculate_data_addresses()),
     separator = reactive(get_sep(input$separator)),
     data_columns = reactive(input$data_columns),
