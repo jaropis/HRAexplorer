@@ -15,7 +15,7 @@ get_results_matrix <- function(current_values, button_label = "View", button_id 
       sprintf(')">%s</button>', button_label))
     return_tibble <- tibble::tibble(file = results_matrix[, 1, drop = FALSE],
                                     "view" = buttons_col,
-                                    results_matrix[, 2:ncol(results_matrix)]) %>%
+                                    results_matrix[, 2:ncol(results_matrix), drop = FALSE]) %>%
       correct_dashes()
     return(return_tibble)
   }
