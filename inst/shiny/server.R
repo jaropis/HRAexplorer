@@ -61,7 +61,8 @@ shinyServer(function(input, output, session){
                           shuffle = data_info$shuffle()
     )
   })
-  rct_current_quality_values <- reactive({
+
+  rct_current_chaos_values <- reactive({
     req(data_info$data_ready())
     get_numerical_results(analysis_type = "chaos",
                           data_info$files(),

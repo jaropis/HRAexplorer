@@ -27,9 +27,9 @@ ui <- dashboardPage(
       ),
       menuItem("Chaos", icon = icon("tornado"),
                menuSubItem("Static",
-                           tabName = "spectral"),
+                           tabName = "chaos"),
                menuSubItem("Dynamic",
-                           tabName = "spectral-dynamic")
+                           tabName = "chaos-dynamic")
       ),
       menuItem("Quality", icon = icon("thumbs-up"),
                menuSubItem("Static",
@@ -151,8 +151,8 @@ ui <- dashboardPage(
                          main_img = NULL,
                          back_content = {
                            fluidRow(
-                             box(title = "Recording quality",
-                                 plotsUI("quality-plots")
+                             box(title = "Recording chaos",
+                                 plotsUI("chaos-plots")
                              )
                            )
                          })
@@ -232,7 +232,7 @@ ui <- dashboardPage(
       ),
       tabItem(tabName = "chaos-dynamic",
               fluidRow(
-                flipBox(id = 8,
+                flipBox(id = 14,
                         front_title = "Numerical results",
                         solidHeader = FALSE,
                         width = 12,

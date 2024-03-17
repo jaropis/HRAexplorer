@@ -40,6 +40,8 @@ get_numerical_results <- function(analysis_type,
     return(get_spectral_results(fileAddresses, separator, column_data, minmax, using_excel, use_ULF, flags_coding, shuffle))
   if (analysis_type == "quality")
     return(get_quality_results(fileAddresses, separator, column_data, minmax, using_excel, flags_coding, shuffle))
+  if (analysis_type == "chaos")
+    return(get_chaos_results(fileAddresses, separator, column_data, minmax, using_excel, flags_coding, shuffle))
 }
 
 #' function for getting the results of Poincare Plot analysis
@@ -177,6 +179,38 @@ get_spectral_results <- function(fileAddresses,
   results <- as.data.frame(results)
   results <- cbind(fileAddresses$name, results)
   colnames(results)[1] <- "file"
+  rownames(results) <- NULL
+  return(results)
+}
+#' function for getting the results of Poincare Plot analysis
+#'
+#' @param file_addresses the addresses of the uploaded file(s)
+#' @param separator the separator chosen by the user
+#' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
+#' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
+#' @param using_Excel boolean, whether Excel files are used
+#' @param flags_coding list with flags_coding
+#' @param shuffle whether the data should be shuffled
+#'
+#' @return the results of Poincare plot analysis
+#' @export
+get_chaos_results <- function(fileAddresses,
+                                separator = "\t",
+                                column_data = c(1, 2),
+                                minmax = c(0, 3000),
+                                using_excel = FALSE,
+                                flags_coding,
+                                shuffle) {
+  results <- c()
+  for (lineNumber in  1:length(fileAddresses[[1]])){
+    rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding, shuffle)
+    temp_results <- hrvhra::ncm_samp_en(rr_and_flags[[1]], 2, 0.15)
+    results <- rbind(results, temp_results)
+  }
+  results <- as.data.frame(results, 3)
+  results <- cbind(fileAddresses$name, results)
+  colnames(results)[1] <- "file"
+  colnames(results)[2] <- "SampEn"
   rownames(results) <- NULL
   return(results)
 }
