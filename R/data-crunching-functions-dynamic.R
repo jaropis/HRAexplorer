@@ -673,7 +673,18 @@ get_single_chaos_windowed_results <- function(RR,
          function(window_table) {
            window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
            std <- sd(window_table[[rr_index]])
-           hrvhra::ncm_samp_en(window_table[[rr_index]], sampen_m, sampen_r * std)
+           sn <- hrvhra::ncm_samp_en(window_table[[rr_index]], sampen_m, sampen_r * std)
+           if (is.nan(sn)) {
+             print("nan")
+             print(window_table[[rr_index]])
+           }
+
+           # Check for Inf or -Inf
+           if (is.infinite(sn)) {
+             print("Inf")
+             print(window_table[[rr_index]])
+           }
+           sn
          }) %>%
     unlist() %>%
     data.frame(SampEn = .)
