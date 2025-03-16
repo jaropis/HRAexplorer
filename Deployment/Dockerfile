@@ -7,7 +7,18 @@ RUN apt-get update \
     libxml2-dev \
     libz-dev\
     tar\
-    libudunits2-dev
+    libudunits2-dev \
+    build-essential \
+    curl \
+    gcc \
+    pkg-config
+
+# installing Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# installing cargo-c (needed for C bindings)
+RUN cargo install cargo-c
 
 RUN R -e "install.packages('devtools')"
 COPY . /HRAexplorer/
