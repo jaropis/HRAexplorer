@@ -11,16 +11,17 @@ RUN apt-get update \
     build-essential \
     curl \
     gcc \
-    pkg-config
+    pkg-config \
+    libclang-dev
 
 # installing Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-# installing cargo-c (needed for C bindings)
+# installing cargo-c (needed for C bindings) and rextendr
 RUN cargo install cargo-c
+RUN R -e "install.packages(c('devtools', 'rextendr'))"
 
-RUN R -e "install.packages('devtools')"
 COPY . /HRAexplorer/
 RUN R -e "devtools::install_github('jaropis/hrvhra', dependencies = TRUE)"
 RUN R -e "devtools::install_github('jaropis/shinydashboardplus0.7.5')"
