@@ -211,7 +211,7 @@ data_upload_and_filter <- function(input, output, session) {
   observeEvent(c(input$sinus, input$ventricular, input$supraventricular, input$artefact), {
     req(input$data_columns)
     if (!is.null(rval_beat_choices()) &&
-        (all(rval_beat_choices() %in% c(input$sinus, input$ventricular, input$supraventricular, input$artefact)) || rval_beat_choices() == "no choices")  ||
+        (all(rval_beat_choices() %in% c(input$sinus, input$ventricular, input$supraventricular, input$artefact)) || (length(rval_beat_choices()) == 1 && rval_beat_choices() == "no choices"))  ||
         is.null(rval_beat_choices()) && identical(c(input$sinus, input$ventricular, input$supraventricular, input$artefact), c("0", "1", "2", "3"))) { # the latter happens at the beginning
       rval_flags_coding(list(sinus = input$sinus,
                         ventricular = input$ventricular,

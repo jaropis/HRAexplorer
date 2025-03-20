@@ -5,7 +5,7 @@
 #' @param separator the separator chosen by the user
 #' @param column_data a 1x2 vector with the numbers of columns holding RR intervals and annotations
 #' @param minmax 1x2 vector with the maximum and minimum acceptable RR intervals values
-#' @param using_Excel boolean, whether Excel files are used
+#' @param using_Enxcel boolean, whether Excel files are used
 #' @param window_type string, jumping or sliding
 #' @param time_unit unit of time (minutes or seconds)
 #' @param move_type string, time based or index based
@@ -549,7 +549,7 @@ get_single_runs_windowed_results <- function(RR,
                             time_function(RR, window = window_length, time_unit = time_unit)),
                       function(window_table) {
                         window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
-                        hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
+                        hrvhra::countruns_rust(window_table[[rr_index]], window_table[[rr_index + 1]])
                       }) %>% Filter(function(elem) !is.null(elem), .)
   runs_results <- hrvhra::bind_runs_as_table(runs_list, 'if' (length(runs_list) == 0, 1, as.character(seq_along(runs_list))))
   entropies_results <- lapply('if' (window_type == 'jump', # cut end is only applicable to the jump window type
@@ -557,7 +557,7 @@ get_single_runs_windowed_results <- function(RR,
                                     time_function(RR, window = window_length, time_unit = time_unit)),
                               function(window_table) {
                                 window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
-                                runs_list_local <- hrvhra::countruns(window_table[[rr_index]], window_table[[rr_index + 1]])
+                                runs_list_local <- hrvhra::countruns_rust(window_table[[rr_index]], window_table[[rr_index + 1]])
                                 hrvhra::entropies(runs_list_local$direction_down,
                                                   runs_list_local$direction_up,
                                                   runs_list_local$no_change)
@@ -673,7 +673,7 @@ get_single_chaos_windowed_results <- function(RR,
          function(window_table) {
            window_table <- shuffle_in_windows(window_table, shuffle, rr_index)
            std <- sd(window_table[[rr_index]])
-           sn <- hrvhra::ncm_samp_en(window_table[[rr_index]], sampen_m, sampen_r * std)
+           sn <- hrvhra::samp_en(window_table[[rr_index]], sampen_m, sampen_r * std)
            if (is.nan(sn)) {
              print("nan")
              print(window_table[[rr_index]])

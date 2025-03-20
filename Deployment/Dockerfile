@@ -7,9 +7,21 @@ RUN apt-get update \
     libxml2-dev \
     libz-dev\
     tar\
-    libudunits2-dev
+    libudunits2-dev \
+    build-essential \
+    curl \
+    gcc \
+    pkg-config \
+    libclang-dev
 
-RUN R -e "install.packages('devtools')"
+# installing Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# installing cargo-c (needed for C bindings) and rextendr
+RUN cargo install cargo-c
+RUN R -e "install.packages(c('devtools', 'rextendr'))"
+
 COPY . /HRAexplorer/
 RUN R -e "devtools::install_github('jaropis/hrvhra', dependencies = TRUE)"
 RUN R -e "devtools::install_github('jaropis/shinydashboardplus0.7.5')"

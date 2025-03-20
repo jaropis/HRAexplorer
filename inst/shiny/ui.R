@@ -1,5 +1,5 @@
 ui <- dashboardPage(
-  dashboardHeader(title = "HRAExplorer"),
+  dashboardHeader(title = "HRAExplorer (v. 1.55)"),
   dashboardSidebar(
     sidebarMenu(
       id = "sidebar-tabs",
@@ -25,7 +25,7 @@ ui <- dashboardPage(
                menuSubItem("Dynamic",
                            tabName = "spectral-dynamic")
       ),
-      menuItem("Chaos", icon = icon("tornado"),
+      menuItem("Complexity", icon = icon("tornado"),
                menuSubItem("Static",
                            tabName = "chaos"),
                menuSubItem("Dynamic",

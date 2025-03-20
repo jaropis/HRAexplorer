@@ -108,7 +108,7 @@ get_runs_results <- function(fileAddresses,
   results_entropies <-data.frame(HDR = c(), HAR = c(), HNO = c(), HDR2 = c(), HAR2 = c(), HNO2 = c())
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding, shuffle)
-    temp_results <- list(hrvhra::countruns(rr_and_flags[[1]], rr_and_flags[[2]]))
+    temp_results <- list(hrvhra::countruns_rust(rr_and_flags[[1]], rr_and_flags[[2]]))
     results <- c(results, temp_results)
     results_entropies = rbind(results_entropies,
                               hrvhra::entropies(temp_results[[1]]$direction_down, temp_results[[1]]$direction_up, temp_results[[1]]$no_change))
@@ -209,7 +209,7 @@ get_chaos_results <- function(fileAddresses,
   for (lineNumber in  1:length(fileAddresses[[1]])){
     rr_and_flags <- read_and_filter_one_file(fileAddresses, lineNumber, separator, column_data, minmax, using_excel, flags_coding, shuffle)
     std <- sd(rr_and_flags[[1]])
-    temp_results <- hrvhra::ncm_samp_en(rr_and_flags[[1]], sampen_m, sampen_r * std)
+    temp_results <- hrvhra::samp_en(rr_and_flags[[1]], sampen_m, sampen_r * std)
     results <- rbind(results, temp_results)
   }
   results <- as.data.frame(results, 3)
