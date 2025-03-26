@@ -1,8 +1,12 @@
-#' module to plot various plots
+#' module to plot the Poincare Plot
 plotsUI <- function(id) {
   ns <- NS(id)
   tagList(
-    plotOutput(ns("current_plot")),
+    div(style = "position: relative; width: 100%; padding-bottom: 100%;",
+        div(style = "position: absolute; top: 0; bottom: 0; left: 0; right: 0;",
+            plotOutput(ns("current_plot"), width = "90%", height = "100%")
+        )
+    ),
     downloadButton(ns('downloadPlot'), 'Download Plot')
   )
 }
