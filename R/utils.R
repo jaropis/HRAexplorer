@@ -61,7 +61,7 @@ loader <- function(path,
 }
 
 #' Function checking if the uploaded files are Excel files
-#' @param files_list
+#' @param files_list files list
 #' @return boolean
 #'
 #' @export

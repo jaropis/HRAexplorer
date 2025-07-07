@@ -6,6 +6,9 @@
 \usage{
 check_for_format(files_list)
 }
+\arguments{
+\item{files_list}{files list}
+}
 \value{
 boolean
 }
