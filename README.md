@@ -14,7 +14,7 @@
 
 ## Fourier analysis for long recordings
 
-If you are sure you want to calculate the spectral analysis for really long recordings, go to the `upload_and_filter.R` module and remove/disable this observer:
+If you are sure you want to calculate the spectral analysis for really long recordings, go to the `upload-and-filter-module.R` module and remove/change/disable this observer:
 
 ```R
 observeEvent(c(input$files, input$separator), {
