@@ -14,22 +14,4 @@
 
 ## Fourier analysis for long recordings
 
-If you are sure you want to calculate the spectral analysis for really long recordings, go to the `upload-and-filter-module.R` module and remove/change/disable this observer:
-
-```R
-observeEvent(c(input$files, input$separator), {
-    # disabling spectral analysis for long recordings
-    req(input$files)
-    lengths <- c()
-    for (file_idx in seq_along(input$files[[1]])) {
-      lengths <- c(lengths,
-                   raw_read_one_file(input$files %||% calculate_data_addresses(), file_no = file_idx, glob_separators[[input$separator]]) %>%
-                     nrow()
-      )}
-    if(any(lengths > 6000)) {
-      shinyjs::runjs("document.querySelectorAll(\"a[href='#shiny-tab-spectral']\")[0].style.pointerEvents = 'none'")
-    } else {
-      shinyjs::runjs("document.querySelectorAll(\"a[href='#shiny-tab-spectral']\")[0].style.pointerEvents = 'auto'")
-    }
-  }, ignoreInit = FALSE, ignoreNULL = FALSE)
-  ```
+If you are sure you want to calculate the spectral analysis for really long recordings, go to `globals.R` and set `glob_block_long_recordings <- FALSE`

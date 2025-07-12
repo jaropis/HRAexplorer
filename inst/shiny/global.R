@@ -62,3 +62,6 @@ glob_pnn_perc = "5 10"
 
 glob_m = 2
 glob_r = 0.15
+
+# blocking long recordings
+glob_block_long_recordings <- TRUE

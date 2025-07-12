@@ -156,7 +156,7 @@ data_upload_and_filter <- function(input, output, session) {
                    raw_read_one_file(input$files %||% calculate_data_addresses(), file_no = file_idx, glob_separators[[input$separator]]) %>%
                      nrow()
       )}
-    if(any(lengths > 6000)) {
+    if(any(lengths > 6000 && glob_block_long_recordings)) {
       shinyjs::runjs("document.querySelectorAll(\"a[href='#shiny-tab-spectral']\")[0].style.pointerEvents = 'none'")
     } else {
       shinyjs::runjs("document.querySelectorAll(\"a[href='#shiny-tab-spectral']\")[0].style.pointerEvents = 'auto'")
