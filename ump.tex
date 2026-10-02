@@ -1,0 +1,244 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{gray!10},   
+    commentstyle=\color{green!50!black},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{gray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{HRAExplorer Authentication and Offline Processing Implementation Guide}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Current Architecture Assessment}
+
+Your HRAExplorer is a sophisticated R/Shiny application for heart rate analysis with:
+\begin{itemize}
+\item Complex calculations (Poincaré plots, runs analysis, spectral analysis, quality metrics, chaos analysis)
+\item Docker containerization ready
+\item Kubernetes deployment configuration
+\item Multiple reactive computational functions that are CPU-intensive
+\end{itemize}
+
+\section{Option 1: Authentication Solutions}
+
+\subsection{ShinyProxy + Authentication}
+Since you already have ShinyProxy configured, this is your most straightforward path:
+
+\textbf{ShinyProxy with LDAP/OAuth:}
+\begin{itemize}
+\item Configure ShinyProxy application.yml with authentication providers
+\item Supports LDAP, OAuth2, OpenID Connect, SAML
+\item Per-user app instances with isolation
+\item Existing Docker setup works perfectly
+\end{itemize}
+
+\textbf{ShinyProxy Configuration Example:}
+\begin{lstlisting}[language=yaml]
+proxy:
+  authentication: openid
+  openid:
+    client-id: your-client-id
+    client-secret: your-client-secret
+    auth-url: https://your-provider/auth
+    token-url: https://your-provider/token
+\end{lstlisting}
+
+\subsection{Shiny + Database Authentication}
+\textbf{Custom authentication module:}
+\begin{itemize}
+\item Add database tables for users/sessions
+\item Use \texttt{shinyauthr} or \texttt{shinymanager} packages
+\item Store credentials in PostgreSQL/MySQL
+\item Session management with cookies
+\end{itemize}
+
+\subsection{Reverse Proxy Authentication}
+\textbf{nginx/Traefik + Auth:}
+\begin{itemize}
+\item Use nginx with auth modules
+\item Traefik with forward auth
+\item Pass user info via headers to Shiny
+\end{itemize}
+
+\section{Option 2: Offline Processing Solutions}
+
+\subsection{Background Processing with R + Queue System}
+
+\textbf{Architecture:}
+\begin{center}
+User Interface $\rightarrow$ Job Queue $\rightarrow$ Background Workers $\rightarrow$ Email Results
+\end{center}
+
+\textbf{Implementation:}
+\begin{enumerate}
+\item \textbf{Job Queue System:} Use Redis + \texttt{rq} (R queue) or RabbitMQ + \texttt{later}
+\item \textbf{Background Workers:} Separate R processes for calculations
+\item \textbf{Email Service:} \texttt{mailR} or \texttt{sendmailR} package
+\item \textbf{Job Status:} Database tracking with status updates
+\end{enumerate}
+
+\textbf{Code Structure:}
+\begin{lstlisting}[language=R]
+# In your server.R - instead of reactive calculations
+observeEvent(input$submit_analysis, {
+  job_id <- queue_job(
+    analysis_type = input$analysis_type,
+    files = input$files,
+    parameters = collect_parameters(),
+    user_email = session$user$email
+  )
+  showNotification(paste("Job", job_id, "submitted"))
+})
+\end{lstlisting}
+
+\subsection{Plumber API + Background Processing}
+
+\textbf{Convert calculations to API:}
+\begin{enumerate}
+\item Extract your analysis functions to Plumber API
+\item Use \texttt{future} + \texttt{promises} for async processing
+\item Store results in database/cloud storage
+\item Email notifications when complete
+\end{enumerate}
+
+\subsection{Kubernetes Jobs for Processing}
+
+\textbf{Leverage your K8s setup:}
+\begin{enumerate}
+\item Create separate Docker image for workers
+\item Submit Kubernetes Jobs for calculations
+\item Use ConfigMaps/Secrets for user data
+\item Results stored in persistent volumes
+\end{enumerate}
+
+\section{Recommended Hybrid Approach}
+
+Given your existing infrastructure, I recommend:
+
+\subsection{Phase 1: Authentication with ShinyProxy}
+\begin{enumerate}
+\item Configure ShinyProxy with OAuth2/OpenID Connect
+\item Add user management database
+\item Modify Shiny app to read user context
+\end{enumerate}
+
+\subsection{Phase 2: Async Processing System}
+
+\textbf{1. Job Management Database:}
+\begin{lstlisting}[language=SQL]
+CREATE TABLE analysis_jobs (
+  id UUID PRIMARY KEY,
+  user_id VARCHAR,
+  status VARCHAR, -- pending, running, completed, failed
+  analysis_type VARCHAR,
+  parameters JSON,
+  created_at TIMESTAMP,
+  completed_at TIMESTAMP,
+  result_file_path VARCHAR
+);
+\end{lstlisting}
+
+\textbf{2. Modified Shiny Server:}
+\begin{lstlisting}[language=R]
+# Replace reactive calculations with job submission
+observeEvent(input$calculate, {
+  job_id <- submit_background_job(
+    user_id = session$user$id,
+    analysis_type = input$analysis_type,
+    files = input$files,
+    # ... other parameters
+  )
+  session$sendCustomMessage("jobSubmitted", job_id)
+})
+\end{lstlisting}
+
+\textbf{3. Background Worker Service:}
+\begin{lstlisting}[language=R]
+# Separate R script/container
+while(TRUE) {
+  job <- get_next_pending_job()
+  if (!is.null(job)) {
+    result <- perform_analysis(job$parameters)
+    save_result(job$id, result)
+    send_email_notification(job$user_id, job$id)
+  }
+  Sys.sleep(5)
+}
+\end{lstlisting}
+
+\subsection{Phase 3: Enhanced Features}
+\begin{enumerate}
+\item \textbf{Real-time Job Status:} WebSocket updates
+\item \textbf{Result History:} User dashboard for past analyses
+\item \textbf{Resource Management:} Queue prioritization
+\item \textbf{Scaling:} Auto-scaling workers based on queue length
+\end{enumerate}
+
+\section{Implementation Steps}
+
+\begin{enumerate}
+\item \textbf{Database Setup:}
+   \begin{itemize}
+   \item PostgreSQL for users, jobs, and results
+   \item Redis for job queue (optional)
+   \end{itemize}
+
+\item \textbf{Email Service:}
+   \begin{itemize}
+   \item SMTP configuration
+   \item Email templates for notifications
+   \end{itemize}
+
+\item \textbf{File Storage:}
+   \begin{itemize}
+   \item Shared storage (NFS/cloud storage) for input/output files
+   \item Temporary file cleanup
+   \end{itemize}
+
+\item \textbf{Monitoring:}
+   \begin{itemize}
+   \item Job queue monitoring
+   \item Worker health checks
+   \item User activity logging
+   \end{itemize}
+\end{enumerate}
+
+\section{Next Steps}
+
+To implement this solution, you would need to:
+
+\begin{enumerate}
+\item \textbf{Set up the database infrastructure} for user management and job tracking
+\item \textbf{Create a job submission system} that replaces your current reactive calculations
+\item \textbf{Build background worker processes} that can execute your analysis functions
+\item \textbf{Implement email notification system} for job completion
+\item \textbf{Modify your Shiny UI} to show job status and history
+\item \textbf{Configure authentication} through ShinyProxy or custom solution
+\end{enumerate}
+
+The key insight is that your existing calculation functions (\texttt{get\_dynamic\_numerical\_results}, \texttt{get\_numerical\_results}, etc.) can be easily extracted into background jobs without major refactoring - they just need to be called from a worker process instead of
